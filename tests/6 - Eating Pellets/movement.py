@@ -1,6 +1,7 @@
 import os, sys, pygame
 
 from Pacman import Pacman
+from Pellet import Pellet
 
 from pygame.locals import *
 
@@ -33,8 +34,13 @@ MOVESPEED = 6
 pacman = Pacman(WINDOWWIDTH/2, WINDOWHEIGHT/2, MOVESPEED)
 pacman_group = pygame.sprite.GroupSingle(pacman)
 
-# blit pacman to the surface
+# create pellets
+pellet_group = pygame.sprite.Group()
+pellet_group.add(Pellet(50, 50), Pellet(100, 100))
+
+# blit pacman and pellets to the surface
 pacman_group.draw(windowSurface)
+pellet_group.draw(windowSurface)
 
 # update the game
 pygame.display.update()
@@ -81,9 +87,14 @@ while True:
     # move the sprite(pacman)
     pacman_group.update(moveLeft, moveRight, moveDown, moveUp)
     
+    # check if Pacman collided with any Pellets in Pellet Group
+    # true = Pellet will be destroyed when collided with
+    pygame.sprite.spritecollide(pacman, pellet_group, True)
+    
     # redraw the background and sprite
     windowSurface.fill(BLACK)
     pacman_group.draw(windowSurface)
+    pellet_group.draw(windowSurface)
     
     # update the game
     pygame.display.update()
