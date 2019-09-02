@@ -45,6 +45,16 @@ while True:
             pygame.quit()
             sys.exit() 
         if event.type == KEYDOWN:
+            if event.key == K_UP:
+                moveLeft  = False
+                moveRight = False
+                moveDown  = False
+                moveUp    = True
+            if event.key == K_DOWN:
+                moveLeft  = False
+                moveRight = False
+                moveDown  = True
+                moveUp    = False
             if event.key == K_LEFT:
                 moveLeft  = True
                 moveRight = False
@@ -55,31 +65,21 @@ while True:
                 moveRight = True
                 moveDown  = False
                 moveUp    = False
-            if event.key == K_DOWN:
-                moveLeft  = False
-                moveRight = False
-                moveDown  = True
-                moveUp    = False
-            if event.key == K_UP:
-                moveLeft  = False
-                moveRight = False
-                moveDown  = False
-                moveUp    = True
         if event.type == KEYUP:
             if event.key == K_ESCAPE:
                 pygame.quit()
                 sys.exit()
+            if event.key == K_UP:
+                moveUp = False
+            if event.key == K_DOWN:
+                moveDown = False
             if event.key == K_LEFT:
                 moveLeft = False
             if event.key == K_RIGHT:
                 moveRight = False
-            if event.key == K_DOWN:
-                moveDown = False
-            if event.key == K_UP:
-                moveUp = False
                 
     # move the sprite(pacman)
-    pacman_group.update(moveLeft, moveRight, moveDown, moveUp)
+    pacman_group.update(moveUp, moveDown, moveLeft, moveRight)
     
     # redraw the background and sprite
     windowSurface.fill(BLACK)
@@ -87,4 +87,4 @@ while True:
     
     # update the game
     pygame.display.update()
-    mainClock.tick(40)
+    mainClock.tick(16)
