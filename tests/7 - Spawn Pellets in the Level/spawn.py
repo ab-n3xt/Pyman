@@ -28,11 +28,9 @@ windowSurface.blit(background, (0, 0))
 # and which ones are not
 # this identifies where Pacman and Pellets can and cannot spawn
 x = 0
-y = 0
+y = 16
 while y < WINDOWHEIGHT:
     while x < WINDOWWIDTH:
-        if y is 0:
-            break
         selected_area = pygame.Rect(x, y, 16, 16)
         cropped_image = background.subsurface(selected_area)
         if pygame.transform.average_color(cropped_image)[:3] == BLACK:
