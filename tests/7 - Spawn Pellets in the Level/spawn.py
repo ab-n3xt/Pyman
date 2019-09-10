@@ -9,8 +9,8 @@ mainClock = pygame.time.Clock()
 # constants
 WINDOWWIDTH = 448 #(16 * 28) (row numbers range from 0 - 27)
 WINDOWHEIGHT = 512 #(16 * 32) (column numbers range from 0 - 31)
-
-# 
+SPRITEWIDTH = 16
+SPRITEHEIGHT = 16
 
 # colors
 BLACK = (0, 0, 0)
@@ -31,10 +31,16 @@ x = 0
 y = 0
 while y < WINDOWHEIGHT:
     while x < WINDOWWIDTH:
+        if y is 0:
+            break
         selected_area = pygame.Rect(x, y, 16, 16)
         cropped_image = background.subsurface(selected_area)
         if pygame.transform.average_color(cropped_image)[:3] == BLACK:
-            pygame.draw.rect(windowSurface, GREEN, selected_area)
+            if not (y >= SPRITEHEIGHT*10 and y <= SPRITEHEIGHT*20):
+                pygame.draw.rect(windowSurface, GREEN, selected_area)
+            else:
+                if x == SPRITEWIDTH*6 or x == SPRITEWIDTH*21:
+                    pygame.draw.rect(windowSurface, GREEN, selected_area)                
         else:
             pygame.draw.rect(windowSurface, RED, selected_area)
             
