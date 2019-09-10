@@ -2,6 +2,8 @@ import os, sys, pygame
 
 from pygame.locals import *
 
+from Pellet import Pellet
+
 # initialize pygame
 pygame.init()
 mainClock = pygame.time.Clock()
@@ -24,6 +26,9 @@ windowSurface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), 0, 32)
 background = pygame.image.load('../../sprites/pacman-level.png')
 windowSurface.blit(background, (0, 0))
 
+# Pellets
+pellet_group = pygame.sprite.Group()
+
 # goes through the entire map and outlines which 16x16 areas are black
 # and which ones are not
 # this identifies where Pacman and Pellets can and cannot spawn
@@ -35,18 +40,22 @@ while y < WINDOWHEIGHT:
         cropped_image = background.subsurface(selected_area)
         if pygame.transform.average_color(cropped_image)[:3] == BLACK:
             if not (y >= SPRITEHEIGHT*10 and y <= SPRITEHEIGHT*20):
-                pygame.draw.rect(windowSurface, GREEN, selected_area)
+                #pygame.draw.rect(windowSurface, GREEN, selected_area)
+                pellet_group.add(Pellet(selected_area.centerx, selected_area.centery))
             else:
                 if x == SPRITEWIDTH*6 or x == SPRITEWIDTH*21:
-                    pygame.draw.rect(windowSurface, GREEN, selected_area)                
+                    #pygame.draw.rect(windowSurface, GREEN, selected_area)
+                    pellet_group.add(Pellet(selected_area.centerx, selected_area.centery))
         else:
             pygame.draw.rect(windowSurface, RED, selected_area)
             
         x += 16
     y += 16
     x = 0
-    
-            
+
+# draw pellets
+pellet_group.draw(windowSurface)
+
 # update display
 pygame.display.update()
     
