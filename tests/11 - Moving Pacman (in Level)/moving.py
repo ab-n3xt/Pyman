@@ -43,10 +43,9 @@ box_group = pygame.sprite.Group()
 # Pellets
 pellet_group = pygame.sprite.Group()
 
-# Teleport
-tele_group = pygame.sprite.Group()
-tele_group.add(Box(0, 16 * 15, BLUE))
-tele_group.add(Box(16 * 27, 16 * 15, BLUE))
+# Teleporters
+teleporter_left = pygame.sprite.GroupSingle(Box(0, 16 * 15, BLUE))
+teleporter_right = pygame.sprite.GroupSingle(Box(16 * 27, 16 * 15, BLUE))
 
 # goes through the entire map and outlines which 16x16 areas are black
 # and which ones are not
@@ -90,7 +89,6 @@ def update_surface():
     # redraw the background and sprite
     windowSurface.blit(background, (0, 0))
     box_group.draw(windowSurface)
-    tele_group.draw(windowSurface)
     pellet_group.draw(windowSurface)
     pacman_group.draw(windowSurface)
     
@@ -98,7 +96,7 @@ def update_surface():
     pygame.display.update()
     mainClock.tick(10)
 
-def transport(sprite):
+def transport_right(sprite):
     while sprite.rect.left <= WINDOWWIDTH:
         sprite.rect.right += 2
         update_surface()
@@ -109,7 +107,20 @@ def transport(sprite):
         sprite.rect.right += 2
         update_surface()
         
-    sprite.rect = pygame.Rect(0, 16 * 15, 16, 16)
+    sprite.rect = pygame.Rect(16 * 1, 16 * 15, 16, 16)
+    
+def transport_left(sprite):
+    while sprite.rect.right >= 0:
+        sprite.rect.left -= 2
+        update_surface()
+        
+    sprite.rect.left = WINDOWWIDTH
+    
+    while sprite.rect.right >= WINDOWWIDTH:
+        sprite.rect.left -= 2
+        update_surface()
+        
+    sprite.rect = pygame.Rect(16 * 26, 16 * 15, 16, 16)
 
 while True:
     for event in pygame.event.get():
@@ -145,7 +156,10 @@ while True:
     # true = Pellet will be destroyed when collided with
     pygame.sprite.spritecollide(pacman, pellet_group, True)
     
-    if pygame.sprite.spritecollide(pacman, tele_group, False):
-        transport(pacman)
+    if pygame.sprite.spritecollide(pacman, teleporter_left, False):
+        transport_left(pacman)
+        
+    if pygame.sprite.spritecollide(pacman, teleporter_right, False):
+        transport_right(pacman)
     
     update_surface()
