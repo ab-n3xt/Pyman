@@ -96,7 +96,7 @@ def update_surface():
     windowSurface.blit(background, (0, 0))
     text = basicFont.render("POINTS: {}".format(POINTS), True, WHITE)
     windowSurface.blit(text, (0, 0))
-    box_group.draw(windowSurface)
+    #box_group.draw(windowSurface)
     pellet_group.draw(windowSurface)
     pacman_group.draw(windowSurface)
     
