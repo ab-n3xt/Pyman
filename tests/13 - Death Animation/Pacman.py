@@ -1,4 +1,4 @@
-import pygame
+import pygame, time
 
 from pygame.locals import *
 
@@ -10,6 +10,16 @@ class Pacman(pygame.sprite.Sprite):
         
         # Get the main window's display
         self.surface = pygame.display.get_surface()
+        
+        # Set frames for death animation
+        self.death_frames = [   '../../sprites/pacman-death-1.png',
+                                '../../sprites/pacman-death-2.png',
+                                '../../sprites/pacman-death-3.png',
+                                '../../sprites/pacman-death-4.png',
+                                '../../sprites/pacman-death-5.png',
+                                '../../sprites/pacman-death-6.png',
+                                '../../sprites/pacman-death-7.png',
+                                ]
         
         # Get the sprite and set the x+y coordinates
         self.image = pygame.image.load('../../sprites/pacman.png')
@@ -40,3 +50,13 @@ class Pacman(pygame.sprite.Sprite):
             # set image to be the original sprite rotated 90 degrees counter-clockwise
             self.image = pygame.transform.rotate(pygame.image.load('../../sprites/pacman.png'), 90)
             self.rect.top -= self.speed
+            
+    def death(self):
+        time.sleep(1)
+        for image in self.death_frames:
+            self.image = pygame.image.load(image)
+            self.surface.blit(self.image, self.rect)
+            pygame.display.update()
+            time.sleep(0.5)
+        
+        time.sleep(1)
