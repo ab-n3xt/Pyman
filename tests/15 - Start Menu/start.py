@@ -54,3 +54,10 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
+        if event.type == MOUSEBUTTONDOWN:
+            x, y = event.pos
+            if quit_rect.collidepoint(x, y):
+                pygame.quit()
+                sys.exit()
+            elif start_rect.collidepoint(x, y):
+                pass # Start the game
