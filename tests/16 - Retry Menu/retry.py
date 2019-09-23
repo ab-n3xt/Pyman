@@ -22,29 +22,21 @@ RED = (255, 0, 0)
 window = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), 0, 32)
 window.fill(BLACK)
 
-# Create Title
-pacman_title = pygame.Surface((384, 192))
-pacman_title.fill(WHITE)
-pacman_title_rect = pacman_title.get_rect()
-pacman_title_rect.centerx = WINDOWWIDTH/2
-pacman_title_rect.centery = 128
+# Create Retry Button
+retry = pygame.Surface((192, 48))
+retry.fill(GREEN)
+retry_rect = retry.get_rect()
+retry_rect.centerx = 112
+retry_rect.centery = 352
 
-# Create Start Button
-start = pygame.Surface((192, 48))
-start.fill(GREEN)
-start_rect = start.get_rect()
-start_rect.centerx = WINDOWWIDTH/2
-start_rect.centery = 320
-
-# Create Exit Button
-quit = pygame.Surface((96, 48))
+# Create Quit Button
+quit = pygame.Surface((192, 48))
 quit.fill(RED)
 quit_rect = quit.get_rect()
-quit_rect.centerx = WINDOWWIDTH/2
-quit_rect.centery = 408
+quit_rect.centerx = 336
+quit_rect.centery = 352
 
-window.blit(pacman_title, pacman_title_rect)
-window.blit(start, start_rect)
+window.blit(retry, retry_rect)
 window.blit(quit, quit_rect)
 
 pygame.display.update()
@@ -59,5 +51,5 @@ while True:
             if quit_rect.collidepoint(x, y):
                 pygame.quit()
                 sys.exit()
-            elif start_rect.collidepoint(x, y):
+            elif retry_rect.collidepoint(x, y):
                 pass # Start the game
