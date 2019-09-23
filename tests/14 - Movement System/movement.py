@@ -15,8 +15,6 @@ mainClock = pygame.time.Clock()
 # Constants
 WINDOWWIDTH = 448 #(16 * 28) (row numbers range from 0 - 27)
 WINDOWHEIGHT = 512 #(16 * 32) (column numbers range from 0 - 31)
-SPRITEWIDTH = 16
-SPRITEHEIGHT = 16
 LIVES = 3
 
 # Initialize window
