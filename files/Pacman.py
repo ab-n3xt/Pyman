@@ -31,9 +31,6 @@ class Pacman(pygame.sprite.Sprite):
                             'R': pygame.transform.rotate(pygame.image.load(self.frames[self.index]), 0),
         }
         
-        # Will become true if one of the movement variables are true
-        self.isMoving = False
-        
         # Get the sprite and set the x+y coordinates
         self.image = self.directions['R']
         self.rect = self.image.get_rect()
