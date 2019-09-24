@@ -24,6 +24,9 @@ window = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), 0, 32)
 
 # Initialize colours
 BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
 
 # Set background
 background = pygame.image.load('../sprites/pacman-level.png')
@@ -42,13 +45,17 @@ MOVESPEED = 16
 # To create a Box object: Box(x, y, COLOR)
 box_group = pygame.sprite.Group()
 
+# Grid (for movement)
+# Uses Box objects
+grid_group = pygame.sprite.Group()
+
 # Pellets
 # To create a Pellet object: Pellet(x, y)
 pellet_group = pygame.sprite.Group()
 
 # Teleporters
-l_transporter = pygame.sprite.GroupSingle(Box(0, 16 * 15))
-r_transporter = pygame.sprite.GroupSingle(Box(16 * 27, 16 * 15))
+l_transporter = pygame.sprite.GroupSingle(Box(0, 16 * 15, BLUE))
+r_transporter = pygame.sprite.GroupSingle(Box(16 * 27, 16 * 15, BLUE))
 
 # Goes through the entire map and outlines which 16x16 areas are black
 # This identifies where Pacman and Pellets can and cannot go
@@ -66,6 +73,11 @@ while y < WINDOWHEIGHT:
         
         # If the cropped image's color is BLACK
         if pygame.transform.average_color(cropped_image)[:3] == BLACK:
+            # Create grid for movement
+            grid_member = Box(x, y, GREEN)
+            grid_member.check_possible_moves(x, y)
+            grid_group.add(grid_member)
+            
             # These if-statements are for specific cases
             if y == SPRITEHEIGHT*4:
                 if not x in columns:
@@ -86,6 +98,10 @@ while y < WINDOWHEIGHT:
 pacman = Pacman(224, 384, MOVESPEED, box_group) # 16 * 14, 16 * 24
 pacman_group = pygame.sprite.GroupSingle(pacman)
 
+# Initialize movement variable
+movement = 'R'
+last_movement = 'R'
+
 # Draw Pacman and the Pellets onto the window
 pellet_group.draw(window)
 pacman_group.draw(window)
@@ -98,7 +114,6 @@ def update_window():
 
     # Redraw the background and sprites
     window.blit(background, (0, 0))
-    box_group.draw(window)
     pellet_group.draw(window)
     pacman_group.draw(window)
     
@@ -144,28 +159,23 @@ while True:
             sys.exit() 
         if event.type == KEYDOWN:
             if event.key == K_UP:
-                moveLeft  = False
-                moveRight = False
-                moveDown  = False
-                moveUp    = True
+                movement = 'U'
             if event.key == K_DOWN:
-                moveLeft  = False
-                moveRight = False
-                moveDown  = True
-                moveUp    = False
+                movement = 'D'
             if event.key == K_LEFT:
-                moveLeft  = True
-                moveRight = False
-                moveDown  = False
-                moveUp    = False
+                movement = 'L'
             if event.key == K_RIGHT:
-                moveLeft  = False
-                moveRight = True
-                moveDown  = False
-                moveUp    = False
+                movement = 'R'
                 
-    # Updates Pacman's movement
-    pacman_group.update(moveUp, moveDown, moveLeft, moveRight)
+    current_grid_location = pygame.sprite.spritecollide(pacman, grid_group, False)
+    grid_member = current_grid_location.pop()
+    if movement in grid_member.valid_moves:
+        # Updates Pacman's movement
+        pacman_group.update(movement)
+        last_movement = movement
+    else:
+        if last_movement in grid_member.valid_moves:
+            pacman_group.update(last_movement)
     
     # Check if Pacman collided with any Pellets
     # True = Pellet will be destroyed when collided with
