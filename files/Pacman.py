@@ -1,4 +1,4 @@
-import pygame
+import pygame, time
 
 from pygame.locals import *
 
@@ -16,6 +16,16 @@ class Pacman(pygame.sprite.Sprite):
                         '../sprites/pacman-2.png',
                         '../sprites/pacman-3.png',
                         '../sprites/pacman-2.png',
+        ]
+        
+        # Set frames for death animation
+        self.death_frames = [   '../sprites/pacman-death-1.png',
+                                '../sprites/pacman-death-2.png',
+                                '../sprites/pacman-death-3.png',
+                                '../sprites/pacman-death-4.png',
+                                '../sprites/pacman-death-5.png',
+                                '../sprites/pacman-death-6.png',
+                                '../sprites/pacman-death-7.png',
         ]
         
         # Used to determine which frame the animation is in
@@ -71,4 +81,14 @@ class Pacman(pygame.sprite.Sprite):
         # Update image
         if movement:
             self.image = self.directions[movement]
+            
+    def death(self):
+        time.sleep(1)
+        for image in self.death_frames:
+            self.image = pygame.image.load(image)
+            self.surface.blit(self.image, self.rect)
+            pygame.display.update()
+            time.sleep(0.5)
+        
+        time.sleep(1)
         
