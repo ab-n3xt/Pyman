@@ -5,12 +5,15 @@ from pygame.locals import *
 from Pellet import Pellet
 from Pacman import Pacman
 from Box import Box
+from Start import Start
 
 # Initialize Pygame
 pygame.init()
 
 # Initialize Clock
 mainClock = pygame.time.Clock()
+
+Start()
 
 # Constants
 WINDOWWIDTH = 448 #(16 * 28) (row numbers range from 0 - 27)
@@ -101,13 +104,6 @@ pacman_group = pygame.sprite.GroupSingle(pacman)
 # Initialize movement variable
 movement = 'R'
 last_movement = 'R'
-
-# Draw Pacman and the Pellets onto the window
-pellet_group.draw(window)
-pacman_group.draw(window)
-
-# Update display
-pygame.display.update()
 
 def update_window():
     """Updates the window by redrawing the background and sprites"""
