@@ -6,6 +6,8 @@ from Pellet import Pellet
 from Pacman import Pacman
 from Box import Box
 from Start import Start
+from Retry import Retry
+from Ghost import Ghost
 
 # Initialize Pygame
 pygame.init()
@@ -13,6 +15,7 @@ pygame.init()
 # Initialize Clock
 mainClock = pygame.time.Clock()
 
+# Initialize the game's Start Menu
 Start()
 
 # Constants
@@ -101,6 +104,10 @@ while y < WINDOWHEIGHT:
 pacman = Pacman(224, 384, MOVESPEED, box_group) # 16 * 14, 16 * 24
 pacman_group = pygame.sprite.GroupSingle(pacman)
 
+# Initialize Ghosts
+ghost_group = pygame.sprite.Group()
+ghost_group.add(Ghost(208, 384))
+
 # Initialize movement variable
 movement = 'R'
 last_movement = 'R'
@@ -112,6 +119,7 @@ def update_window():
     window.blit(background, (0, 0))
     pellet_group.draw(window)
     pacman_group.draw(window)
+    ghost_group.draw(window)
     
     # Update the display
     pygame.display.update()
@@ -176,6 +184,20 @@ while True:
     # Check if Pacman collided with any Pellets
     # True = Pellet will be destroyed when collided with
     pygame.sprite.spritecollide(pacman, pellet_group, True)
+    
+    # check if Pacman collided with any Ghosts
+    # If so, check if they are vulnerable
+    # If true, destroy the sprite
+    # If not, quit the game
+    collided_ghosts = pygame.sprite.spritecollide(pacman, ghost_group, False)
+    for ghost in collided_ghosts:
+        if ghost.isVulnerable:
+            ghost.kill()
+        else:
+            window.fill(BLACK)
+            pygame.display.update()
+            pacman.death()
+            Retry()
     
     # Transport Pacman if Pacman collides with either transporter
     if pygame.sprite.spritecollide(pacman, l_transporter, False):
