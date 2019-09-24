@@ -9,7 +9,7 @@ class Pellet(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         
         # Get the sprite and set the x+y coordinates
-        self.image = pygame.image.load('../../sprites/pellet.png')
+        self.image = pygame.image.load('../sprites/pellet.png')
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
