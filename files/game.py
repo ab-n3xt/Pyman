@@ -93,8 +93,6 @@ while y < WINDOWHEIGHT:
             else:
                 if x == SPRITEWIDTH*6 or x == SPRITEWIDTH*21:
                     pellet_group.add(Pellet(selected_area.centerx, selected_area.centery))
-        else:
-            box_group.add(Box(x, y, RED))
            
         x += 16
     y += 16
@@ -130,13 +128,13 @@ def transport_right(sprite):
     
     while sprite.rect.left <= WINDOWWIDTH:
         sprite.rect.right += 2
-        update_surface()
+        update_window()
         
     sprite.rect.right = 0
     
     while sprite.rect.left <= 0:
         sprite.rect.right += 2
-        update_surface()
+        update_window()
         
     sprite.rect = pygame.Rect(16 * 1, 16 * 15, 16, 16)
     
