@@ -23,8 +23,7 @@ class Start(object):
         font = pygame.font.Font("../font/minecraft.ttf", 36)
 
         # Create Title
-        pacman_title = pygame.Surface((384, 192))
-        pacman_title.fill(WHITE)
+        pacman_title = pygame.image.load("../sprites/pyman_title.png")
         pacman_title_rect = pacman_title.get_rect()
         pacman_title_rect.centerx = WINDOWWIDTH/2
         pacman_title_rect.centery = 128
@@ -42,7 +41,6 @@ class Start(object):
         quit_rect.centery = 408
 
         window.blit(pacman_title, pacman_title_rect)
-        window.blit(quit, quit_rect)
         
         # Create Start Text
         start_text = font.render("START", True, GREEN)
