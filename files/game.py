@@ -143,13 +143,13 @@ def transport_left(sprite):
     
     while sprite.rect.right >= 0:
         sprite.rect.left -= 2
-        update_surface()
+        update_window()
         
     sprite.rect.left = WINDOWWIDTH
     
     while sprite.rect.right >= WINDOWWIDTH:
         sprite.rect.left -= 2
-        update_surface()
+        update_window()
         
     sprite.rect = pygame.Rect(16 * 26, 16 * 15, 16, 16)
 
