@@ -12,7 +12,7 @@ class Pacman(pygame.sprite.Sprite):
         self.surface = pygame.display.get_surface()
         
         # Set animation frames
-        self.frames = [ '../sprites/pacman.png',
+        self.frames = [ '../sprites/pacman-1.png',
                         '../sprites/pacman-2.png',
                         '../sprites/pacman-3.png',
                         '../sprites/pacman-2.png',
