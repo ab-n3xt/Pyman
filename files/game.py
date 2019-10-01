@@ -45,7 +45,7 @@ moveDown = False
 moveUp = False
 
 # Pixels per loop
-MOVESPEED = 16
+MOVESPEED = 4
 
 # Boxes (for collision purposes)
 # To create a Box object: Box(x, y, COLOR)
@@ -121,19 +121,19 @@ def update_window():
     
     # Update the display
     pygame.display.update()
-    mainClock.tick(10)
+    mainClock.tick(40)
 
 def transport_right(sprite):
     """Transports sprite from the right side of the window to the left side"""
     
     while sprite.rect.left <= WINDOWWIDTH:
-        sprite.rect.right += 2
+        sprite.rect.right += 10
         update_window()
         
     sprite.rect.right = 0
     
     while sprite.rect.left <= 0:
-        sprite.rect.right += 2
+        sprite.rect.right += 10
         update_window()
         
     sprite.rect = pygame.Rect(16 * 1, 16 * 15, 16, 16)
@@ -169,15 +169,20 @@ while True:
             if event.key == K_RIGHT:
                 movement = 'R'
                 
+    # Updates Pacman's movement
     current_grid_location = pygame.sprite.spritecollide(pacman, grid_group, False)
     grid_member = current_grid_location.pop()
     if movement in grid_member.valid_moves:
-        # Updates Pacman's movement
-        pacman_group.update(movement)
+        for x in range(4):
+            pacman_group.update(movement)
+            update_window()
+
         last_movement = movement
     else:
         if last_movement in grid_member.valid_moves:
-            pacman_group.update(last_movement)
+            for x in range(4):
+                pacman_group.update(last_movement)
+                update_window()
     
     # Check if Pacman collided with any Pellets
     # True = Pellet will be destroyed when collided with
