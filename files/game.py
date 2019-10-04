@@ -25,18 +25,8 @@ window = pygame.display.set_mode((constants.WINDOWWIDTH, constants.WINDOWHEIGHT)
 background = pygame.image.load('../sprites/pacman-level.png')
 window.blit(background, (0, 0))
 
-# Initialize movement variables
-moveLeft = False
-moveRight = False
-moveDown = False
-moveUp = False
-
 # Pixels per loop
 MOVESPEED = 4
-
-# Boxes (for collision purposes)
-# To create a Box object: Box(x, y, COLOR)
-box_group = pygame.sprite.Group()
 
 # Grid (for movement)
 # Uses Box objects
