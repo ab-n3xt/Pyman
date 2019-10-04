@@ -40,10 +40,7 @@ pellet_group = pygame.sprite.Group()
 l_transporter = pygame.sprite.GroupSingle(Box(0, 16 * 15))
 r_transporter = pygame.sprite.GroupSingle(Box(16 * 27, 16 * 15))
 
-# Goes through the entire map and outlines which 16x16 areas are black
-# This identifies where Pacman and Pellets can and cannot go
-list = [3, 4, 8, 9, 10, 17, 18, 19, 23, 24]
-columns = [i * constants.SPRITEWIDTH for i in list]
+# Create Grid System
 x = 0
 y = 16
 while y < constants.WINDOWHEIGHT:
@@ -60,17 +57,7 @@ while y < constants.WINDOWHEIGHT:
             grid_member = Box(x, y)
             grid_member.check_possible_moves(x, y)
             grid_group.add(grid_member)
-            
-            # These if-statements are for specific cases
-            if y == constants.SPRITEHEIGHT*4:
-                if not x in columns:
-                    pellet_group.add(Pellet(selected_area.centerx, selected_area.centery))
-            elif not (y >= constants.SPRITEHEIGHT*10 and y <= constants.SPRITEHEIGHT*20):
-                pellet_group.add(Pellet(selected_area.centerx, selected_area.centery))
-            else:
-                if x == constants.SPRITEWIDTH*6 or x == constants.SPRITEWIDTH*21:
-                    pellet_group.add(Pellet(selected_area.centerx, selected_area.centery))
-           
+        
         x += 16
     y += 16
     x = 0
@@ -78,15 +65,60 @@ while y < constants.WINDOWHEIGHT:
 # Initialize Pacman
 pacman = Pacman(224, 384, MOVESPEED) # 16 * 14, 16 * 24
 pacman_group = pygame.sprite.GroupSingle(pacman)
-
+    
 # Initialize Ghosts
 ghost_group = pygame.sprite.Group()
 ghost_group.add(Ghost(208, 384))
-
+    
 # Initialize movement variable
 movement = 'R'
 last_movement = 'R'
+        
 
+def create_pellets():
+    # Goes through the entire map and outlines which 16x16 areas are black
+    # This identifies where Pacman and Pellets can and cannot go
+    list = [3, 4, 8, 9, 10, 17, 18, 19, 23, 24]
+    columns = [i * constants.SPRITEWIDTH for i in list]
+    x = 0
+    y = 16
+    while y < constants.WINDOWHEIGHT:
+        while x < constants.WINDOWWIDTH:
+            # 16x16 area used for cropping
+            selected_area = pygame.Rect(x, y, 16, 16)
+            
+            # Creates a cropped image from the background
+            cropped_image = background.subsurface(selected_area)
+            
+            # If the cropped image's color is BLACK
+            if pygame.transform.average_color(cropped_image)[:3] == constants.BLACK:
+                # Create grid for movement
+                grid_member = Box(x, y)
+                grid_member.check_possible_moves(x, y)
+                grid_group.add(grid_member)
+                
+                # These if-statements are for specific cases
+                if y == constants.SPRITEHEIGHT*4:
+                    if not x in columns:
+                        pellet_group.add(Pellet(selected_area.centerx, selected_area.centery))
+                elif not (y >= constants.SPRITEHEIGHT*10 and y <= constants.SPRITEHEIGHT*20):
+                    pellet_group.add(Pellet(selected_area.centerx, selected_area.centery))
+                else:
+                    if x == constants.SPRITEWIDTH*6 or x == constants.SPRITEWIDTH*21:
+                        pellet_group.add(Pellet(selected_area.centerx, selected_area.centery))
+            
+            x += 16
+        y += 16
+        x = 0
+
+
+def load_game():
+    window.blit(background, (0, 0))
+    pellet_group.empty()
+    
+    create_pellets()
+    
+    
 def update_window():
     """Updates the window by redrawing the background and sprites"""
 
@@ -99,6 +131,7 @@ def update_window():
     # Update the display
     pygame.display.update()
     mainClock.tick(40)
+    
 
 def transport_right(sprite):
     """Transports sprite from the right side of the window to the left side"""
@@ -115,6 +148,7 @@ def transport_right(sprite):
         
     sprite.rect = pygame.Rect(16 * 1, 16 * 15, 16, 16)
     
+    
 def transport_left(sprite):
     """Transports sprite from the left side of the window to the right side"""
     
@@ -130,7 +164,11 @@ def transport_left(sprite):
         
     sprite.rect = pygame.Rect(16 * 26, 16 * 15, 16, 16)
 
-# Main loop
+    
+load_game()
+###############################################################################
+##########                     MAIN GAME LOOP                        ##########
+###############################################################################
 while True:
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -178,6 +216,9 @@ while True:
             pygame.display.update()
             pacman.death()
             Retry()
+            load_game()
+            movement = 'R'
+            last_movement = 'R'
     
     # Transport Pacman if Pacman collides with either transporter
     if pygame.sprite.spritecollide(pacman, l_transporter, False):
