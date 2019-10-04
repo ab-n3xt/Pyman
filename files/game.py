@@ -2,12 +2,10 @@ import os, sys, pygame
 
 from pygame.locals import *
 
-from Pellet import Pellet
-from Pacman import Pacman
-from Box import Box
 from Start import Start
 from Retry import Retry
-from Ghost import Ghost
+
+from Sprites import Box, Ghost, Pacman, Pellet
 
 # Initialize Pygame
 pygame.init()
