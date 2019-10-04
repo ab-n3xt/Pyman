@@ -39,8 +39,6 @@ class Start(object):
         quit_rect = quit.get_rect()
         quit_rect.centerx = WINDOWWIDTH/2
         quit_rect.centery = 408
-
-        window.blit(pacman_title, pacman_title_rect)
         
         # Create Start Text
         start_text = font.render("START", True, GREEN)
@@ -54,6 +52,7 @@ class Start(object):
         quit_text_rect.centerx = quit_rect.centerx
         quit_text_rect.centery = quit_rect.centery
         
+        window.blit(pacman_title, pacman_title_rect)
         window.blit(start_text, start_text_rect)
         window.blit(quit_text, quit_text_rect)
 
@@ -70,4 +69,55 @@ class Start(object):
                         pygame.quit()
                         sys.exit()
                     elif start_rect.collidepoint(x, y):
+                        return
+                        
+                        
+
+class Retry(object):
+	
+    def __init__(self):
+        # Constants
+        WINDOWWIDTH = 448 #(16 * 28) (row numbers range from 0 - 27)
+        WINDOWHEIGHT = 512 #(16 * 32) (column numbers range from 0 - 31)
+
+        # Colors
+        BLACK = (0, 0, 0)
+        WHITE = (255, 255, 255)
+        GREEN = (0, 255, 0)
+        RED = (255, 0, 0)
+
+        # Initialize window
+        window = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), 0, 32)
+        window.fill(BLACK)
+
+        # Create Retry Button
+        retry = pygame.Surface((192, 48))
+        retry.fill(GREEN)
+        retry_rect = retry.get_rect()
+        retry_rect.centerx = 112
+        retry_rect.centery = 352
+
+        # Create Quit Button
+        quit = pygame.Surface((192, 48))
+        quit.fill(RED)
+        quit_rect = quit.get_rect()
+        quit_rect.centerx = 336
+        quit_rect.centery = 352
+
+        window.blit(retry, retry_rect)
+        window.blit(quit, quit_rect)
+
+        pygame.display.update()
+
+        while True:
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == MOUSEBUTTONDOWN:
+                    x, y = event.pos
+                    if quit_rect.collidepoint(x, y):
+                        pygame.quit()
+                        sys.exit()
+                    elif retry_rect.collidepoint(x, y):
                         return

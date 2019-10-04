@@ -2,9 +2,8 @@ import os, sys, pygame
 
 from pygame.locals import *
 
-from Start import Start
-from Retry import Retry
-
+# from Start import Start
+from Menus import Start, Retry
 from Sprites import Box, Ghost, Pacman, Pellet
 
 # Initialize Pygame
