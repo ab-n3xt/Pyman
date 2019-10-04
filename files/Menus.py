@@ -89,23 +89,36 @@ class Retry(object):
         # Initialize window
         window = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), 0, 32)
         window.fill(BLACK)
+        
+        # Initialize font
+        font = pygame.font.Font("../font/minecraft.ttf", 36)
 
         # Create Retry Button
         retry = pygame.Surface((192, 48))
-        retry.fill(GREEN)
         retry_rect = retry.get_rect()
         retry_rect.centerx = 112
         retry_rect.centery = 352
 
         # Create Quit Button
         quit = pygame.Surface((192, 48))
-        quit.fill(RED)
         quit_rect = quit.get_rect()
         quit_rect.centerx = 336
         quit_rect.centery = 352
+        
+        # Create Retry Text
+        retry_text = font.render("RETRY", True, GREEN)
+        retry_text_rect = retry_text.get_rect()
+        retry_text_rect.centerx = retry_rect.centerx
+        retry_text_rect.centery = retry_rect.centery
+        
+        # Create Quit Text
+        quit_text = font.render("QUIT", True, RED)
+        quit_text_rect = quit_text.get_rect()
+        quit_text_rect.centerx = quit_rect.centerx
+        quit_text_rect.centery = quit_rect.centery
 
-        window.blit(retry, retry_rect)
-        window.blit(quit, quit_rect)
+        window.blit(retry_text, retry_text_rect)
+        window.blit(quit_text, quit_text_rect)
 
         pygame.display.update()
 
