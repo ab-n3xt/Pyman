@@ -95,7 +95,7 @@ class Ghost(pygame.sprite.Sprite):
 
 class Pacman(pygame.sprite.Sprite):
     
-    def __init__(self, x, y, speed, collisions):
+    def __init__(self, x, y, speed):
         # Call the parent class constructor
         pygame.sprite.Sprite.__init__(self)
         

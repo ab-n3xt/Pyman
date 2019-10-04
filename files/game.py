@@ -86,7 +86,7 @@ while y < constants.WINDOWHEIGHT:
     x = 0
     
 # Initialize Pacman
-pacman = Pacman(224, 384, MOVESPEED, box_group) # 16 * 14, 16 * 24
+pacman = Pacman(224, 384, MOVESPEED) # 16 * 14, 16 * 24
 pacman_group = pygame.sprite.GroupSingle(pacman)
 
 # Initialize Ghosts
