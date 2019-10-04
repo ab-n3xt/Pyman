@@ -1,4 +1,4 @@
-import os, sys, pygame
+import os, sys, pygame, constants
 
 from pygame.locals import *
 
@@ -16,17 +16,10 @@ mainClock = pygame.time.Clock()
 Start()
 
 # Constants
-WINDOWWIDTH = 448 #(16 * 28) (row numbers range from 0 - 27)
-WINDOWHEIGHT = 512 #(16 * 32) (column numbers range from 0 - 31)
-SPRITEWIDTH = 16
-SPRITEHEIGHT = 16
 LIVES = 3
 
 # Initialize window
-window = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), 0, 32)
-
-# Initialize colours
-BLACK = (0, 0, 0)
+window = pygame.display.set_mode((constants.WINDOWWIDTH, constants.WINDOWHEIGHT), 0, 32)
 
 # Set background
 background = pygame.image.load('../sprites/pacman-level.png')
@@ -60,11 +53,11 @@ r_transporter = pygame.sprite.GroupSingle(Box(16 * 27, 16 * 15))
 # Goes through the entire map and outlines which 16x16 areas are black
 # This identifies where Pacman and Pellets can and cannot go
 list = [3, 4, 8, 9, 10, 17, 18, 19, 23, 24]
-columns = [i * SPRITEWIDTH for i in list]
+columns = [i * constants.SPRITEWIDTH for i in list]
 x = 0
 y = 16
-while y < WINDOWHEIGHT:
-    while x < WINDOWWIDTH:
+while y < constants.WINDOWHEIGHT:
+    while x < constants.WINDOWWIDTH:
         # 16x16 area used for cropping
         selected_area = pygame.Rect(x, y, 16, 16)
         
@@ -72,20 +65,20 @@ while y < WINDOWHEIGHT:
         cropped_image = background.subsurface(selected_area)
         
         # If the cropped image's color is BLACK
-        if pygame.transform.average_color(cropped_image)[:3] == BLACK:
+        if pygame.transform.average_color(cropped_image)[:3] == constants.BLACK:
             # Create grid for movement
             grid_member = Box(x, y)
             grid_member.check_possible_moves(x, y)
             grid_group.add(grid_member)
             
             # These if-statements are for specific cases
-            if y == SPRITEHEIGHT*4:
+            if y == constants.SPRITEHEIGHT*4:
                 if not x in columns:
                     pellet_group.add(Pellet(selected_area.centerx, selected_area.centery))
-            elif not (y >= SPRITEHEIGHT*10 and y <= SPRITEHEIGHT*20):
+            elif not (y >= constants.SPRITEHEIGHT*10 and y <= constants.SPRITEHEIGHT*20):
                 pellet_group.add(Pellet(selected_area.centerx, selected_area.centery))
             else:
-                if x == SPRITEWIDTH*6 or x == SPRITEWIDTH*21:
+                if x == constants.SPRITEWIDTH*6 or x == constants.SPRITEWIDTH*21:
                     pellet_group.add(Pellet(selected_area.centerx, selected_area.centery))
            
         x += 16
@@ -139,9 +132,9 @@ def transport_left(sprite):
         sprite.rect.left -= 10
         update_window()
         
-    sprite.rect.left = WINDOWWIDTH
+    sprite.rect.left = constants.WINDOWWIDTH
     
-    while sprite.rect.right >= WINDOWWIDTH:
+    while sprite.rect.right >= constants.WINDOWWIDTH:
         sprite.rect.left -= 10
         update_window()
         
@@ -191,7 +184,7 @@ while True:
         if ghost.isVulnerable:
             ghost.kill()
         else:
-            window.fill(BLACK)
+            window.fill(constants.BLACK)
             pygame.display.update()
             pacman.death()
             Retry()
