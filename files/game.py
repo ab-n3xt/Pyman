@@ -30,9 +30,6 @@ window = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), 0, 32)
 
 # Initialize colours
 BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
 
 # Set background
 background = pygame.image.load('../sprites/pacman-level.png')
@@ -60,8 +57,8 @@ grid_group = pygame.sprite.Group()
 pellet_group = pygame.sprite.Group()
 
 # Teleporters
-l_transporter = pygame.sprite.GroupSingle(Box(0, 16 * 15, BLUE))
-r_transporter = pygame.sprite.GroupSingle(Box(16 * 27, 16 * 15, BLUE))
+l_transporter = pygame.sprite.GroupSingle(Box(0, 16 * 15))
+r_transporter = pygame.sprite.GroupSingle(Box(16 * 27, 16 * 15))
 
 # Goes through the entire map and outlines which 16x16 areas are black
 # This identifies where Pacman and Pellets can and cannot go
@@ -80,7 +77,7 @@ while y < WINDOWHEIGHT:
         # If the cropped image's color is BLACK
         if pygame.transform.average_color(cropped_image)[:3] == BLACK:
             # Create grid for movement
-            grid_member = Box(x, y, GREEN)
+            grid_member = Box(x, y)
             grid_member.check_possible_moves(x, y)
             grid_group.add(grid_member)
             
