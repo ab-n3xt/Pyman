@@ -4,7 +4,7 @@ from pygame.locals import *
 
 class Box(pygame.sprite.Sprite):
 
-    def __init__(self, x, y, color):
+    def __init__(self, x, y):
         # Call the parent class constructor
         pygame.sprite.Sprite.__init__(self)
         
@@ -13,7 +13,6 @@ class Box(pygame.sprite.Sprite):
         
         # Create a 16x16 surface and fill it with the color RED
         self.image = pygame.Surface([16, 16])
-        self.image.fill(color)
         
         self.valid_moves = []
         
