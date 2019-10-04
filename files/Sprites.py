@@ -66,6 +66,7 @@ class Box(pygame.sprite.Sprite):
         except ValueError:
             pass
 
+
 class Ghost(pygame.sprite.Sprite):
 
     def __init__(self, x, y):
@@ -90,7 +91,6 @@ class Ghost(pygame.sprite.Sprite):
             
     def triggerVulnerability(self):
         self.isVulnerable = True
-
 
 
 class Pacman(pygame.sprite.Sprite):
