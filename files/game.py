@@ -117,6 +117,7 @@ def load_game():
     pellet_group.empty()
     
     create_pellets()
+    pacman.reset_pos()
     
     
 def update_window():
