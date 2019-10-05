@@ -138,6 +138,10 @@ class Pacman(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         
+        # Default coordinates when the game restarts
+        self.defaultx = x
+        self.defaulty = y
+        
         # Setting the pixels per loop of the sprite
         self.speed = speed
         
@@ -182,6 +186,10 @@ class Pacman(pygame.sprite.Sprite):
             time.sleep(0.5)
         
         time.sleep(1)
+        
+    def reset_pos(self):
+        self.rect.x = self.defaultx
+        self.rect.y = self.defaulty
         
 
 class Pellet(pygame.sprite.Sprite):
