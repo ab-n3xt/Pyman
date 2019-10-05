@@ -17,6 +17,11 @@ Start()
 
 # Constants
 LIVES = 3
+POINTS = 0
+
+# text
+basic_font = pygame.font.Font("../font/minecraft.ttf", 18)
+text = basic_font.render("POINTS: {}".format(POINTS), True, constants.WHITE)
 
 # Initialize window
 window = pygame.display.set_mode((constants.WINDOWWIDTH, constants.WINDOWHEIGHT), 0, 32)
@@ -68,7 +73,7 @@ pacman_group = pygame.sprite.GroupSingle(pacman)
     
 # Initialize Ghosts
 ghost_group = pygame.sprite.Group()
-ghost_group.add(Ghost(208, 384))
+ghost_group.add(Ghost(208, 288))
     
 # Initialize movement variable
 movement = 'R'
@@ -113,10 +118,15 @@ def create_pellets():
 
 
 def load_game():
+    """Loads all sprites and """    
+    # Creates the map
     window.blit(background, (0, 0))
-    pellet_group.empty()
     
+    # Creates the pellets
+    pellet_group.empty()
     create_pellets()
+    
+    # Sets Pacman to its default position
     pacman.reset_pos()
     
     
@@ -128,6 +138,10 @@ def update_window():
     pellet_group.draw(window)
     pacman_group.draw(window)
     ghost_group.draw(window)
+    
+    # Redraw the text
+    text = basic_font.render("POINTS: {}".format(POINTS), True, constants.WHITE)
+    window.blit(text, (0, 0))
     
     # Update the display
     pygame.display.update()
@@ -202,7 +216,14 @@ while True:
     
     # Check if Pacman collided with any Pellets
     # True = Pellet will be destroyed when collided with
-    pygame.sprite.spritecollide(pacman, pellet_group, True)
+    eaten_pellets = pygame.sprite.spritecollide(pacman, pellet_group, True)
+    for pellet in eaten_pellets:
+        POINTS += 10
+        
+    # Check if all Pellets are eaten
+    if len(pellet_group) == 0:
+        pygame.quit()
+        sys.exit()
     
     # check if Pacman collided with any Ghosts
     # If so, check if they are vulnerable
@@ -220,6 +241,7 @@ while True:
             load_game()
             movement = 'R'
             last_movement = 'R'
+            POINTS = 0
     
     # Transport Pacman if Pacman collides with either transporter
     if pygame.sprite.spritecollide(pacman, l_transporter, False):
