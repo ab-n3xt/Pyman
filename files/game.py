@@ -1,4 +1,4 @@
-import os, sys, pygame, constants
+import os, sys, pygame, constants, time
 
 from pygame.locals import *
 
@@ -20,7 +20,7 @@ LIVES = 3
 POINTS = 0
 
 # text
-basic_font = pygame.font.Font("../font/minecraft.ttf", 16)
+basic_font = pygame.font.Font("../font/joystix.ttf", 14)
 text = basic_font.render("POINTS: {}".format(POINTS), True, constants.WHITE)
 
 # Initialize window
@@ -73,7 +73,7 @@ pacman_group = pygame.sprite.GroupSingle(pacman)
     
 # Initialize Ghosts
 ghost_group = pygame.sprite.Group()
-ghost_group.add(Ghost(208, 288))
+ghost_group.add(Ghost(208, 192)) # 208, 288
     
 # Initialize movement variable
 movement = 'R'
@@ -122,9 +122,20 @@ def load_game():
     # Creates the map
     window.blit(background, (0, 0))
     
-    # Creates the pellets
+    # Create the pellets
     pellet_group.empty()
     create_pellets()
+    
+    # Draw all sprites
+    pellet_group.draw(window)
+    pacman_group.draw(window)
+    ghost_group.draw(window)
+    
+    # "Ready" Message
+    text = basic_font.render("READY!".format(POINTS), True, constants.YELLOW)
+    window.blit(text, (192, 288))
+    pygame.display.update()
+    time.sleep(2.5)
     
     # Sets Pacman to its default position
     pacman.reset_pos()
