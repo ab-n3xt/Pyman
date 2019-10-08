@@ -11,7 +11,7 @@ class Start(object):
         window.fill(constants.BLACK)
         
         # Initialize font
-        font = pygame.font.Font("../font/minecraft.ttf", 36)
+        font = pygame.font.Font("../font/joystix.ttf", 36)
 
         # Create Title
         pacman_title = pygame.image.load("../sprites/pyman_title.png")
