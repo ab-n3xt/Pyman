@@ -96,12 +96,7 @@ def create_pellets():
             cropped_image = background.subsurface(selected_area)
             
             # If the cropped image's color is BLACK
-            if pygame.transform.average_color(cropped_image)[:3] == constants.BLACK:
-                # Create grid for movement
-                grid_member = Box(x, y)
-                grid_member.check_possible_moves(x, y)
-                grid_group.add(grid_member)
-                
+            if pygame.transform.average_color(cropped_image)[:3] == constants.BLACK:                
                 # These if-statements are for specific cases
                 if y == constants.SPRITEHEIGHT*4:
                     if not x in columns:
@@ -122,6 +117,9 @@ def load_game():
     # Creates the map
     window.blit(background, (0, 0))
     
+    # Sets Pacman to its default position
+    pacman.reset_pos()
+    
     # Create the pellets
     pellet_group.empty()
     create_pellets()
@@ -136,9 +134,26 @@ def load_game():
     window.blit(text, (192, 288))
     pygame.display.update()
     time.sleep(2.5)
+
+    
+def continue_game():
+    """Loads sprites and leaves pellets the same"""
+    # Creates the map
+    window.blit(background, (0, 0))
     
     # Sets Pacman to its default position
     pacman.reset_pos()
+    
+    # Draw all sprites
+    pellet_group.draw(window)
+    pacman_group.draw(window)
+    ghost_group.draw(window)
+    
+    # "Ready" Message
+    text = basic_font.render("READY!".format(POINTS), True, constants.YELLOW)
+    window.blit(text, (192, 288))
+    pygame.display.update()
+    time.sleep(2.5)
     
     
 def update_window():
@@ -240,8 +255,9 @@ while True:
         
     # Check if all Pellets are eaten
     if len(pellet_group) == 0:
-        pygame.quit()
-        sys.exit()
+        load_game()
+        movement = 'R'
+        last_movement = 'R'
     
     # check if Pacman collided with any Ghosts
     # If so, check if they are vulnerable
@@ -254,13 +270,18 @@ while True:
         else:
             window.fill(constants.BLACK)
             pygame.display.update()
+            LIVES -= 1
             pacman.death()
-            Retry()
-            load_game()
+            if LIVES == 0:
+                Retry()
+                load_game()
+                POINTS = 0
+                LIVES = 3            
+            else:
+                continue_game()
+            
             movement = 'R'
             last_movement = 'R'
-            POINTS = 0
-            LIVES -= 1
     
     # Transport Pacman if Pacman collides with either transporter
     if pygame.sprite.spritecollide(pacman, l_transporter, False):
