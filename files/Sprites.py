@@ -183,11 +183,12 @@ class Pacman(pygame.sprite.Sprite):
             self.image = pygame.image.load(image)
             self.surface.blit(self.image, self.rect)
             pygame.display.update()
-            time.sleep(0.5)
+            time.sleep(0.1)
         
         time.sleep(1)
         
     def reset_pos(self):
+        self.image = self.directions['R']
         self.rect.x = self.defaultx
         self.rect.y = self.defaulty
         
