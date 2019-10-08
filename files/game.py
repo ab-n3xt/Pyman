@@ -20,7 +20,7 @@ LIVES = 3
 POINTS = 0
 
 # text
-basic_font = pygame.font.Font("../font/minecraft.ttf", 18)
+basic_font = pygame.font.Font("../font/minecraft.ttf", 16)
 text = basic_font.render("POINTS: {}".format(POINTS), True, constants.WHITE)
 
 # Initialize window
@@ -118,7 +118,7 @@ def create_pellets():
 
 
 def load_game():
-    """Loads all sprites and """    
+    """Loads map and pellets"""    
     # Creates the map
     window.blit(background, (0, 0))
     
@@ -141,7 +141,14 @@ def update_window():
     
     # Redraw the text
     text = basic_font.render("POINTS: {}".format(POINTS), True, constants.WHITE)
-    window.blit(text, (0, 0))
+    window.blit(text, (1, 1))
+    
+    # Redraw the life system
+    x = 16 * 20
+    for _ in range(LIVES):
+        sprite = pygame.image.load('../sprites/pacman-2.png')
+        window.blit(sprite, (x, 0))
+        x += 16
     
     # Update the display
     pygame.display.update()
@@ -242,6 +249,7 @@ while True:
             movement = 'R'
             last_movement = 'R'
             POINTS = 0
+            LIVES -= 1
     
     # Transport Pacman if Pacman collides with either transporter
     if pygame.sprite.spritecollide(pacman, l_transporter, False):
