@@ -43,10 +43,6 @@ pellet_group = pygame.sprite.Group()
 
 # Magic Pellets
 magic_pellet_group = pygame.sprite.Group()
-coordinates = [(16*1, 16*4), (16*26, 16*4), (16*1, 16*24), (16*26, 16*24)]
-for (x, y) in coordinates:
-    selected_area = pygame.Rect(x, y, 16, 16)
-    magic_pellet_group.add(Magic_Pellet(selected_area.centerx, selected_area.centery))
 
 # Teleporters
 l_transporter = pygame.sprite.GroupSingle(Box(0, 16 * 15))
@@ -131,8 +127,16 @@ def load_game():
     pellet_group.empty()
     create_pellets()
     
+    # Create the magic pellets
+    magic_pellet_group.empty()
+    coordinates = [(16*1, 16*4), (16*26, 16*4), (16*1, 16*24), (16*26, 16*24)]
+    for (x, y) in coordinates:
+        selected_area = pygame.Rect(x, y, 16, 16)
+        magic_pellet_group.add(Magic_Pellet(selected_area.centerx, selected_area.centery))
+    
     # Draw all sprites
     pellet_group.draw(window)
+    magic_pellet_group.draw(window)
     pacman_group.draw(window)
     ghost_group.draw(window)
     
