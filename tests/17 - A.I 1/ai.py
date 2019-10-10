@@ -31,6 +31,10 @@ MOVESPEED = 16
 pacman = Pacman(224, 384, MOVESPEED) # 16 * 14, 16 * 24
 pacman_group = pygame.sprite.GroupSingle(pacman)
 
+# Initialize Ghost
+ghost = Ghost(224, 256, MOVESPEED)
+ghost_group = pygame.sprite.GroupSingle(ghost)
+
 # Initialize movement variable
 movement = 'R'
 
@@ -46,7 +50,7 @@ def update_window():
     # Redraw the background and sprites
     window.fill(BLACK)
     pacman_group.draw(window)
-    #ghost_group.draw(window)
+    ghost_group.draw(window)
     
     # Update the display
     pygame.display.update()
@@ -69,6 +73,19 @@ while True:
                 movement = 'R'
                 
     pacman_group.update(movement)
+    ghost_group.update((pacman.rect.x, pacman.rect.y))
+    
+    # check if Pacman collided with any Ghosts
+    # If so, check if they are vulnerable
+    # If true, destroy the sprite
+    # If not, quit the game
+    collided_ghosts = pygame.sprite.spritecollide(pacman, ghost_group, False)
+    for ghost in collided_ghosts:
+        if ghost.isVulnerable:
+            ghost.kill()
+        else:
+            pygame.quit()
+            sys.exit()
     
     # Update game
     update_window()
