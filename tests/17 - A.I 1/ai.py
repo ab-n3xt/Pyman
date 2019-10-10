@@ -1,10 +1,8 @@
 import os, sys, pygame
 
 from pygame.locals import *
-
-from Pellet import Pellet
 from Pacman import Pacman
-from Box import Box
+from Ghost import Ghost
 
 # Initialize Pygame
 pygame.init()
@@ -35,7 +33,6 @@ pacman_group = pygame.sprite.GroupSingle(pacman)
 
 # Initialize movement variable
 movement = 'R'
-last_movement = 'R'
 
 # Draw Pacman onto the window
 pacman_group.draw(window)
@@ -47,8 +44,9 @@ def update_window():
     """Updates the window by redrawing the background and sprites"""
 
     # Redraw the background and sprites
+    window.fill(BLACK)
     pacman_group.draw(window)
-    ghost_group.draw(window)
+    #ghost_group.draw(window)
     
     # Update the display
     pygame.display.update()
@@ -71,13 +69,6 @@ while True:
                 movement = 'R'
                 
     pacman_group.update(movement)
-    ghost_group.update(movement)
-       
-    # Transport Pacman if Pacman collides with either transporter
-    if pygame.sprite.spritecollide(pacman, l_transporter, False):
-        transport_left(pacman)
-    elif pygame.sprite.spritecollide(pacman, r_transporter, False):
-        transport_right(pacman)
     
     # Update game
     update_window()
