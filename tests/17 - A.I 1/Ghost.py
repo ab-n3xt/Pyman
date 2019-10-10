@@ -4,7 +4,7 @@ from pygame.locals import *
 
 class Ghost(pygame.sprite.Sprite):
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, speed):
         # Call the parent class constructor
         pygame.sprite.Sprite.__init__(self)
         
@@ -14,17 +14,18 @@ class Ghost(pygame.sprite.Sprite):
         # Get the sprite and set the x+y coordinates
         self.image = pygame.image.load('../../sprites/red.png')
         self.rect = self.image.get_rect()
-        self.rect.centerx = x
-        self.rect.centery = y
+        self.rect.x = x
+        self.rect.y = y
         
         # Set Vulnerable state to False
         self.isVulnerable = False
         
-    def update(self):
-        if self.isVulnerable:
-            self.image = pygame.image.load('../../sprites/v-ghost.png')
-            
-    def triggerVulnerability(self):
-        self.isVulnerable = True
+        self.speed = speed
+        
+    def update(self, coordinates):
+        x = coordinates[0]
+        y = coordinates[1]
+        
+        distance = 
         
     
