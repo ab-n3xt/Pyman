@@ -4,7 +4,7 @@ from pygame.locals import *
 
 # from Start import Start
 from Menus import Start, Retry
-from Sprites import Box, Ghost, Pacman, Pellet
+from Sprites import Box, Ghost, Pacman, Pellet, Magic_Pellet
 
 # Initialize Pygame
 pygame.init()
@@ -40,6 +40,13 @@ grid_group = pygame.sprite.Group()
 # Pellets
 # To create a Pellet object: Pellet(x, y)
 pellet_group = pygame.sprite.Group()
+
+# Magic Pellets
+magic_pellet_group = pygame.sprite.Group()
+coordinates = [(16*1, 16*4), (16*26, 16*4), (16*1, 16*24), (16*26, 16*24)]
+for (x, y) in coordinates:
+    selected_area = pygame.Rect(x, y, 16, 16)
+    magic_pellet_group.add(Magic_Pellet(selected_area.centerx, selected_area.centery))
 
 # Teleporters
 l_transporter = pygame.sprite.GroupSingle(Box(0, 16 * 15))
@@ -162,6 +169,7 @@ def update_window():
     # Redraw the background and sprites
     window.blit(background, (0, 0))
     pellet_group.draw(window)
+    magic_pellet_group.draw(window)
     pacman_group.draw(window)
     ghost_group.draw(window)
     
@@ -253,6 +261,15 @@ while True:
     for pellet in eaten_pellets:
         POINTS += 10
         
+    # Check if Pacman collided with any Magic Pellets
+    # True = Magic Pellet will be destroyed when collided with
+    eaten_magic_pellets = pygame.sprite.spritecollide(pacman, magic_pellet_group, True)
+    for magic_pellet in eaten_magic_pellets:
+        POINTS += 10
+        for ghost in ghost_group:
+            ghost.triggerVulnerability()
+        ghost_group.update()
+        
     # Check if all Pellets are eaten
     if len(pellet_group) == 0:
         load_game()
@@ -267,6 +284,7 @@ while True:
     for ghost in collided_ghosts:
         if ghost.isVulnerable:
             ghost.kill()
+            POINTS += 50
         else:
             window.fill(constants.BLACK)
             pygame.display.update()
