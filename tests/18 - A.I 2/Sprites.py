@@ -1,4 +1,4 @@
-import pygame, time
+import pygame, time, math
 
 from pygame.locals import *
 
@@ -69,7 +69,7 @@ class Box(pygame.sprite.Sprite):
 
 class Ghost(pygame.sprite.Sprite):
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, speed):
         # Call the parent class constructor
         pygame.sprite.Sprite.__init__(self)
         
@@ -85,13 +85,67 @@ class Ghost(pygame.sprite.Sprite):
         # Set Vulnerable state to False
         self.isVulnerable = False
         
+        # Speed of sprite
+        self.speed = speed
+        
+        self.current_direction = None
+        
+    def triggerVulnerability(self):
+        self.isVulnerable = True
+        
     def update(self):
         if self.isVulnerable:
             self.image = pygame.image.load('../../sprites/v-ghost.png')
             
-    def triggerVulnerability(self):
-        self.isVulnerable = True
-
+        if self.current_direction[0] == 'U':
+            self.rect.top -= self.speed
+        elif self.current_direction[0] == 'D':
+            self.rect.bottom += self.speed
+        elif self.current_direction[0] == 'L':
+            self.rect.left -= self.speed
+        elif self.current_direction[0] == 'R':
+            self.rect.right += self.speed
+        
+    def determine_direction(self, x, y, valid_moves):
+        """
+            Parameters:
+                - x             : Pacman's x value
+                - y             : Pacman's y value
+                - valid_moves   : List of valid movements from the Ghost's current grid
+        """
+        
+        distance = math.sqrt(math.pow(x - self.rect.x, 2) + math.pow(y - self.rect.y, 2))
+        
+        list_of_new_distances = {}
+        
+        for move in valid_moves:
+            if move == 'U':
+                self.rect.top -= self.speed
+                list_of_new_distances['U'] = math.sqrt(math.pow(x - self.rect.x, 2) + math.pow(y - self.rect.y, 2))
+                self.rect.top += self.speed
+            elif move == 'D':
+                self.rect.bottom += self.speed
+                list_of_new_distances['D'] = math.sqrt(math.pow(x - self.rect.x, 2) + math.pow(y - self.rect.y, 2))
+                self.rect.bottom -= self.speed
+            elif move == 'L':
+                self.rect.left -= self.speed
+                list_of_new_distances['L'] = math.sqrt(math.pow(x - self.rect.x, 2) + math.pow(y - self.rect.y, 2))
+                self.rect.left += self.speed
+            elif move == 'R':
+                self.rect.right += self.speed
+                list_of_new_distances['R'] = math.sqrt(math.pow(x - self.rect.x, 2) + math.pow(y - self.rect.y, 2))
+                self.rect.right -= self.speed
+        
+        self.current_direction = None
+        for key in list_of_new_distances:
+            dir = key
+            val = list_of_new_distances[key]
+            if self.current_direction == None:
+                self.current_direction = [dir, val - distance]
+            else:
+                if (val - distance) < self.current_direction[1]:
+                    self.current_direction = [dir, val - distance]
+                    
 
 class Pacman(pygame.sprite.Sprite):
     
