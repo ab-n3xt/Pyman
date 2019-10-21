@@ -75,8 +75,8 @@ pacman = Pacman(224, 384, MOVESPEED) # 16 * 14, 16 * 24
 pacman_group = pygame.sprite.GroupSingle(pacman)
     
 # Initialize Ghosts
-ghost_group = pygame.sprite.Group()
-ghost_group.add(Ghost(208, 192)) # 208, 288
+ghost = Ghost(208, 192, MOVESPEED)
+ghost_group = pygame.sprite.Group(ghost)
     
 # Initialize movement variable
 movement = 'R'
@@ -245,19 +245,33 @@ while True:
                 movement = 'R'
                 
     # Updates Pacman's movement
-    current_grid_location = pygame.sprite.spritecollide(pacman, grid_group, False)
-    grid_member = current_grid_location.pop()
-    if movement in grid_member.valid_moves:
-        for x in range(4):
+    pacman_current_grid = pygame.sprite.spritecollide(pacman, grid_group, False)
+    p_grid = pacman_current_grid.pop()
+    
+    # Updates Ghost's movement
+    ghost_current_grid = pygame.sprite.spritecollide(ghost, grid_group, False)
+    g_grid = ghost_current_grid.pop()
+    ghost.determine_direction(pacman.rect.x, pacman.rect.y, g_grid.valid_moves)
+    
+    # Update sprites
+    if movement in p_grid.valid_moves:
+        for _ in range(4):
             pacman_group.update(movement)
+            ghost_group.update()
             update_window()
 
         last_movement = movement
     else:
-        if last_movement in grid_member.valid_moves:
-            for x in range(4):
+        if last_movement in p_grid.valid_moves:
+            for _ in range(4):
                 pacman_group.update(last_movement)
+                ghost_group.update()
                 update_window()
+        else:
+            for _ in range(4):
+                ghost_group.update()
+                update_window()
+
     
     # Check if Pacman collided with any Pellets
     # True = Pellet will be destroyed when collided with
