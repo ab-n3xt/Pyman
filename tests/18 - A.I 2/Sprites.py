@@ -82,6 +82,9 @@ class Ghost(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         
+        self.defaultx = x
+        self.defaulty = y
+        
         # Set Vulnerable state to False
         self.isVulnerable = False
         
@@ -105,6 +108,10 @@ class Ghost(pygame.sprite.Sprite):
             self.rect.left -= self.speed
         elif self.current_direction[0] == 'R':
             self.rect.right += self.speed
+            
+    def reset_pos(self):
+        self.rect.x = self.defaultx
+        self.rect.y = self.defaulty
         
     def determine_direction(self, x, y, valid_moves):
         """
