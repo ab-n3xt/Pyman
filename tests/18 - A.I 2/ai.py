@@ -152,8 +152,9 @@ def continue_game():
     # Creates the map
     window.blit(background, (0, 0))
     
-    # Sets Pacman to its default position
+    # Sets Pacman & Ghost to their default position
     pacman.reset_pos()
+    ghost.reset_pos()
     
     # Draw all sprites
     pellet_group.draw(window)
