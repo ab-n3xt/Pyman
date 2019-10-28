@@ -113,45 +113,29 @@ class Ghost(pygame.sprite.Sprite):
         self.rect.x = self.defaultx
         self.rect.y = self.defaulty
         
-    def determine_direction(self, x, y, valid_moves):
+    def create_path(self, pacman, current_grid, grid_system, path):
         """
             Parameters:
-                - x             : Pacman's x value
-                - y             : Pacman's y value
-                - valid_moves   : List of valid movements from the Ghost's current grid
+                - pacman       : Pacman's current Box()
+                - current_grid : Ghost's current Box()
+                - grid_system  : list of all Box() in the game
+                - path         : array containing the directions
         """
         
-        distance = math.sqrt(math.pow(x - self.rect.x, 2) + math.pow(y - self.rect.y, 2))
-        
-        list_of_new_distances = {}
-        
-        for move in valid_moves:
-            if move == 'U':
-                self.rect.top -= self.speed
-                list_of_new_distances['U'] = math.sqrt(math.pow(x - self.rect.x, 2) + math.pow(y - self.rect.y, 2))
-                self.rect.top += self.speed
-            elif move == 'D':
-                self.rect.bottom += self.speed
-                list_of_new_distances['D'] = math.sqrt(math.pow(x - self.rect.x, 2) + math.pow(y - self.rect.y, 2))
-                self.rect.bottom -= self.speed
-            elif move == 'L':
-                self.rect.left -= self.speed
-                list_of_new_distances['L'] = math.sqrt(math.pow(x - self.rect.x, 2) + math.pow(y - self.rect.y, 2))
-                self.rect.left += self.speed
-            elif move == 'R':
-                self.rect.right += self.speed
-                list_of_new_distances['R'] = math.sqrt(math.pow(x - self.rect.x, 2) + math.pow(y - self.rect.y, 2))
-                self.rect.right -= self.speed
-        
-        self.current_direction = None
-        for key in list_of_new_distances:
-            dir = key
-            val = list_of_new_distances[key]
-            if self.current_direction == None:
-                self.current_direction = [dir, val - distance]
-            else:
-                if (val - distance) < self.current_direction[1]:
-                    self.current_direction = [dir, val - distance]
+        directions = current_grid.valid_moves()
+        for direction in directions:
+            if direction == 'U':
+                path.append('U')
+                for grid in grid_system:
+                    if grid.rect.x == current_grid.rect.x - 16 and grid.rect.y == current_grid.rect.y:
+                        current_grid = grid
+                        grid.remove(current_grid)
+                        break
+                
+                if current_grid == pacman:  
+                    return path
+                else:
+                    create_path(pacman, current_grid, grid_system, path)
                     
 
 class Pacman(pygame.sprite.Sprite):
