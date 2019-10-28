@@ -252,7 +252,7 @@ while True:
     # Updates Ghost's movement
     ghost_current_grid = pygame.sprite.spritecollide(ghost, grid_group, False)
     g_grid = ghost_current_grid.pop()
-    ghost.determine_direction(pacman.rect.x, pacman.rect.y, g_grid.valid_moves)
+    ghost.create_path(p_grid, g_grid, grid_group.copy(), [])
     
     # Update sprites
     if movement in p_grid.valid_moves:

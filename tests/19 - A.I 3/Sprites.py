@@ -91,7 +91,7 @@ class Ghost(pygame.sprite.Sprite):
         # Speed of sprite
         self.speed = speed
         
-        self.current_direction = None
+        self.path = None
         
     def triggerVulnerability(self):
         self.isVulnerable = True
@@ -100,13 +100,13 @@ class Ghost(pygame.sprite.Sprite):
         if self.isVulnerable:
             self.image = pygame.image.load('../../sprites/v-ghost.png')
             
-        if self.current_direction[0] == 'U':
+        if self.path[0] == 'U':
             self.rect.top -= self.speed
-        elif self.current_direction[0] == 'D':
+        elif self.path[0] == 'D':
             self.rect.bottom += self.speed
-        elif self.current_direction[0] == 'L':
+        elif self.path[0] == 'L':
             self.rect.left -= self.speed
-        elif self.current_direction[0] == 'R':
+        elif self.path[0] == 'R':
             self.rect.right += self.speed
             
     def reset_pos(self):
@@ -122,20 +122,44 @@ class Ghost(pygame.sprite.Sprite):
                 - path         : array containing the directions
         """
         
-        directions = current_grid.valid_moves()
+        directions = current_grid.valid_moves
         for direction in directions:
             if direction == 'U':
                 path.append('U')
                 for grid in grid_system:
+                    if grid.rect.x == current_grid.rect.x and grid.rect.y == current_grid.rect.y - 16:
+                        current_grid = grid
+                        current_grid.remove(grid_system)
+                        break
+            elif direction == 'D':
+                path.append('D')
+                for grid in grid_system:
+                    if grid.rect.x == current_grid.rect.x and grid.rect.y == current_grid.rect.y + 16:
+                        current_grid = grid
+                        current_grid.remove(grid_system)
+                        break
+            elif direction == 'L':
+                path.append('L')
+                for grid in grid_system:
                     if grid.rect.x == current_grid.rect.x - 16 and grid.rect.y == current_grid.rect.y:
                         current_grid = grid
-                        grid.remove(current_grid)
+                        current_grid.remove(grid_system)
+                        break
+            elif direction == 'R':
+                path.append('R')
+                for grid in grid_system:
+                    if grid.rect.x == current_grid.rect.x + 16 and grid.rect.y == current_grid.rect.y:
+                        current_grid = grid
+                        current_grid.remove(grid_system)
                         break
                 
-                if current_grid == pacman:  
-                    return path
-                else:
-                    create_path(pacman, current_grid, grid_system, path)
+                
+            if current_grid == pacman: # Box() is Pacman's
+                self.path = path
+            else: # Continue creating the path
+                self.create_path(pacman, current_grid, grid_system, path)
+                
+            return
                     
 
 class Pacman(pygame.sprite.Sprite):
