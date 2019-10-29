@@ -113,53 +113,25 @@ class Ghost(pygame.sprite.Sprite):
         self.rect.x = self.defaultx
         self.rect.y = self.defaulty
         
-    def create_path(self, pacman, current_grid, grid_system, path):
+    def create_path(self, pacman, untraversed, grid_system, path):
         """
             Parameters:
                 - pacman       : Pacman's current Box()
-                - current_grid : Ghost's current Box()
+                - untraversed  : list of untraversed Box()
                 - grid_system  : list of all Box() in the game
                 - path         : array containing the directions
         """
         
-        directions = current_grid.valid_moves
-        for direction in directions:
-            if direction == 'U':
-                path.append('U')
-                for grid in grid_system:
-                    if grid.rect.x == current_grid.rect.x and grid.rect.y == current_grid.rect.y - 16:
-                        current_grid = grid
-                        current_grid.remove(grid_system)
-                        break
-            elif direction == 'D':
-                path.append('D')
-                for grid in grid_system:
-                    if grid.rect.x == current_grid.rect.x and grid.rect.y == current_grid.rect.y + 16:
-                        current_grid = grid
-                        current_grid.remove(grid_system)
-                        break
-            elif direction == 'L':
-                path.append('L')
-                for grid in grid_system:
-                    if grid.rect.x == current_grid.rect.x - 16 and grid.rect.y == current_grid.rect.y:
-                        current_grid = grid
-                        current_grid.remove(grid_system)
-                        break
-            elif direction == 'R':
-                path.append('R')
-                for grid in grid_system:
-                    if grid.rect.x == current_grid.rect.x + 16 and grid.rect.y == current_grid.rect.y:
-                        current_grid = grid
-                        current_grid.remove(grid_system)
-                        break
+        while(current_grid != pacman): # while the Box() we arrive at isn't Pacman's Box()
+            # go through list of untraversed Box()
+            # go through each Box()'s valid_moves
+            # add each Box() to the untraversed list (add to a self.path variable for Box() to keep track of direction)
+            # loop again if any new Box() are not Pacman's Box()
+            
+            # check first box --> check two boxes beside first box -->
+            # if neither of these boxes are pacman, add them to the list so their valid_moves can be checked and remove the first box
+            # from the list --> then loop (until we find pacman's box)
                 
-                
-            if current_grid == pacman: # Box() is Pacman's
-                self.path = path
-            else: # Continue creating the path
-                self.create_path(pacman, current_grid, grid_system, path)
-                
-            return
                     
 
 class Pacman(pygame.sprite.Sprite):
