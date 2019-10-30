@@ -115,29 +115,51 @@ class Ghost(pygame.sprite.Sprite):
         self.rect.x = self.defaultx
         self.rect.y = self.defaulty
         
-    def create_path(self, pacman, untraversed, grid_system, path):
+    def create_path(self, pacman, untraversed, grid_system):
         """
             Parameters:
                 - pacman       : Pacman's current Box()
                 - untraversed  : list of untraversed Box()
                 - grid_system  : list of all Box() in the game
-                - path         : array containing the directions
         """
-        
-        while(current_grid != pacman): # while the Box() we arrive at isn't Pacman's Box()
-            # go through list of untraversed Box()
-            # go through each Box()'s valid_moves
-            # add each Box() to the untraversed list (add to a self.path variable for Box() to keep track of direction)
-            # loop again if any new Box() are not Pacman's Box()
+        for box in untraversed:
+            if box == pacman: # check if box being checked is where pacman is
+                self.path = box.path
+                print(f"WE GOT 'EM: {box.path}")
+                return
+                
+            for move in box.valid_moves:
+                if move == 'U':
+                    for grid in grid_system:
+                        if grid.rect.x == box.rect.x and grid.rect.y == box.rect.y - 16:
+                            grid.path = box.path + 'U' # keeps track of where it came from
+                            grid.remove(grid_system) # remove from grid_system
+                            untraversed.append(grid) # appends to end of untraversed list
+                            break
+                if move == 'D':
+                    for grid in grid_system:
+                        if grid.rect.x == box.rect.x and grid.rect.y == box.rect.y + 16:
+                            grid.path = box.path + 'D' # keeps track of where it came from
+                            grid.remove(grid_system) # remove from grid_system
+                            untraversed.append(grid) # appends to end of untraversed list
+                            break
+                if move == 'L':
+                    for grid in grid_system:
+                        if grid.rect.x == box.rect.x - 16 and grid.rect.y == box.rect.y:
+                            grid.path = box.path + 'L' # keeps track of where it came from
+                            grid.remove(grid_system) # remove from grid_system
+                            untraversed.append(grid) # appends to end of untraversed list
+                            break
+                if move == 'R':
+                    for grid in grid_system:
+                        if grid.rect.x == box.rect.x + 16 and grid.rect.y == box.rect.y:
+                            grid.path = box.path + 'R' # keeps track of where it came from
+                            grid.remove(grid_system) # remove from grid_system
+                            untraversed.append(grid) # appends to end of untraversed list
+                            break
             
-            # check first box --> check two boxes beside first box -->
-            # if neither of these boxes are pacman, add them to the list so their valid_moves can be checked and remove the first box
-            # from the list --> then loop (until we find pacman's box)
-            for box in untraversed:
-                for move in box.valid_moves:
-                    if move == 'U':
+            box.path = ''
                         
-                    
 
 class Pacman(pygame.sprite.Sprite):
     
