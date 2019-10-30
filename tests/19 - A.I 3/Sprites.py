@@ -125,7 +125,7 @@ class Ghost(pygame.sprite.Sprite):
         for box in untraversed:
             if box == pacman: # check if box being checked is where pacman is
                 self.path = box.path
-                print(f"WE GOT 'EM: {box.path}")
+                box.path = ''
                 return
                 
             for move in box.valid_moves:
