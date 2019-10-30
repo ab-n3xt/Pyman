@@ -21,6 +21,8 @@ class Box(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         
+        self.path = ''
+        
     def check_possible_moves(self, x, y):
         BLACK = (0, 0, 0)
         
@@ -131,7 +133,10 @@ class Ghost(pygame.sprite.Sprite):
             # check first box --> check two boxes beside first box -->
             # if neither of these boxes are pacman, add them to the list so their valid_moves can be checked and remove the first box
             # from the list --> then loop (until we find pacman's box)
-                
+            for box in untraversed:
+                for move in box.valid_moves:
+                    if move == 'U':
+                        
                     
 
 class Pacman(pygame.sprite.Sprite):
