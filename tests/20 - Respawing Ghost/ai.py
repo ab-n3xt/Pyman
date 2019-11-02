@@ -287,7 +287,6 @@ while True:
         POINTS += 10
         for ghost in ghost_group:
             ghost.triggerVulnerability()
-        ghost_group.update()
         
     # Check if all Pellets are eaten
     if len(pellet_group) == 0:
