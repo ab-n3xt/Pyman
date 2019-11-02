@@ -94,6 +94,7 @@ class Ghost(pygame.sprite.Sprite):
         # Speed of sprite
         self.speed = speed
         
+        # Used for path-finding
         self.path = None
         
     def triggerVulnerability(self):
