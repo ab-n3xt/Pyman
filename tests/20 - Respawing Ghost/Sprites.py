@@ -80,7 +80,7 @@ class Ghost(pygame.sprite.Sprite):
         self.surface = pygame.display.get_surface()
         
         # Get the sprite and set the x+y coordinates
-        self.image = pygame.image.load('../../sprites/red.png')
+        self.image = pygame.image.load('../../sprites/v-ghost.png')
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -88,22 +88,20 @@ class Ghost(pygame.sprite.Sprite):
         self.defaultx = x
         self.defaulty = y
         
-        # Set Vulnerable state to False
-        self.isVulnerable = False
-        
         # Speed of sprite
         self.speed = speed
+        
+        # Used to determine whether Pacman can eat Ghost
+        self.isVulnerable = False
         
         # Used for path-finding
         self.path = None
         
     def triggerVulnerability(self):
         self.isVulnerable = True
+        self.image = pygame.image.load('../../sprites/v-ghost.png')
         
     def update(self):
-        if self.isVulnerable:
-            self.image = pygame.image.load('../../sprites/v-ghost.png')
-            
         if self.path[0] == 'U':
             self.rect.top -= self.speed
         elif self.path[0] == 'D':
