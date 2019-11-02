@@ -80,7 +80,7 @@ class Ghost(pygame.sprite.Sprite):
         self.surface = pygame.display.get_surface()
         
         # Get the sprite and set the x+y coordinates
-        self.image = pygame.image.load('../../sprites/v-ghost.png')
+        self.image = pygame.image.load('../../sprites/red.png')
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
