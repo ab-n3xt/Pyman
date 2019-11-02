@@ -21,6 +21,7 @@ class Box(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         
+        # Used for path-finding
         self.path = ''
         
     def check_possible_moves(self, x, y):
