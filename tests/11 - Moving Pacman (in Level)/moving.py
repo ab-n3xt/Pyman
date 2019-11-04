@@ -28,12 +28,6 @@ BLUE = (0, 0, 255)
 background = pygame.image.load('../../sprites/pacman-level.png')
 windowSurface.blit(background, (0, 0))
 
-# initialize movement variables
-moveLeft = False
-moveRight = False
-moveDown = False
-moveUp = False
-
 # pixels per loop
 MOVESPEED = 16
 
@@ -78,6 +72,10 @@ while y < WINDOWHEIGHT:
 pacman = Pacman(224, 384, MOVESPEED, box_group) # 16 * 14, 16 * 24
 pacman_group = pygame.sprite.GroupSingle(pacman)
 
+# Initialize movement variable
+movement = 'R'
+last_movement = 'R'
+
 # draw pellets
 pellet_group.draw(windowSurface)
 pacman_group.draw(windowSurface)
@@ -121,7 +119,68 @@ def transport_left(sprite):
         update_surface()
         
     sprite.rect = pygame.Rect(16 * 26, 16 * 15, 16, 16)
+    
+def test_movement(move, speed, pacman):
+    test = Box(pacman.rect.x, pacman.rect.y, RED)
+    global last_movement
+    if move == 'U':
+        test.rect.top -= speed
+        if not pygame.sprite.spritecollide(test, box_group, False):
+            last_movement = 'U'
+            pacman_group.update(move)
+        else:
+            test_last_movement(last_movement, speed, pacman)
+    elif move == 'D':
+        test.rect.bottom += speed
+        if not pygame.sprite.spritecollide(test, box_group, False):
+            last_movement = 'D'
+            pacman_group.update(move)
+        else:
+            test_last_movement(last_movement, speed, pacman)
+    elif move == 'L':
+        test.rect.left -= speed
+        if not pygame.sprite.spritecollide(test, box_group, False):
+            last_movement = 'L'
+            pacman_group.update(move)
+        else:
+            test_last_movement(last_movement, speed, pacman)
+    elif move == 'R':
+        test.rect.right += speed
+        if not pygame.sprite.spritecollide(test, box_group, False):
+            last_movement = 'R'
+            pacman_group.update(move)
+        else:
+            test_last_movement(last_movement, speed, pacman)
 
+def test_last_movement(move, speed, pacman):
+    test = Box(pacman.rect.x, pacman.rect.y, RED)
+    global last_movement
+    if move == 'U':
+        test.rect.top -= speed
+        if not pygame.sprite.spritecollide(test, box_group, False):
+            pacman_group.update(move)
+        else:
+            pacman_group.update('')
+    elif move == 'D':
+        test.rect.bottom += speed
+        if not pygame.sprite.spritecollide(test, box_group, False):
+            pacman_group.update(move)
+        else:
+            pacman_group.update('')
+    elif move == 'L':
+        test.rect.left -= speed
+        if not pygame.sprite.spritecollide(test, box_group, False):
+            pacman_group.update(move)
+        else:
+            pacman_group.update('')
+    elif move == 'R':
+        test.rect.right += speed
+        if not pygame.sprite.spritecollide(test, box_group, False):
+            pacman_group.update(move)
+        else:
+            pacman_group.update('')
+        
+        
 while True:
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -129,28 +188,16 @@ while True:
             sys.exit() 
         if event.type == KEYDOWN:
             if event.key == K_UP:
-                moveLeft  = False
-                moveRight = False
-                moveDown  = False
-                moveUp    = True
+                movement = 'U'
             if event.key == K_DOWN:
-                moveLeft  = False
-                moveRight = False
-                moveDown  = True
-                moveUp    = False
+                movement = 'D'
             if event.key == K_LEFT:
-                moveLeft  = True
-                moveRight = False
-                moveDown  = False
-                moveUp    = False
+                movement = 'L'
             if event.key == K_RIGHT:
-                moveLeft  = False
-                moveRight = True
-                moveDown  = False
-                moveUp    = False
+                movement = 'R'
                 
     # move the sprite(pacman)
-    pacman_group.update(moveUp, moveDown, moveLeft, moveRight)
+    test_movement(movement, MOVESPEED, pacman)
     
     # check if Pacman collided with any Pellets in Pellet Group
     # true = Pellet will be destroyed when collided with
