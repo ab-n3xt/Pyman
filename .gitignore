@@ -37,6 +37,9 @@ MANIFEST
 pip-log.txt
 pip-delete-this-directory.txt
 
+# Settings for IDE Geany
+geany-settings
+
 # Unit test / coverage reports
 htmlcov/
 .tox/
