@@ -87,6 +87,9 @@ ghost_group = pygame.sprite.Group(ghost)
 movement = 'R'
 last_movement = 'R'
 
+# Initialize loop variable
+loop = 0
+
 
 def create_pellets():
     # Goes through the entire map and outlines which 16x16 areas are black
@@ -311,14 +314,17 @@ while True:
             if event.key == K_RIGHT:
                 movement = 'R'
                 
-    # Updates Pacman's movement
-    pacman_current_grid = pygame.sprite.spritecollide(pacman, grid_group, False)
-    p_grid = pacman_current_grid.pop()
+    if loop % 4 == 0:
+        # Updates Pacman's movement
+        pacman_current_grid = pygame.sprite.spritecollide(pacman, grid_group, False)
+        p_grid = pacman_current_grid.pop()
     
-    # Updates Ghost's movement
-    ghost_current_grid = pygame.sprite.spritecollide(ghost, grid_group, False)
-    g_grid = ghost_current_grid.pop()
-    ghost.create_path(p_grid, [g_grid], grid_group.copy())
+        # Updates Ghost's movement
+        ghost_current_grid = pygame.sprite.spritecollide(ghost, grid_group, False)
+        g_grid = ghost_current_grid.pop()
+        ghost.create_path(p_grid, [g_grid], grid_group.copy())
+    
+    loop += 1    
     
     # move the sprite(pacman)
     test_movement(movement, MOVESPEED, pacman)
