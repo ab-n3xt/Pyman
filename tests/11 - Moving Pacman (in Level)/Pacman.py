@@ -12,7 +12,7 @@ class Pacman(pygame.sprite.Sprite):
         self.surface = pygame.display.get_surface()
         
         # Set animation frames
-        self.frames = [ '../../sprites/pacman.png',
+        self.frames = [ '../../sprites/pacman-1.png',
                         '../../sprites/pacman-2.png',
                         '../../sprites/pacman-3.png',
                         '../../sprites/pacman-2.png',
@@ -36,9 +36,6 @@ class Pacman(pygame.sprite.Sprite):
         # Pacman starts looking right, so "R" is the initial value
         self.lastMove = 'R'
         
-        # Will become true if one of the movement variables are true
-        self.isMoving = False
-        
         # Get the sprite and set the x+y coordinates
         self.image = self.directions[self.lastMove]
         self.rect = self.image.get_rect()
@@ -51,56 +48,28 @@ class Pacman(pygame.sprite.Sprite):
         # Set the collisions for Pacman
         self.collisions = collisions
         
-    def update(self, moveUp, moveDown, moveLeft, moveRight):
-
-        list_of_movement = [moveLeft, moveRight, moveDown, moveUp]
-        
-        if list_of_movement.count(True) > 0:
-            self.isMoving = True
-        else:
-            self.isMoving = False
-        
-        # if Pacman is moving, continue looping through the animation frames
-        if self.isMoving:
+    def update(self, movement):
+    
+        if movement == 'U':
+            self.rect.top -= self.speed
             self.index += 1
-            if self.index is len(self.frames):
-                self.index = 0
+        elif movement == 'D':
+            self.rect.bottom += self.speed
+            self.index += 1
+        elif movement == 'L':
+            self.rect.left -= self.speed
+            self.index += 1
+        elif movement == 'R':
+            self.rect.right += self.speed
+            self.index += 1
         else:
             self.index = 0
         
-        if moveUp:
-            self.rect.top -= self.speed
-            if not pygame.sprite.spritecollide(self, self.collisions, False):
-                self.lastMove = 'U'
-            else:
-                self.rect.top += self.speed
-                self.index = 0
-            
-        if moveDown:
-            self.rect.bottom += self.speed
-            if not pygame.sprite.spritecollide(self, self.collisions, False):
-                self.lastMove = 'D'
-            else:
-                self.rect.bottom -= self.speed
-                self.index = 0
-    
-        if moveLeft:
-            self.rect.left -= self.speed
-            if not pygame.sprite.spritecollide(self, self.collisions, False):
-                self.lastMove = 'L'
-            else:
-                self.rect.left += self.speed
-                self.index = 0
-            
-        if moveRight:
-            self.rect.right += self.speed
-            if not pygame.sprite.spritecollide(self, self.collisions, False):
-                self.lastMove = 'R'
-            else:
-                self.rect.right -= self.speed
-                self.index = 0
+        # Specfic Case
+        if self.index == 4:
+            self.index = 0
                 
-        # Directions is called again to update the image based on index
+        # Called again to update the image based on index
         self.directions = { 'U': pygame.transform.rotate(pygame.image.load(self.frames[self.index]), 90),
                             'D': pygame.transform.rotate(pygame.image.load(self.frames[self.index]), 270),
                             'L': pygame.transform.rotate(pygame.image.load(self.frames[self.index]), 180),
@@ -108,5 +77,6 @@ class Pacman(pygame.sprite.Sprite):
         }
             
         # Update image
-        self.image = self.directions[self.lastMove]
+        if movement:
+            self.image = self.directions[movement]
         
