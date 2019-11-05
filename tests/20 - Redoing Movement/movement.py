@@ -328,7 +328,7 @@ while True:
     
     # move the sprite(pacman)
     test_movement(movement, MOVESPEED, pacman)
-    ghost_group.update()
+    ghost_group.update(g_grid, p_grid)
     update_window()
     
     # # Update sprites

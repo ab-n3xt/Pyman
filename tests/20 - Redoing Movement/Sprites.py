@@ -97,6 +97,9 @@ class Ghost(pygame.sprite.Sprite):
         
         # Used for path-finding
         self.path = None
+        self.path_move = None
+        
+        self.hold_move = None
         
     def toggleVulnerability(self):
         if self.isVulnerable:
@@ -108,15 +111,58 @@ class Ghost(pygame.sprite.Sprite):
             self.image = pygame.image.load('../../sprites/v-ghost.png')
             self.speed = self.speed / 2
         
-    def update(self):
-        if self.path[0] == 'U':
-            self.rect.top -= self.speed
-        elif self.path[0] == 'D':
-            self.rect.bottom += self.speed
-        elif self.path[0] == 'L':
-            self.rect.left -= self.speed
-        elif self.path[0] == 'R':
-            self.rect.right += self.speed
+    def update(self, current_grid, pacman):
+        if self.isVulnerable:
+            if self.path_move and not current_grid.rect.contains(self.rect):
+                if self.path_move == 'U':
+                    self.rect.bottom += self.speed
+                elif self.path_move == 'D':
+                    self.rect.top -= self.speed
+                elif self.path_move == 'L':
+                    self.rect.right += self.speed
+                elif self.path_move == 'R':
+                    self.rect.left -= self.speed
+            else:
+                self.path_move = None
+                before_distance = math.sqrt(math.pow(current_grid.rect.x - pacman.rect.x, 2) + math.pow(current_grid.rect.y - pacman.rect.y, 2))
+                for moves in current_grid.valid_moves:
+                    if moves == 'U':
+                        x = current_grid.rect.x
+                        y = current_grid.rect.y - 16
+                        after_distance = math.sqrt(math.pow(x - pacman.rect.x, 2) + math.pow(y - pacman.rect.y, 2))
+                        if after_distance > before_distance:
+                            self.path_move = 'U'
+                    if moves == 'D':
+                        x = current_grid.rect.x
+                        y = current_grid.rect.y + 16
+                        after_distance = math.sqrt(math.pow(x - pacman.rect.x, 2) + math.pow(y - pacman.rect.y, 2))
+                        if after_distance > before_distance:
+                            self.path_move = 'D'
+                    if moves == 'L':
+                        x = current_grid.rect.x - 16
+                        y = current_grid.rect.y
+                        after_distance = math.sqrt(math.pow(x - pacman.rect.x, 2) + math.pow(y - pacman.rect.y, 2))
+                        if after_distance > before_distance:
+                            self.path_move = 'L'
+                    if moves == 'R':
+                        x = current_grid.rect.x + 16
+                        y = current_grid.rect.y
+                        after_distance = math.sqrt(math.pow(x - pacman.rect.x, 2) + math.pow(y - pacman.rect.y, 2))
+                        if after_distance > before_distance:
+                            self.path_move = 'R'
+        else:
+            if self.path[0] == 'U':
+                self.rect.top -= self.speed
+                self.path_move = 'U'
+            elif self.path[0] == 'D':
+                self.rect.bottom += self.speed
+                self.path_move = 'D'
+            elif self.path[0] == 'L':
+                self.rect.left -= self.speed
+                self.path_move = 'L'
+            elif self.path[0] == 'R':
+                self.rect.right += self.speed
+                self.path_move = 'R'
             
     def reset_pos(self):
         self.rect.x = self.defaultx
@@ -167,7 +213,6 @@ class Ghost(pygame.sprite.Sprite):
             
             box.path = ''
                         
-
 class Pacman(pygame.sprite.Sprite):
     
     def __init__(self, x, y, speed):
