@@ -87,6 +87,7 @@ class Ghost(pygame.sprite.Sprite):
         
         self.defaultx = x
         self.defaulty = y
+        self.default_speed = speed
         
         # Speed of sprite
         self.speed = speed
@@ -97,9 +98,15 @@ class Ghost(pygame.sprite.Sprite):
         # Used for path-finding
         self.path = None
         
-    def triggerVulnerability(self):
-        self.isVulnerable = True
-        self.image = pygame.image.load('../../sprites/v-ghost.png')
+    def toggleVulnerability(self):
+        if self.isVulnerable:
+            self.isVulnerable = False
+            self.image = pygame.image.load('../../sprites/red.png')
+            self.speed = self.default_speed
+        else:
+            self.isVulnerable = True
+            self.image = pygame.image.load('../../sprites/v-ghost.png')
+            self.speed = self.speed / 2
         
     def update(self):
         if self.path[0] == 'U':
