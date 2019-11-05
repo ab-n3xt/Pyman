@@ -102,7 +102,6 @@ class Ghost(pygame.sprite.Sprite):
         self.image = pygame.image.load('../../sprites/v-ghost.png')
         
     def update(self):
-        print(f"PATH: {self.path}")
         if self.path[0] == 'U':
             self.rect.top -= self.speed
         elif self.path[0] == 'D':
