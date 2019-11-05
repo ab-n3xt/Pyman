@@ -100,6 +100,7 @@ class Ghost(pygame.sprite.Sprite):
         self.path_move = None
         
         self.hold_move = None
+        self.times_moved = 0
         
     def toggleVulnerability(self):
         if self.isVulnerable:
@@ -122,7 +123,7 @@ class Ghost(pygame.sprite.Sprite):
                     self.rect.right += self.speed
                 elif self.path_move == 'R':
                     self.rect.left -= self.speed
-            else:
+            elif self.hold_move == None:
                 self.path_move = None
                 before_distance = math.sqrt(math.pow(current_grid.rect.x - pacman.rect.x, 2) + math.pow(current_grid.rect.y - pacman.rect.y, 2))
                 for moves in current_grid.valid_moves:
@@ -131,25 +132,37 @@ class Ghost(pygame.sprite.Sprite):
                         y = current_grid.rect.y - 16
                         after_distance = math.sqrt(math.pow(x - pacman.rect.x, 2) + math.pow(y - pacman.rect.y, 2))
                         if after_distance > before_distance:
-                            self.path_move = 'U'
-                    if moves == 'D':
+                            self.hold_move = 'U'
+                    elif moves == 'D':
                         x = current_grid.rect.x
                         y = current_grid.rect.y + 16
                         after_distance = math.sqrt(math.pow(x - pacman.rect.x, 2) + math.pow(y - pacman.rect.y, 2))
                         if after_distance > before_distance:
-                            self.path_move = 'D'
-                    if moves == 'L':
+                            self.hold_move = 'D'
+                    elif moves == 'L':
                         x = current_grid.rect.x - 16
                         y = current_grid.rect.y
                         after_distance = math.sqrt(math.pow(x - pacman.rect.x, 2) + math.pow(y - pacman.rect.y, 2))
                         if after_distance > before_distance:
-                            self.path_move = 'L'
-                    if moves == 'R':
+                            self.hold_move = 'L'
+                    elif moves == 'R':
                         x = current_grid.rect.x + 16
                         y = current_grid.rect.y
                         after_distance = math.sqrt(math.pow(x - pacman.rect.x, 2) + math.pow(y - pacman.rect.y, 2))
                         if after_distance > before_distance:
-                            self.path_move = 'R'
+                            self.hold_move = 'R'
+            else:
+                if self.hold_move == 'U':
+                    self.rect.top -= self.speed
+                elif self.hold_move == 'D':
+                    self.rect.bottom += self.speed
+                elif self.hold_move == 'L':
+                    self.rect.left -= self.speed
+                elif self.hold_move == 'R':
+                    self.rect.right += self.speed
+                self.times_moved += 1
+                if self.times_moved == 8:
+                    self.hold_move = None
         else:
             if self.path[0] == 'U':
                 self.rect.top -= self.speed
