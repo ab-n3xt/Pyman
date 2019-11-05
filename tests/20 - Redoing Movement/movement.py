@@ -363,7 +363,7 @@ while True:
     for magic_pellet in eaten_magic_pellets:
         POINTS += 10
         for ghost in ghost_group:
-            ghost.triggerVulnerability()
+            ghost.toggleVulnerability()
         
     # Check if all Pellets are eaten
     if len(pellet_group) == 0:
