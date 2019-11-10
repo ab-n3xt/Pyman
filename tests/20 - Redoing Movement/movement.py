@@ -324,32 +324,12 @@ while True:
         g_grid = ghost_current_grid.pop()
         ghost.create_path(p_grid, [g_grid], grid_group.copy())
     
-    loop += 1    
+    loop += 1
     
     # move the sprite(pacman)
     test_movement(movement, MOVESPEED, pacman)
     ghost_group.update(g_grid, p_grid)
     update_window()
-    
-    # # Update sprites
-    # if movement in p_grid.valid_moves:
-        # for _ in range(4):
-            # pacman_group.update(movement)
-            # ghost_group.update()
-            # update_window()
-
-        # last_movement = movement
-    # else:
-        # if last_movement in p_grid.valid_moves:
-            # for _ in range(4):
-                # pacman_group.update(last_movement)
-                # ghost_group.update()
-                # update_window()
-        # else:
-            # for _ in range(4):
-                # ghost_group.update()
-                # update_window()
-
     
     # Check if Pacman collided with any Pellets
     # True = Pellet will be destroyed when collided with
