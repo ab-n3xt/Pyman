@@ -102,7 +102,7 @@ class Ghost(pygame.sprite.Sprite):
         
         # Keeping track of which pixel Ghost is currently on
         self.pixel = 0
-        
+
     def toggleVulnerability(self):
         if self.isVulnerable:
             self.isVulnerable = False
@@ -116,7 +116,7 @@ class Ghost(pygame.sprite.Sprite):
                 self.correct_path = False
             else:
                 self.correct_path = True
-        
+
     def update(self, current_grid, pacman):
         if self.isVulnerable:
             if self.pixel == 0 and self.correct_path:
@@ -128,11 +128,11 @@ class Ghost(pygame.sprite.Sprite):
                 self.run_away()
         else:
             self.chase_pacman()
-            
+
     def reset_pos(self):
         self.rect.x = self.defaultx
         self.rect.y = self.defaulty
-        
+
     def create_path(self, pacman, untraversed, grid_system):
         """
             Parameters:
@@ -273,7 +273,6 @@ class Ghost(pygame.sprite.Sprite):
         if self.path_move == None:
             index = random.randint(0, len(valid_moves)-1)
             self.path_move = valid_moves[index]
-                
 
     def calculate_distance(self, point_1, point_2):
         return math.sqrt(math.pow(point_2.x - point_1.x, 2) + math.pow(point_2.y - point_1.y, 2))
