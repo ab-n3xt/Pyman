@@ -99,9 +99,6 @@ class Ghost(pygame.sprite.Sprite):
         self.path = None
         self.path_move = None
         
-        self.hold_move = None
-        self.times_moved = 0
-        
     def toggleVulnerability(self):
         if self.isVulnerable:
             self.isVulnerable = False
