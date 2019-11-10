@@ -314,7 +314,7 @@ while True:
             if event.key == K_RIGHT:
                 movement = 'R'
                 
-    if loop % 4 == 0:
+    if ghost.pixel == 0 and not ghost.isVulnerable:
         # Updates Pacman's movement
         pacman_current_grid = pygame.sprite.spritecollide(pacman, grid_group, False)
         p_grid = pacman_current_grid.pop()
@@ -323,8 +323,14 @@ while True:
         ghost_current_grid = pygame.sprite.spritecollide(ghost, grid_group, False)
         g_grid = ghost_current_grid.pop()
         ghost.create_path(p_grid, [g_grid], grid_group.copy())
-    
-    loop += 1
+    elif ghost.pixel == 0 and ghost.isVulnerable:
+		# Updates Pacman's movement
+        pacman_current_grid = pygame.sprite.spritecollide(pacman, grid_group, False)
+        p_grid = pacman_current_grid.pop()
+
+		# Updates Ghost's movement
+        ghost_current_grid = pygame.sprite.spritecollide(ghost, grid_group, False)
+        g_grid = ghost_current_grid.pop()
     
     # move the sprite(pacman)
     test_movement(movement, MOVESPEED, pacman)
@@ -344,6 +350,7 @@ while True:
         POINTS += 10
         for ghost in ghost_group:
             ghost.toggleVulnerability()
+        
         
     # Check if all Pellets are eaten
     if len(pellet_group) == 0:
