@@ -114,7 +114,7 @@ class Ghost(pygame.sprite.Sprite):
         
     def update(self, current_grid, pacman):
         if self.isVulnerable:
-            pass
+            self.run_away(current_grid, pacman)
         else:
             self.chase_pacman()
             
@@ -189,6 +189,10 @@ class Ghost(pygame.sprite.Sprite):
         # When Ghost reaches a grid, reset pixel count back to 0
         if self.pixel == 16:
             self.pixel = 0
+
+    def run_away(self, current_grid, pacman):
+        pass
+
 
 class Pacman(pygame.sprite.Sprite):
     
