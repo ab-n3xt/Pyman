@@ -174,7 +174,8 @@ class Ghost(pygame.sprite.Sprite):
                             break
             
             box.path = ''
-                        
+
+
 class Pacman(pygame.sprite.Sprite):
     
     def __init__(self, x, y, speed):
