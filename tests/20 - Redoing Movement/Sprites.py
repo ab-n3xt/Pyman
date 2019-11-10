@@ -99,6 +99,9 @@ class Ghost(pygame.sprite.Sprite):
         self.path = None
         self.path_move = None
         
+        # Keeping track of which pixel Ghost is currently on
+        self.pixel = 0
+        
     def toggleVulnerability(self):
         if self.isVulnerable:
             self.isVulnerable = False
@@ -110,18 +113,10 @@ class Ghost(pygame.sprite.Sprite):
             self.speed = self.speed / 2
         
     def update(self, current_grid, pacman):
-        if self.path[0] == 'U':
-            self.rect.top -= self.speed
-            self.path_move = 'U'
-        elif self.path[0] == 'D':
-            self.rect.bottom += self.speed
-            self.path_move = 'D'
-        elif self.path[0] == 'L':
-            self.rect.left -= self.speed
-            self.path_move = 'L'
-        elif self.path[0] == 'R':
-            self.rect.right += self.speed
-            self.path_move = 'R'
+        if self.isVulnerable:
+            pass
+        else:
+            self.chase_pacman()
             
     def reset_pos(self):
         self.rect.x = self.defaultx
@@ -172,6 +167,28 @@ class Ghost(pygame.sprite.Sprite):
             
             box.path = ''
 
+    def chase_pacman(self):
+        # Normal movement loop
+        if self.path[0] == 'U':
+            self.rect.top -= self.speed
+            self.pixel += self.speed
+            self.path_move = 'U'
+        elif self.path[0] == 'D':
+            self.rect.bottom += self.speed
+            self.pixel += self.speed
+            self.path_move = 'D'
+        elif self.path[0] == 'L':
+            self.rect.left -= self.speed
+            self.pixel += self.speed
+            self.path_move = 'L'
+        elif self.path[0] == 'R':
+            self.rect.right += self.speed
+            self.pixel += self.speed
+            self.path_move = 'R'
+        
+        # When Ghost reaches a grid, reset pixel count back to 0
+        if self.pixel == 16:
+            self.pixel = 0
 
 class Pacman(pygame.sprite.Sprite):
     
