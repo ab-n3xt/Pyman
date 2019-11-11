@@ -102,6 +102,12 @@ class Ghost(pygame.sprite.Sprite):
         
         # Keeping track of which pixel Ghost is currently on
         self.pixel = 0
+        
+        # Two states:
+        #   - 'A'live
+        #   - 'D'ead
+        # Initial state is Alive
+        self.state = 'A'
 
     def toggleVulnerability(self):
         if self.isVulnerable:
@@ -301,6 +307,12 @@ class Ghost(pygame.sprite.Sprite):
         
         self.correct_path = True
 
+    def toggle_death(self):
+        if self.state == 'D':
+            self.state = 'A'
+        else:
+            self.state = 'D'
+        
 
 class Pacman(pygame.sprite.Sprite):
     
