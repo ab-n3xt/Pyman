@@ -137,6 +137,11 @@ class Ghost(pygame.sprite.Sprite):
                 self.reverse()
             else:
                 self.run_away()
+        elif self.state == 'D':
+            if self.correct_path:
+                self.chase_pacman()
+            else:
+                self.reverse()
         else:
             if self.correct_path:
                 self.chase_pacman()
@@ -215,6 +220,10 @@ class Ghost(pygame.sprite.Sprite):
         # When Ghost reaches a grid, reset pixel count back to 0
         if self.pixel == 16:
             self.pixel = 0
+        
+        # Reached destination
+        if self.path == '':
+            self.state = 'A'
 
     def run_away(self):
         # Normal movement loop
