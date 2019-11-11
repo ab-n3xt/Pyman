@@ -164,6 +164,15 @@ def continue_game():
     pacman.reset_pos()
     ghost.reset_pos()
     
+    # Updates Pacman's movement
+    pacman_current_grid = pygame.sprite.spritecollide(pacman, grid_group, False)
+    p_grid = pacman_current_grid.pop()
+    
+    # Updates Ghost's movement
+    ghost_current_grid = pygame.sprite.spritecollide(ghost, grid_group, False)
+    g_grid = ghost_current_grid.pop()
+    ghost.create_path(p_grid, [g_grid], grid_group.copy())
+    
     # Draw all sprites
     pellet_group.draw(window)
     pacman_group.draw(window)
@@ -375,6 +384,15 @@ while True:
     for ghost in collided_ghosts:
         if ghost.isVulnerable:
             ghost.toggle_death()
+            time_start = None
+            # Updates Pacman's movement
+            pacman_current_grid = pygame.sprite.spritecollide(pacman, grid_group, False)
+            p_grid = pacman_current_grid.pop()
+    
+            # Updates Ghost's movement
+            ghost_current_grid = pygame.sprite.spritecollide(ghost, grid_group, False)
+            g_grid = ghost_current_grid.pop()
+            ghost.create_path(p_grid, [g_grid], grid_group.copy())
             POINTS += 200
         else:
             window.fill(constants.BLACK)
