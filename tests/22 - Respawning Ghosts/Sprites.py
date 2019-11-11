@@ -87,10 +87,11 @@ class Ghost(pygame.sprite.Sprite):
         
         self.defaultx = x
         self.defaulty = y
-        self.default_speed = speed
         
         # Speed of sprite
         self.speed = speed
+        self.default_speed = speed
+        self.dead_speed = speed * 2
         
         # Used to determine whether Pacman can eat Ghost
         self.isVulnerable = False
