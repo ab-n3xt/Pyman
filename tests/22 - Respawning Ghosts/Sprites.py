@@ -138,8 +138,10 @@ class Ghost(pygame.sprite.Sprite):
                 self.run_away()
         elif self.state == 'D':
             if self.correct_path:
+                self.speed = self.dead_speed
                 self.chase_pacman()
             else:
+                self.speed = self.default_speed / 2
                 self.reverse()
         else:
             if self.correct_path:
@@ -198,6 +200,11 @@ class Ghost(pygame.sprite.Sprite):
             box.path = ''
 
     def chase_pacman(self):
+        # Reached destination
+        if self.path == '':
+            self.toggle_death()
+            return
+
         # Normal movement loop
         if self.path[0] == 'U':
             self.rect.top -= self.speed
@@ -219,10 +226,6 @@ class Ghost(pygame.sprite.Sprite):
         # When Ghost reaches a grid, reset pixel count back to 0
         if self.pixel == 16:
             self.pixel = 0
-        
-        # Reached destination
-        if self.path == '':
-            self.state = 'A'
 
     def run_away(self):
         # Normal movement loop
@@ -319,17 +322,14 @@ class Ghost(pygame.sprite.Sprite):
     def toggle_death(self):
         if self.state == 'D':
             self.state = 'A'
+            self.speed = self.default_speed
         else:
             self.state = 'D'
             self.image = pygame.image.load('../../sprites/red.png')
-            self.speed = self.dead_speed
-            self.reset_pos()
-            self.toggle_death()
-            self.toggleVulnerability()
-            # if self.pixel != 0:
-                # self.correct_path = False
-            # else:
-                # self.correct_path = True
+            if self.pixel != 0:
+                self.correct_path = False
+            else:
+                self.correct_path = True
         
 
 class Pacman(pygame.sprite.Sprite):
