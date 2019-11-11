@@ -330,7 +330,7 @@ while True:
                 ghost.toggleVulnerability()
                 time_start = None
                 
-    if ghost.pixel == 0:
+    if ghost.pixel == 0 and ghost.state == 'A':
         # Updates Pacman's movement
         pacman_current_grid = pygame.sprite.spritecollide(pacman, grid_group, False)
         p_grid = pacman_current_grid.pop()
@@ -339,6 +339,20 @@ while True:
         ghost_current_grid = pygame.sprite.spritecollide(ghost, grid_group, False)
         g_grid = ghost_current_grid.pop()
         ghost.create_path(p_grid, [g_grid], grid_group.copy())
+    elif ghost.pixel == 0 and ghost.state == 'D':
+        # Updates Pacman's movement
+        pacman_current_grid = pygame.sprite.spritecollide(pacman, grid_group, False)
+        spawn = None
+        for box in grid_group:
+            if box.rect.x == ghost.defaultx and box.rect.y == ghost.defaulty:
+                spawn = box
+                break
+        print(f"BOX TO GO TO: {spawn}")
+        # Updates Ghost's movement
+        ghost_current_grid = pygame.sprite.spritecollide(ghost, grid_group, False)
+        g_grid = ghost_current_grid.pop()
+        ghost.create_path(spawn, [g_grid], grid_group.copy())
+        print(f"PATH: {ghost.path}")
     
     # move the sprite(pacman)
     test_movement(movement, MOVESPEED, pacman)
@@ -374,18 +388,11 @@ while True:
     collided_ghosts = pygame.sprite.spritecollide(pacman, ghost_group, False)
     for ghost in collided_ghosts:
         if ghost.isVulnerable:
+            ghost.toggleVulnerability()
             ghost.toggle_death()
             time_start = None
-            # Updates Pacman's movement
-            pacman_current_grid = pygame.sprite.spritecollide(pacman, grid_group, False)
-            p_grid = pacman_current_grid.pop()
-    
-            # Updates Ghost's movement
-            ghost_current_grid = pygame.sprite.spritecollide(ghost, grid_group, False)
-            g_grid = ghost_current_grid.pop()
-            ghost.create_path(p_grid, [g_grid], grid_group.copy())
             POINTS += 200
-        else:
+        elif ghost.state == 'A':
             window.fill(constants.BLACK)
             pygame.display.update()
             LIVES -= 1
