@@ -330,21 +330,12 @@ while True:
                 ghost.toggleVulnerability()
                 time_start = None
                 
-    if ghost.pixel == 0 and not ghost.isVulnerable:
+    if ghost.pixel == 0:
         # Updates Pacman's movement
         pacman_current_grid = pygame.sprite.spritecollide(pacman, grid_group, False)
         p_grid = pacman_current_grid.pop()
     
         # Updates Ghost's movement
-        ghost_current_grid = pygame.sprite.spritecollide(ghost, grid_group, False)
-        g_grid = ghost_current_grid.pop()
-        ghost.create_path(p_grid, [g_grid], grid_group.copy())
-    elif ghost.pixel == 0 and ghost.isVulnerable:
-		# Updates Pacman's movement
-        pacman_current_grid = pygame.sprite.spritecollide(pacman, grid_group, False)
-        p_grid = pacman_current_grid.pop()
-
-		# Updates Ghost's movement
         ghost_current_grid = pygame.sprite.spritecollide(ghost, grid_group, False)
         g_grid = ghost_current_grid.pop()
         ghost.create_path(p_grid, [g_grid], grid_group.copy())
