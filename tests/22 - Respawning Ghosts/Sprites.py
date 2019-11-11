@@ -129,10 +129,9 @@ class Ghost(pygame.sprite.Sprite):
                 self.correct_path = True
 
     def update(self, current_grid, pacman):
-        if self.isVulnerable:
+        if self.isVulnerable and self.state == 'A':
             if self.pixel == 0 and self.correct_path:
                 self.choose_direction(current_grid, pacman)
-                
             if not self.correct_path:
                 self.reverse()
             else:
@@ -320,15 +319,17 @@ class Ghost(pygame.sprite.Sprite):
     def toggle_death(self):
         if self.state == 'D':
             self.state = 'A'
-            self.speed = self.default_speed
         else:
             self.state = 'D'
             self.image = pygame.image.load('../../sprites/red.png')
             self.speed = self.dead_speed
-            if self.pixel != 0:
-                self.correct_path = False
-            else:
-                self.correct_path = True
+            self.reset_pos()
+            self.toggle_death()
+            self.toggleVulnerability()
+            # if self.pixel != 0:
+                # self.correct_path = False
+            # else:
+                # self.correct_path = True
         
 
 class Pacman(pygame.sprite.Sprite):
