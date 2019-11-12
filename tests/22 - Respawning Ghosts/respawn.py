@@ -51,6 +51,9 @@ magic_pellet_group = pygame.sprite.Group()
 l_transporter = pygame.sprite.GroupSingle(Box(0, 16 * 15))
 r_transporter = pygame.sprite.GroupSingle(Box(16 * 27, 16 * 15))
 
+# Respawner
+respawner = pygame.sprite.GroupSingle(Box(208, 192))
+
 # Create Grid System
 x = 0
 y = 16
@@ -413,6 +416,21 @@ while True:
         transport_left(pacman)
     elif pygame.sprite.spritecollide(pacman, r_transporter, False):
         transport_right(pacman)
+        
+    if pygame.sprite.spritecollide(ghost, respawner, False):
+        if ghost.state == 'D':
+            while ghost.rect.y < 224:
+                ghost.rect.bottom += 4
+                time.sleep(0.5)
+                update_window()
+            ghost.toggle_death()
+            while ghost.rect.y > 192:
+                ghost.rect.top -= 4
+                time.sleep(0.5)
+                update_window()
+                
+            ghost.reset_pos()
+            
     
     # Update game
     update_window()
