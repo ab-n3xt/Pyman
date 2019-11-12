@@ -201,9 +201,9 @@ class Ghost(pygame.sprite.Sprite):
 
     def chase_pacman(self):
         # Reached destination
-        if self.path == '':
-            self.toggle_death()
-            return
+        # if self.path == '':
+            # self.toggle_death()
+            # return
 
         # Normal movement loop
         if self.path[0] == 'U':
