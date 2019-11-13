@@ -329,9 +329,14 @@ while True:
     time_end = time.time()
     if time_start and time_end:
         if (time_end-time_start) >= 5.0:
-            for ghost in ghost_group:
+            # for ghost in ghost_group:
+                # ghost.toggleVulnerability()
+                # time_start = None
+            if ghost.isVulnerable:
                 ghost.toggleVulnerability()
                 time_start = None
+            elif ghost.state == 'P':
+                ghost.state = 'S'
                 
     if ghost.pixel == 0 and ghost.state == 'A':
         # Updates Pacman's movement
@@ -419,17 +424,19 @@ while True:
         
     if pygame.sprite.spritecollide(ghost, respawner, False):
         if ghost.state == 'D':
-            while ghost.rect.y < 224:
-                ghost.rect.bottom += 4
-                time.sleep(0.5)
-                update_window()
-            ghost.toggle_death()
-            while ghost.rect.y > 192:
-                ghost.rect.top -= 4
-                time.sleep(0.5)
-                update_window()
+            ghost.state = 'R'
+            time_start = time.time()
+            # while ghost.rect.y < 224:
+                # ghost.rect.bottom += 4
+                # time.sleep(0.5)
+                # update_window()
+            # ghost.toggle_death()
+            # while ghost.rect.y > 192:
+                # ghost.rect.top -= 4
+                # time.sleep(0.5)
+                # update_window()
                 
-            ghost.reset_pos()
+            # ghost.reset_pos()
             
     
     # Update game
