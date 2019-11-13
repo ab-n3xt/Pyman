@@ -338,15 +338,22 @@ while True:
             elif ghost.state == 'P':
                 ghost.state = 'S'
                 
-    if ghost.pixel == 0 and ghost.state == 'A':
+    if ghost.pixel == 0:
         # Updates Pacman's movement
         pacman_current_grid = pygame.sprite.spritecollide(pacman, grid_group, False)
-        p_grid = pacman_current_grid.pop()
-    
+        target = None
+        if ghost.state == 'A':
+            target = pacman_current_grid.pop()
+        else:
+            for box in grid_group:
+                if box.rect.x == ghost.defaultx and box.rect.y == ghost.defaulty:
+                    target = box
+                    break
         # Updates Ghost's movement
         ghost_current_grid = pygame.sprite.spritecollide(ghost, grid_group, False)
         g_grid = ghost_current_grid.pop()
-        ghost.create_path(p_grid, [g_grid], grid_group.copy())
+        
+        ghost.create_path(target, [g_grid], grid_group.copy())            
     elif ghost.pixel == 0 and ghost.state == 'D':
         # Updates Pacman's movement
         pacman_current_grid = pygame.sprite.spritecollide(pacman, grid_group, False)
@@ -355,16 +362,14 @@ while True:
             if box.rect.x == ghost.defaultx and box.rect.y == ghost.defaulty:
                 spawn = box
                 break
-        print(f"BOX TO GO TO: {spawn}")
         # Updates Ghost's movement
         ghost_current_grid = pygame.sprite.spritecollide(ghost, grid_group, False)
         g_grid = ghost_current_grid.pop()
         ghost.create_path(spawn, [g_grid], grid_group.copy())
-        print(f"PATH: {ghost.path}")
     
     # move the sprite(pacman)
     test_movement(movement, MOVESPEED, pacman)
-    ghost_group.update(g_grid, p_grid)
+    ghost_group.update(g_grid, target)
     update_window()
     
     # Check if Pacman collided with any Pellets
@@ -426,18 +431,6 @@ while True:
         if ghost.state == 'D':
             ghost.state = 'R'
             time_start = time.time()
-            # while ghost.rect.y < 224:
-                # ghost.rect.bottom += 4
-                # time.sleep(0.5)
-                # update_window()
-            # ghost.toggle_death()
-            # while ghost.rect.y > 192:
-                # ghost.rect.top -= 4
-                # time.sleep(0.5)
-                # update_window()
-                
-            # ghost.reset_pos()
-            
-    
+
     # Update game
     update_window()
