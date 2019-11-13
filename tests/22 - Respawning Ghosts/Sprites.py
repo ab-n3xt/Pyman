@@ -104,12 +104,16 @@ class Ghost(pygame.sprite.Sprite):
         # Keeping track of which pixel Ghost is currently on
         self.pixel = 0
         
-        # Three states:
+        # Five states:
         #   - 'A'live
         #   - 'D'ead
         #   - 'R'espawning
+        #   - 'P'urgatory
+        #   - 'S'pawning
         # Initial state is Alive
         self.state = 'A'
+        
+        self.pace_dir = 'R'
 
     def toggleVulnerability(self):
         if self.isVulnerable:
@@ -130,6 +134,7 @@ class Ghost(pygame.sprite.Sprite):
                 self.correct_path = True
 
     def update(self, current_grid, pacman):
+        # print(f"Vulnerability: {self.isVulnerable} | State: {self.state}")
         if self.isVulnerable and self.state == 'A':
             if self.pixel == 0 and self.correct_path:
                 self.choose_direction(current_grid, pacman)
@@ -144,6 +149,31 @@ class Ghost(pygame.sprite.Sprite):
             else:
                 self.speed = self.default_speed / 2
                 self.reverse()
+        elif self.state == 'R':
+            if self.rect.y < 224:       # Go into the spawn-zone
+                self.rect.bottom += 4
+                return
+            self.state = 'P'
+        elif self.state == 'P':
+            if self.pace_dir == 'R':
+                if self.rect.x < 240:
+                    self.rect.right += 4
+                    return
+                else:
+                    self.pace_dir = 'L'
+            if self.pace_dir == 'L':
+                if self.rect.x > 192:
+                    self.rect.left -= 4
+                    return
+                else:
+                    self.pace_dir = 'R'
+        elif self.state == 'S':
+            if self.rect.y > 192:
+                self.rect.top -= 4
+                return
+            self.state = 'A'
+            self.speed = self.default_speed
+            self.reset_pos()
         else:
             if self.correct_path:
                 self.chase_pacman()
