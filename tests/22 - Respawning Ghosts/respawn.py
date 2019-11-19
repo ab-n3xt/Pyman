@@ -353,19 +353,7 @@ while True:
         ghost_current_grid = pygame.sprite.spritecollide(ghost, grid_group, False)
         g_grid = ghost_current_grid.pop()
         
-        ghost.create_path(target, [g_grid], grid_group.copy())            
-    elif ghost.pixel == 0 and ghost.state == 'D':
-        # Updates Pacman's movement
-        pacman_current_grid = pygame.sprite.spritecollide(pacman, grid_group, False)
-        spawn = None
-        for box in grid_group:
-            if box.rect.x == ghost.defaultx and box.rect.y == ghost.defaulty:
-                spawn = box
-                break
-        # Updates Ghost's movement
-        ghost_current_grid = pygame.sprite.spritecollide(ghost, grid_group, False)
-        g_grid = ghost_current_grid.pop()
-        ghost.create_path(spawn, [g_grid], grid_group.copy())
+        ghost.create_path(target, [g_grid], grid_group.copy())
     
     # move the sprite(pacman)
     test_movement(movement, MOVESPEED, pacman)
