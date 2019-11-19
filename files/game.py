@@ -33,12 +33,15 @@ window.blit(background, (0, 0))
 # Pixels per loop
 MOVESPEED = 4
 
-# Tile System (for movement)
-# Uses Tile objects
-tile_system = pygame.sprite.Group()
+# Create Boxes for collisions
+box_group = pygame.sprite.Group()
+
+# Grid (for movement)
+# Uses Box objects
+grid_group = pygame.sprite.Group()
 
 # Pellets
-# Uses Pellet objects
+# To create a Pellet object: Pellet(x, y)
 pellet_group = pygame.sprite.Group()
 
 # Magic Pellets
@@ -67,7 +70,7 @@ while y < constants.WINDOWHEIGHT:
             # Create grid for movement
             grid_member = Box(x, y)
             grid_member.check_possible_moves(x, y)
-            tile_system.add(grid_member)
+            grid_group.add(grid_member)
         else:
             box_group.add(Box(x, y))
         
@@ -165,13 +168,13 @@ def continue_game():
     ghost.reset_pos()
     
     # Updates Pacman's movement
-    pacman_current_grid = pygame.sprite.spritecollide(pacman, tile_system, False)
+    pacman_current_grid = pygame.sprite.spritecollide(pacman, grid_group, False)
     p_grid = pacman_current_grid.pop()
     
     # Updates Ghost's movement
-    ghost_current_grid = pygame.sprite.spritecollide(ghost, tile_system, False)
+    ghost_current_grid = pygame.sprite.spritecollide(ghost, grid_group, False)
     g_grid = ghost_current_grid.pop()
-    ghost.create_path(p_grid, [g_grid], tile_system.copy())
+    ghost.create_path(p_grid, [g_grid], grid_group.copy())
     
     # Draw all sprites
     pellet_group.draw(window)
@@ -326,9 +329,6 @@ while True:
     time_end = time.time()
     if time_start and time_end:
         if (time_end-time_start) >= 5.0:
-            # for ghost in ghost_group:
-                # ghost.toggleVulnerability()
-                # time_start = None
             if ghost.isVulnerable:
                 ghost.toggleVulnerability()
                 time_start = None
@@ -337,20 +337,20 @@ while True:
                 
     if ghost.pixel == 0:
         # Updates Pacman's movement
-        pacman_current_grid = pygame.sprite.spritecollide(pacman, tile_system, False)
+        pacman_current_grid = pygame.sprite.spritecollide(pacman, grid_group, False)
         target = None
         if ghost.state == 'A':
             target = pacman_current_grid.pop()
         else:
-            for box in tile_system:
+            for box in grid_group:
                 if box.rect.x == ghost.defaultx and box.rect.y == ghost.defaulty:
                     target = box
                     break
         # Updates Ghost's movement
-        ghost_current_grid = pygame.sprite.spritecollide(ghost, tile_system, False)
+        ghost_current_grid = pygame.sprite.spritecollide(ghost, grid_group, False)
         g_grid = ghost_current_grid.pop()
         
-        ghost.create_path(target, [g_grid], tile_system.copy())
+        ghost.create_path(target, [g_grid], grid_group.copy())
     
     # move the sprite(pacman)
     test_movement(movement, MOVESPEED, pacman)
