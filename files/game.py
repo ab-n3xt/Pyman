@@ -52,7 +52,8 @@ l_transporter = pygame.sprite.GroupSingle(Box(0, 16 * 15))
 r_transporter = pygame.sprite.GroupSingle(Box(16 * 27, 16 * 15))
 
 # Respawner
-respawner = pygame.sprite.GroupSingle(Box(208, 192))
+respawner_tile = Box(208, 192)
+respawner = pygame.sprite.GroupSingle(respawner_tile)
 
 # Create Grid System
 x = 0
@@ -338,14 +339,12 @@ while True:
     if ghost.pixel == 0:
         # Updates Pacman's movement
         pacman_current_grid = pygame.sprite.spritecollide(pacman, grid_group, False)
+        respawner_current_grid = pygame.sprite.spritecollide(respawner_tile, grid_group, False)
         target = None
         if ghost.state == 'A':
             target = pacman_current_grid.pop()
         else:
-            for box in grid_group:
-                if box.rect.x == ghost.defaultx and box.rect.y == ghost.defaulty:
-                    target = box
-                    break
+            target = respawner_current_grid.pop()
         # Updates Ghost's movement
         ghost_current_grid = pygame.sprite.spritecollide(ghost, grid_group, False)
         g_grid = ghost_current_grid.pop()
