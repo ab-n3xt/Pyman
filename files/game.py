@@ -33,6 +33,9 @@ window.blit(background, (0, 0))
 # Pixels per loop
 MOVESPEED = 4
 
+# Create Boxes for collisions
+box_group = pygame.sprite.Group()
+
 # Grid (for movement)
 # Uses Box objects
 grid_group = pygame.sprite.Group()
@@ -47,6 +50,9 @@ magic_pellet_group = pygame.sprite.Group()
 # Teleporters
 l_transporter = pygame.sprite.GroupSingle(Box(0, 16 * 15))
 r_transporter = pygame.sprite.GroupSingle(Box(16 * 27, 16 * 15))
+
+# Respawner
+respawner = pygame.sprite.GroupSingle(Box(208, 192))
 
 # Create Grid System
 x = 0
@@ -65,6 +71,8 @@ while y < constants.WINDOWHEIGHT:
             grid_member = Box(x, y)
             grid_member.check_possible_moves(x, y)
             grid_group.add(grid_member)
+        else:
+            box_group.add(Box(x, y))
         
         x += 16
     y += 16
@@ -75,13 +83,16 @@ pacman = Pacman(224, 384, MOVESPEED) # 16 * 14, 16 * 24
 pacman_group = pygame.sprite.GroupSingle(pacman)
     
 # Initialize Ghosts
-ghost_group = pygame.sprite.Group()
-ghost_group.add(Ghost(208, 192)) # 208, 288
+ghost = Ghost(208, 192, MOVESPEED)
+ghost_group = pygame.sprite.Group(ghost)
     
 # Initialize movement variable
 movement = 'R'
 last_movement = 'R'
-        
+
+# Initialize timer
+time_start = None
+time_end = None
 
 def create_pellets():
     # Goes through the entire map and outlines which 16x16 areas are black
@@ -152,8 +163,18 @@ def continue_game():
     # Creates the map
     window.blit(background, (0, 0))
     
-    # Sets Pacman to its default position
+    # Sets Pacman & Ghost to their default position
     pacman.reset_pos()
+    ghost.reset_pos()
+    
+    # Updates Pacman's movement
+    pacman_current_grid = pygame.sprite.spritecollide(pacman, grid_group, False)
+    p_grid = pacman_current_grid.pop()
+    
+    # Updates Ghost's movement
+    ghost_current_grid = pygame.sprite.spritecollide(ghost, grid_group, False)
+    g_grid = ghost_current_grid.pop()
+    ghost.create_path(p_grid, [g_grid], grid_group.copy())
     
     # Draw all sprites
     pellet_group.draw(window)
@@ -190,7 +211,7 @@ def update_window():
     
     # Update the display
     pygame.display.update()
-    mainClock.tick(40)
+    mainClock.tick(60)
     
 
 def transport_right(sprite):
@@ -223,7 +244,68 @@ def transport_left(sprite):
         update_window()
         
     sprite.rect = pygame.Rect(16 * 26, 16 * 15, 16, 16)
+    
+    
+def test_movement(move, speed, pacman):
+    test = Box(pacman.rect.x, pacman.rect.y)
+    global last_movement
+    if move == 'U':
+        test.rect.top -= speed
+        if not pygame.sprite.spritecollide(test, box_group, False):
+            last_movement = 'U'
+            pacman_group.update(move)
+        else:
+            test_last_movement(last_movement, speed, pacman)
+    elif move == 'D':
+        test.rect.bottom += speed
+        if not pygame.sprite.spritecollide(test, box_group, False):
+            last_movement = 'D'
+            pacman_group.update(move)
+        else:
+            test_last_movement(last_movement, speed, pacman)
+    elif move == 'L':
+        test.rect.left -= speed
+        if not pygame.sprite.spritecollide(test, box_group, False):
+            last_movement = 'L'
+            pacman_group.update(move)
+        else:
+            test_last_movement(last_movement, speed, pacman)
+    elif move == 'R':
+        test.rect.right += speed
+        if not pygame.sprite.spritecollide(test, box_group, False):
+            last_movement = 'R'
+            pacman_group.update(move)
+        else:
+            test_last_movement(last_movement, speed, pacman)
 
+            
+def test_last_movement(move, speed, pacman):
+    test = Box(pacman.rect.x, pacman.rect.y)
+    global last_movement
+    if move == 'U':
+        test.rect.top -= speed
+        if not pygame.sprite.spritecollide(test, box_group, False):
+            pacman_group.update(move)
+        else:
+            pacman_group.update('')
+    elif move == 'D':
+        test.rect.bottom += speed
+        if not pygame.sprite.spritecollide(test, box_group, False):
+            pacman_group.update(move)
+        else:
+            pacman_group.update('')
+    elif move == 'L':
+        test.rect.left -= speed
+        if not pygame.sprite.spritecollide(test, box_group, False):
+            pacman_group.update(move)
+        else:
+            pacman_group.update('')
+    elif move == 'R':
+        test.rect.right += speed
+        if not pygame.sprite.spritecollide(test, box_group, False):
+            pacman_group.update(move)
+        else:
+            pacman_group.update('')
     
 load_game()
 ###############################################################################
@@ -243,21 +325,40 @@ while True:
                 movement = 'L'
             if event.key == K_RIGHT:
                 movement = 'R'
+    
+    time_end = time.time()
+    if time_start and time_end:
+        if (time_end-time_start) >= 5.0:
+            # for ghost in ghost_group:
+                # ghost.toggleVulnerability()
+                # time_start = None
+            if ghost.isVulnerable:
+                ghost.toggleVulnerability()
+                time_start = None
+            elif ghost.state == 'P':
+                ghost.state = 'S'
                 
-    # Updates Pacman's movement
-    current_grid_location = pygame.sprite.spritecollide(pacman, grid_group, False)
-    grid_member = current_grid_location.pop()
-    if movement in grid_member.valid_moves:
-        for x in range(4):
-            pacman_group.update(movement)
-            update_window()
-
-        last_movement = movement
-    else:
-        if last_movement in grid_member.valid_moves:
-            for x in range(4):
-                pacman_group.update(last_movement)
-                update_window()
+    if ghost.pixel == 0:
+        # Updates Pacman's movement
+        pacman_current_grid = pygame.sprite.spritecollide(pacman, grid_group, False)
+        target = None
+        if ghost.state == 'A':
+            target = pacman_current_grid.pop()
+        else:
+            for box in grid_group:
+                if box.rect.x == ghost.defaultx and box.rect.y == ghost.defaulty:
+                    target = box
+                    break
+        # Updates Ghost's movement
+        ghost_current_grid = pygame.sprite.spritecollide(ghost, grid_group, False)
+        g_grid = ghost_current_grid.pop()
+        
+        ghost.create_path(target, [g_grid], grid_group.copy())
+    
+    # move the sprite(pacman)
+    test_movement(movement, MOVESPEED, pacman)
+    ghost_group.update(g_grid, target)
+    update_window()
     
     # Check if Pacman collided with any Pellets
     # True = Pellet will be destroyed when collided with
@@ -270,9 +371,10 @@ while True:
     eaten_magic_pellets = pygame.sprite.spritecollide(pacman, magic_pellet_group, True)
     for magic_pellet in eaten_magic_pellets:
         POINTS += 10
+        time_start = time.time()
         for ghost in ghost_group:
-            ghost.triggerVulnerability()
-        ghost_group.update()
+            ghost.toggleVulnerability()
+        
         
     # Check if all Pellets are eaten
     if len(pellet_group) == 0:
@@ -287,9 +389,11 @@ while True:
     collided_ghosts = pygame.sprite.spritecollide(pacman, ghost_group, False)
     for ghost in collided_ghosts:
         if ghost.isVulnerable:
-            ghost.kill()
-            POINTS += 50
-        else:
+            ghost.toggleVulnerability()
+            ghost.toggle_death()
+            time_start = None
+            POINTS += 200
+        elif ghost.state == 'A':
             window.fill(constants.BLACK)
             pygame.display.update()
             LIVES -= 1
@@ -310,6 +414,11 @@ while True:
         transport_left(pacman)
     elif pygame.sprite.spritecollide(pacman, r_transporter, False):
         transport_right(pacman)
-    
+        
+    if pygame.sprite.spritecollide(ghost, respawner, False):
+        if ghost.state == 'D':
+            ghost.state = 'R'
+            time_start = time.time()
+
     # Update game
     update_window()
