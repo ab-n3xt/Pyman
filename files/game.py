@@ -20,8 +20,8 @@ LIVES = 3
 POINTS = 0
 
 # text
-basic_font = pygame.font.Font("../font/joystix.ttf", 14)
-text = basic_font.render("POINTS: {}".format(POINTS), True, constants.WHITE)
+font_system = pygame.font.Font("../font/joystix.ttf", 14)
+text = font_system.render("POINTS: {}".format(POINTS), True, constants.WHITE)
 
 # Initialize window
 window = pygame.display.set_mode((constants.WINDOWWIDTH, constants.WINDOWHEIGHT), 0, 32)
@@ -149,7 +149,7 @@ def load_game():
     ghost_group.draw(window)
     
     # "Ready" Message
-    text = basic_font.render("READY!".format(POINTS), True, constants.YELLOW)
+    text = font_system.render("READY!".format(POINTS), True, constants.YELLOW)
     window.blit(text, (192, 288))
     pygame.display.update()
     time.sleep(2.5)
@@ -179,7 +179,7 @@ def continue_game():
     ghost_group.draw(window)
     
     # "Ready" Message
-    text = basic_font.render("READY!".format(POINTS), True, constants.YELLOW)
+    text = font_system.render("READY!".format(POINTS), True, constants.YELLOW)
     window.blit(text, (192, 288))
     pygame.display.update()
     time.sleep(2.5)
@@ -196,7 +196,7 @@ def update_window():
     ghost_group.draw(window)
     
     # Redraw the text
-    text = basic_font.render("POINTS: {}".format(POINTS), True, constants.WHITE)
+    text = font_system.render("POINTS: {}".format(POINTS), True, constants.WHITE)
     window.blit(text, (1, 1))
     
     # Redraw the life system
