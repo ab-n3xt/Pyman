@@ -33,9 +33,6 @@ window.blit(background, (0, 0))
 # Pixels per loop
 MOVESPEED = 4
 
-# Create Boxes for collisions
-box_group = pygame.sprite.Group()
-
 # Grid (for movement)
 # Uses Box objects
 grid_group = pygame.sprite.Group()
