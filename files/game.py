@@ -34,7 +34,7 @@ window.blit(background, (0, 0))
 MOVESPEED = 4
 
 # Create Tilees for collisions
-box_group = pygame.sprite.Group()
+walls = pygame.sprite.Group()
 
 # Grid (for movement)
 # Uses Tile objects
@@ -73,7 +73,7 @@ while y < constants.WINDOWHEIGHT:
             grid_member.check_possible_moves(x, y)
             tile_system.add(grid_member)
         else:
-            box_group.add(Tile(x, y))
+            walls.add(Tile(x, y))
         
         x += 16
     y += 16
@@ -252,28 +252,28 @@ def test_movement(move, speed, pacman):
     global last_movement
     if move == 'U':
         test.rect.top -= speed
-        if not pygame.sprite.spritecollide(test, box_group, False):
+        if not pygame.sprite.spritecollide(test, walls, False):
             last_movement = 'U'
             pacman_group.update(move)
         else:
             test_last_movement(last_movement, speed, pacman)
     elif move == 'D':
         test.rect.bottom += speed
-        if not pygame.sprite.spritecollide(test, box_group, False):
+        if not pygame.sprite.spritecollide(test, walls, False):
             last_movement = 'D'
             pacman_group.update(move)
         else:
             test_last_movement(last_movement, speed, pacman)
     elif move == 'L':
         test.rect.left -= speed
-        if not pygame.sprite.spritecollide(test, box_group, False):
+        if not pygame.sprite.spritecollide(test, walls, False):
             last_movement = 'L'
             pacman_group.update(move)
         else:
             test_last_movement(last_movement, speed, pacman)
     elif move == 'R':
         test.rect.right += speed
-        if not pygame.sprite.spritecollide(test, box_group, False):
+        if not pygame.sprite.spritecollide(test, walls, False):
             last_movement = 'R'
             pacman_group.update(move)
         else:
@@ -285,25 +285,25 @@ def test_last_movement(move, speed, pacman):
     global last_movement
     if move == 'U':
         test.rect.top -= speed
-        if not pygame.sprite.spritecollide(test, box_group, False):
+        if not pygame.sprite.spritecollide(test, walls, False):
             pacman_group.update(move)
         else:
             pacman_group.update('')
     elif move == 'D':
         test.rect.bottom += speed
-        if not pygame.sprite.spritecollide(test, box_group, False):
+        if not pygame.sprite.spritecollide(test, walls, False):
             pacman_group.update(move)
         else:
             pacman_group.update('')
     elif move == 'L':
         test.rect.left -= speed
-        if not pygame.sprite.spritecollide(test, box_group, False):
+        if not pygame.sprite.spritecollide(test, walls, False):
             pacman_group.update(move)
         else:
             pacman_group.update('')
     elif move == 'R':
         test.rect.right += speed
-        if not pygame.sprite.spritecollide(test, box_group, False):
+        if not pygame.sprite.spritecollide(test, walls, False):
             pacman_group.update(move)
         else:
             pacman_group.update('')
