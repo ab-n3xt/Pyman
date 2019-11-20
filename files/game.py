@@ -4,7 +4,7 @@ from pygame.locals import *
 
 # from Start import Start
 from Menus import Start, Retry
-from Sprites import Box, Ghost, Pacman, Pellet, Magic_Pellet
+from Sprites import Tile, Ghost, Pacman, Pellet, Magic_Pellet
 
 # Initialize Pygame
 pygame.init()
@@ -33,11 +33,11 @@ window.blit(background, (0, 0))
 # Pixels per loop
 MOVESPEED = 4
 
-# Create Boxes for collisions
+# Create Tilees for collisions
 box_group = pygame.sprite.Group()
 
 # Grid (for movement)
-# Uses Box objects
+# Uses Tile objects
 grid_group = pygame.sprite.Group()
 
 # Pellets
@@ -48,11 +48,11 @@ pellet_group = pygame.sprite.Group()
 magic_pellet_group = pygame.sprite.Group()
 
 # Teleporters
-l_transporter = pygame.sprite.GroupSingle(Box(0, 16 * 15))
-r_transporter = pygame.sprite.GroupSingle(Box(16 * 27, 16 * 15))
+l_transporter = pygame.sprite.GroupSingle(Tile(0, 16 * 15))
+r_transporter = pygame.sprite.GroupSingle(Tile(16 * 27, 16 * 15))
 
 # Respawner
-respawner_tile = Box(208, 192)
+respawner_tile = Tile(208, 192)
 respawner = pygame.sprite.GroupSingle(respawner_tile)
 
 # Create Grid System
@@ -69,11 +69,11 @@ while y < constants.WINDOWHEIGHT:
         # If the cropped image's color is BLACK
         if pygame.transform.average_color(cropped_image)[:3] == constants.BLACK:
             # Create grid for movement
-            grid_member = Box(x, y)
+            grid_member = Tile(x, y)
             grid_member.check_possible_moves(x, y)
             grid_group.add(grid_member)
         else:
-            box_group.add(Box(x, y))
+            box_group.add(Tile(x, y))
         
         x += 16
     y += 16
@@ -248,7 +248,7 @@ def transport_left(sprite):
     
     
 def test_movement(move, speed, pacman):
-    test = Box(pacman.rect.x, pacman.rect.y)
+    test = Tile(pacman.rect.x, pacman.rect.y)
     global last_movement
     if move == 'U':
         test.rect.top -= speed
@@ -281,7 +281,7 @@ def test_movement(move, speed, pacman):
 
             
 def test_last_movement(move, speed, pacman):
-    test = Box(pacman.rect.x, pacman.rect.y)
+    test = Tile(pacman.rect.x, pacman.rect.y)
     global last_movement
     if move == 'U':
         test.rect.top -= speed
