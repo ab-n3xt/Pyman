@@ -45,7 +45,7 @@ tile_system = pygame.sprite.Group()
 pellet_group = pygame.sprite.Group()
 
 # Magic Pellets
-magic_pellet_group = pygame.sprite.Group()
+power_pellets = pygame.sprite.Group()
 
 # Teleporters
 l_transporter = pygame.sprite.GroupSingle(Tile(0, 16 * 15))
@@ -140,15 +140,15 @@ def load_game():
     create_pellets()
     
     # Create the magic pellets
-    magic_pellet_group.empty()
+    power_pellets.empty()
     coordinates = [(16*1, 16*4), (16*26, 16*4), (16*1, 16*24), (16*26, 16*24)]
     for (x, y) in coordinates:
         selected_area = pygame.Rect(x, y, 16, 16)
-        magic_pellet_group.add(Power_Pellet(selected_area.centerx, selected_area.centery))
+        power_pellets.add(Power_Pellet(selected_area.centerx, selected_area.centery))
     
     # Draw all sprites
     pellet_group.draw(window)
-    magic_pellet_group.draw(window)
+    power_pellets.draw(window)
     pacman_group.draw(window)
     ghost_group.draw(window)
     
@@ -195,7 +195,7 @@ def update_window():
     # Redraw the background and sprites
     window.blit(background, (0, 0))
     pellet_group.draw(window)
-    magic_pellet_group.draw(window)
+    power_pellets.draw(window)
     pacman_group.draw(window)
     ghost_group.draw(window)
     
@@ -364,7 +364,7 @@ while True:
         
     # Check if Pacman collided with any Magic Pellets
     # True = Magic Pellet will be destroyed when collided with
-    eaten_magic_pellets = pygame.sprite.spritecollide(pacman, magic_pellet_group, True)
+    eaten_magic_pellets = pygame.sprite.spritecollide(pacman, power_pellets, True)
     for magic_pellet in eaten_magic_pellets:
         POINTS += 10
         time_start = time.time()
