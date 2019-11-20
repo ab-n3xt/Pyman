@@ -4,7 +4,7 @@ from pygame.locals import *
 
 # from Start import Start
 from Menus import Start, Retry
-from Sprites import Tile, Ghost, Pacman, Pellet, Magic_Pellet
+from Sprites import Tile, Ghost, Pacman, Pellet, Power_Pellet
 
 # Initialize Pygame
 pygame.init()
@@ -144,7 +144,7 @@ def load_game():
     coordinates = [(16*1, 16*4), (16*26, 16*4), (16*1, 16*24), (16*26, 16*24)]
     for (x, y) in coordinates:
         selected_area = pygame.Rect(x, y, 16, 16)
-        magic_pellet_group.add(Magic_Pellet(selected_area.centerx, selected_area.centery))
+        magic_pellet_group.add(Power_Pellet(selected_area.centerx, selected_area.centery))
     
     # Draw all sprites
     pellet_group.draw(window)
