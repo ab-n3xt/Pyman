@@ -476,7 +476,7 @@ class Pellet(pygame.sprite.Sprite):
         self.rect.centery = y
 
 
-class Magic_Pellet(pygame.sprite.Sprite):
+class Power_Pellet(pygame.sprite.Sprite):
 
     def __init__(self, x, y):
         # Call the parent class constructor
