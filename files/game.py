@@ -42,7 +42,7 @@ tile_system = pygame.sprite.Group()
 
 # Pellets
 # To create a Pellet object: Pellet(x, y)
-pellet_group = pygame.sprite.Group()
+pellets = pygame.sprite.Group()
 
 # Magic Pellets
 power_pellets = pygame.sprite.Group()
@@ -115,12 +115,12 @@ def create_pellets():
                 # These if-statements are for specific cases
                 if y == constants.SPRITEHEIGHT*4:
                     if not x in columns:
-                        pellet_group.add(Pellet(selected_area.centerx, selected_area.centery))
+                        pellets.add(Pellet(selected_area.centerx, selected_area.centery))
                 elif not (y >= constants.SPRITEHEIGHT*10 and y <= constants.SPRITEHEIGHT*20):
-                    pellet_group.add(Pellet(selected_area.centerx, selected_area.centery))
+                    pellets.add(Pellet(selected_area.centerx, selected_area.centery))
                 else:
                     if x == constants.SPRITEWIDTH*6 or x == constants.SPRITEWIDTH*21:
-                        pellet_group.add(Pellet(selected_area.centerx, selected_area.centery))
+                        pellets.add(Pellet(selected_area.centerx, selected_area.centery))
             
             x += 16
         y += 16
@@ -136,7 +136,7 @@ def load_game():
     pacman.reset_pos()
     
     # Create the pellets
-    pellet_group.empty()
+    pellets.empty()
     create_pellets()
     
     # Create the magic pellets
@@ -147,7 +147,7 @@ def load_game():
         power_pellets.add(Power_Pellet(selected_area.centerx, selected_area.centery))
     
     # Draw all sprites
-    pellet_group.draw(window)
+    pellets.draw(window)
     power_pellets.draw(window)
     pacman_group.draw(window)
     ghost_group.draw(window)
@@ -178,7 +178,7 @@ def continue_game():
     ghost.create_path(p_grid, [g_grid], tile_system.copy())
     
     # Draw all sprites
-    pellet_group.draw(window)
+    pellets.draw(window)
     pacman_group.draw(window)
     ghost_group.draw(window)
     
@@ -194,7 +194,7 @@ def update_window():
 
     # Redraw the background and sprites
     window.blit(background, (0, 0))
-    pellet_group.draw(window)
+    pellets.draw(window)
     power_pellets.draw(window)
     pacman_group.draw(window)
     ghost_group.draw(window)
@@ -358,7 +358,7 @@ while True:
     
     # Check if Pacman collided with any Pellets
     # True = Pellet will be destroyed when collided with
-    eaten_pellets = pygame.sprite.spritecollide(pacman, pellet_group, True)
+    eaten_pellets = pygame.sprite.spritecollide(pacman, pellets, True)
     for pellet in eaten_pellets:
         POINTS += 10
         
@@ -373,7 +373,7 @@ while True:
         
         
     # Check if all Pellets are eaten
-    if len(pellet_group) == 0:
+    if len(pellets) == 0:
         load_game()
         movement = 'R'
         last_movement = 'R'
