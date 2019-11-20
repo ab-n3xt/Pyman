@@ -2,7 +2,7 @@ import pygame, time, math, random
 
 from pygame.locals import *
 
-class Box(pygame.sprite.Sprite):
+class Tile(pygame.sprite.Sprite):
 
     def __init__(self, x, y):
         # Call the parent class constructor
@@ -188,9 +188,9 @@ class Ghost(pygame.sprite.Sprite):
     def create_path(self, pacman, untraversed, grid_system):
         """
             Parameters:
-                - pacman       : Pacman's current Box()
-                - untraversed  : list of untraversed Box()
-                - grid_system  : list of all Box() in the game
+                - pacman       : Pacman's current Tile()
+                - untraversed  : list of untraversed Tile()
+                - grid_system  : list of all Tile() in the game
         """
         for box in untraversed:
             if box == pacman: # check if box being checked is where pacman is
