@@ -364,8 +364,8 @@ while True:
         
     # Check if Pacman collided with any Magic Pellets
     # True = Magic Pellet will be destroyed when collided with
-    eaten_magic_pellets = pygame.sprite.spritecollide(pacman, power_pellets, True)
-    for magic_pellet in eaten_magic_pellets:
+    eaten_power_pellets = pygame.sprite.spritecollide(pacman, power_pellets, True)
+    for power_pellet in eaten_power_pellets:
         POINTS += 10
         time_start = time.time()
         for ghost in ghost_group:
