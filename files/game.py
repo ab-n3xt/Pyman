@@ -384,8 +384,7 @@ while True:
     # If not, quit the game
     collided_ghosts = pygame.sprite.spritecollide(pacman, ghost_group, False)
     for ghost in collided_ghosts:
-        if ghost.isVulnerable:
-            ghost.toggle_vulnerability()
+        if ghost.state == 'V':
             ghost.toggle_death()
             time_start = None
             POINTS += 200
