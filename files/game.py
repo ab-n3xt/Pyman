@@ -369,7 +369,8 @@ while True:
         POINTS += 10
         time_start = time.time()
         for ghost in ghost_group:
-            ghost.toggle_vulnerability()
+            if ghost.state == 'A':
+                ghost.toggle_vulnerability()
         
         
     # Check if all Pellets are eaten
