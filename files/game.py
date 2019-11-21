@@ -331,7 +331,7 @@ while True:
     if time_start and time_end:
         if (time_end-time_start) >= 5.0:
             if ghost.isVulnerable:
-                ghost.toggleVulnerability()
+                ghost.toggle_vulnerability()
                 time_start = None
             elif ghost.state == 'P':
                 ghost.state = 'S'
@@ -369,7 +369,7 @@ while True:
         POINTS += 10
         time_start = time.time()
         for ghost in ghost_group:
-            ghost.toggleVulnerability()
+            ghost.toggle_vulnerability()
         
         
     # Check if all Pellets are eaten
@@ -385,7 +385,7 @@ while True:
     collided_ghosts = pygame.sprite.spritecollide(pacman, ghost_group, False)
     for ghost in collided_ghosts:
         if ghost.isVulnerable:
-            ghost.toggleVulnerability()
+            ghost.toggle_vulnerability()
             ghost.toggle_death()
             time_start = None
             POINTS += 200

@@ -116,7 +116,7 @@ class Ghost(pygame.sprite.Sprite):
         
         self.pace_dir = 'R'
 
-    def toggleVulnerability(self):
+    def toggle_vulnerability(self):
         # if self.isVulnerable:
         #     self.isVulnerable = False
         #     self.image = pygame.image.load('../sprites/red.png')
