@@ -135,7 +135,6 @@ class Ghost(pygame.sprite.Sprite):
                 self.correct_path = True
 
     def update(self, current_grid, pacman):
-        # print(f"Vulnerability: {self.isVulnerable} | State: {self.state}")
         if self.isVulnerable and self.state == 'A':
             if self.pixel == 0 and self.correct_path:
                 self.choose_direction(current_grid, pacman)
