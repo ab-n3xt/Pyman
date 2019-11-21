@@ -117,22 +117,29 @@ class Ghost(pygame.sprite.Sprite):
         self.pace_dir = 'R'
 
     def toggleVulnerability(self):
-        if self.isVulnerable:
-            self.isVulnerable = False
-            self.image = pygame.image.load('../sprites/red.png')
-            self.speed = self.default_speed
-            if self.pixel % 4 == 0:
-                self.correct_path = True
-            else:
-                self.correct_path = False
+        # if self.isVulnerable:
+        #     self.isVulnerable = False
+        #     self.image = pygame.image.load('../sprites/red.png')
+        #     self.speed = self.default_speed
+        #     if self.pixel % 4 == 0:
+        #         self.correct_path = True
+        #     else:
+        #         self.correct_path = False
+        # else:
+        #     self.isVulnerable = True
+        #     self.image = pygame.image.load('../sprites/v-ghost.png')
+        #     self.speed = self.speed / 2
+        #     if self.pixel != 0:
+        #         self.correct_path = False
+        #     else:
+        #         self.correct_path = True
+        self.state = 'V'
+        self.image = pygame.image.load('../sprites/v-ghost.png')
+        self.speed = self.speed / 2
+        if self.pixel != 0:
+            self.correct_path = False
         else:
-            self.isVulnerable = True
-            self.image = pygame.image.load('../sprites/v-ghost.png')
-            self.speed = self.speed / 2
-            if self.pixel != 0:
-                self.correct_path = False
-            else:
-                self.correct_path = True
+            self.correct_path = True
 
     def update(self, current_grid, pacman):
         if self.isVulnerable and self.state == 'A':
