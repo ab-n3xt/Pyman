@@ -104,8 +104,9 @@ class Ghost(pygame.sprite.Sprite):
         # Keeping track of which pixel Ghost is currently on
         self.pixel = 0
         
-        # Five states:
+        # Six states:
         #   - 'A'live
+        #   - 'V'ulnerable
         #   - 'D'ead
         #   - 'R'espawning
         #   - 'P'urgatory
