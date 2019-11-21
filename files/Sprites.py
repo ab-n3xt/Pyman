@@ -142,13 +142,20 @@ class Ghost(pygame.sprite.Sprite):
             self.correct_path = True
 
     def update(self, current_grid, pacman):
-        if self.isVulnerable and self.state == 'A':
+        if self.state == 'A':
+            if self.correct_path:
+                self.chase_pacman()
+            else:
+                self.shift()
+
+        elif self.state == 'V':
             if self.pixel == 0 and self.correct_path:
                 self.choose_direction(current_grid, pacman)
             if not self.correct_path:
                 self.reverse()
             else:
                 self.run_away()
+
         elif self.state == 'D':
             if self.correct_path:
                 self.speed = self.dead_speed
@@ -156,11 +163,13 @@ class Ghost(pygame.sprite.Sprite):
             else:
                 self.speed = self.default_speed / 2
                 self.reverse()
+
         elif self.state == 'R':
             if self.rect.y < 224:       # Go into the spawn-zone
                 self.rect.bottom += 4
                 return
             self.state = 'P'
+
         elif self.state == 'P':
             if self.pace_dir == 'R':
                 if self.rect.x < 240:
@@ -174,6 +183,7 @@ class Ghost(pygame.sprite.Sprite):
                     return
                 else:
                     self.pace_dir = 'R'
+
         elif self.state == 'S':
             if self.rect.y > 192:
                 self.rect.top -= 4
@@ -181,11 +191,6 @@ class Ghost(pygame.sprite.Sprite):
             self.state = 'A'
             self.speed = self.default_speed
             self.reset_pos()
-        else:
-            if self.correct_path:
-                self.chase_pacman()
-            else:
-                self.shift()
 
     def reset_pos(self):
         self.rect.x = self.defaultx
