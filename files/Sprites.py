@@ -1,8 +1,8 @@
-import pygame, time
+import pygame, time, math, random
 
 from pygame.locals import *
 
-class Box(pygame.sprite.Sprite):
+class Tile(pygame.sprite.Sprite):
 
     def __init__(self, x, y):
         # Call the parent class constructor
@@ -20,6 +20,9 @@ class Box(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        
+        # Used for path-finding
+        self.path = ''
         
     def check_possible_moves(self, x, y):
         BLACK = (0, 0, 0)
@@ -69,7 +72,7 @@ class Box(pygame.sprite.Sprite):
 
 class Ghost(pygame.sprite.Sprite):
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, speed):
         # Call the parent class constructor
         pygame.sprite.Sprite.__init__(self)
         
@@ -82,16 +85,283 @@ class Ghost(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         
-        # Set Vulnerable state to False
+        self.defaultx = x
+        self.defaulty = y
+        
+        # Speed of sprite
+        self.speed = speed
+        self.default_speed = speed
+        self.dead_speed = speed * 2
+        
+        # Used to determine whether Pacman can eat Ghost
         self.isVulnerable = False
         
-    def update(self):
-        if self.isVulnerable:
-            self.image = pygame.image.load('../sprites/v-ghost.png')
-            
-    def triggerVulnerability(self):
-        self.isVulnerable = True
+        # Used for path-finding
+        self.path = None
+        self.path_move = None
+        self.correct_path = True
+        
+        # Keeping track of which pixel Ghost is currently on
+        self.pixel = 0
+        
+        # Five states:
+        #   - 'A'live
+        #   - 'D'ead
+        #   - 'R'espawning
+        #   - 'P'urgatory
+        #   - 'S'pawning
+        # Initial state is Alive
+        self.state = 'A'
+        
+        self.pace_dir = 'R'
 
+    def toggleVulnerability(self):
+        if self.isVulnerable:
+            self.isVulnerable = False
+            self.image = pygame.image.load('../sprites/red.png')
+            self.speed = self.default_speed
+            if self.pixel % 4 == 0:
+                self.correct_path = True
+            else:
+                self.correct_path = False
+        else:
+            self.isVulnerable = True
+            self.image = pygame.image.load('../sprites/v-ghost.png')
+            self.speed = self.speed / 2
+            if self.pixel != 0:
+                self.correct_path = False
+            else:
+                self.correct_path = True
+
+    def update(self, current_grid, pacman):
+        # print(f"Vulnerability: {self.isVulnerable} | State: {self.state}")
+        if self.isVulnerable and self.state == 'A':
+            if self.pixel == 0 and self.correct_path:
+                self.choose_direction(current_grid, pacman)
+            if not self.correct_path:
+                self.reverse()
+            else:
+                self.run_away()
+        elif self.state == 'D':
+            if self.correct_path:
+                self.speed = self.dead_speed
+                self.chase_pacman()
+            else:
+                self.speed = self.default_speed / 2
+                self.reverse()
+        elif self.state == 'R':
+            if self.rect.y < 224:       # Go into the spawn-zone
+                self.rect.bottom += 4
+                return
+            self.state = 'P'
+        elif self.state == 'P':
+            if self.pace_dir == 'R':
+                if self.rect.x < 240:
+                    self.rect.right += 4
+                    return
+                else:
+                    self.pace_dir = 'L'
+            if self.pace_dir == 'L':
+                if self.rect.x > 192:
+                    self.rect.left -= 4
+                    return
+                else:
+                    self.pace_dir = 'R'
+        elif self.state == 'S':
+            if self.rect.y > 192:
+                self.rect.top -= 4
+                return
+            self.state = 'A'
+            self.speed = self.default_speed
+            self.reset_pos()
+        else:
+            if self.correct_path:
+                self.chase_pacman()
+            else:
+                self.shift()
+
+    def reset_pos(self):
+        self.rect.x = self.defaultx
+        self.rect.y = self.defaulty
+        self.pixel = 0
+
+    def create_path(self, pacman, untraversed, grid_system):
+        """
+            Parameters:
+                - pacman       : Pacman's current Tile()
+                - untraversed  : list of untraversed Tile()
+                - grid_system  : list of all Tile() in the game
+        """
+        for box in untraversed:
+            if box == pacman: # check if box being checked is where pacman is
+                self.path = box.path
+                box.path = ''
+                return
+                
+            for move in box.valid_moves:
+                if move == 'U':
+                    for grid in grid_system:
+                        if grid.rect.x == box.rect.x and grid.rect.y == box.rect.y - 16:
+                            grid.path = box.path + 'U' # keeps track of where it came from
+                            grid.remove(grid_system) # remove from grid_system
+                            untraversed.append(grid) # appends to end of untraversed list
+                            break
+                if move == 'D':
+                    for grid in grid_system:
+                        if grid.rect.x == box.rect.x and grid.rect.y == box.rect.y + 16:
+                            grid.path = box.path + 'D' # keeps track of where it came from
+                            grid.remove(grid_system) # remove from grid_system
+                            untraversed.append(grid) # appends to end of untraversed list
+                            break
+                if move == 'L':
+                    for grid in grid_system:
+                        if grid.rect.x == box.rect.x - 16 and grid.rect.y == box.rect.y:
+                            grid.path = box.path + 'L' # keeps track of where it came from
+                            grid.remove(grid_system) # remove from grid_system
+                            untraversed.append(grid) # appends to end of untraversed list
+                            break
+                if move == 'R':
+                    for grid in grid_system:
+                        if grid.rect.x == box.rect.x + 16 and grid.rect.y == box.rect.y:
+                            grid.path = box.path + 'R' # keeps track of where it came from
+                            grid.remove(grid_system) # remove from grid_system
+                            untraversed.append(grid) # appends to end of untraversed list
+                            break
+            
+            box.path = ''
+
+    def chase_pacman(self):
+        # Reached destination
+        # if self.path == '':
+            # self.toggle_death()
+            # return
+
+        # Normal movement loop
+        if self.path[0] == 'U':
+            self.rect.top -= self.speed
+            self.pixel += self.speed
+            self.path_move = 'U'
+        elif self.path[0] == 'D':
+            self.rect.bottom += self.speed
+            self.pixel += self.speed
+            self.path_move = 'D'
+        elif self.path[0] == 'L':
+            self.rect.left -= self.speed
+            self.pixel += self.speed
+            self.path_move = 'L'
+        elif self.path[0] == 'R':
+            self.rect.right += self.speed
+            self.pixel += self.speed
+            self.path_move = 'R'
+        
+        # When Ghost reaches a grid, reset pixel count back to 0
+        if self.pixel == 16:
+            self.pixel = 0
+
+    def run_away(self):
+        # Normal movement loop
+        if self.path_move == 'U':
+            self.rect.top -= self.speed
+            self.pixel += self.speed
+        elif self.path_move == 'D':
+            self.rect.bottom += self.speed
+            self.pixel += self.speed
+        elif self.path_move == 'L':
+            self.rect.left -= self.speed
+            self.pixel += self.speed
+        elif self.path_move == 'R':
+            self.rect.right += self.speed
+            self.pixel += self.speed
+        
+        # When Ghost reaches a grid, reset pixel count back to 0
+        if self.pixel == 16:
+            self.pixel = 0
+            self.path_move = None
+
+    def reverse(self):
+        # Normal movement loop
+        if self.path_move == 'U':
+            self.rect.bottom += self.speed
+            self.pixel -= self.speed
+        elif self.path_move == 'D':
+            self.rect.top -= self.speed
+            self.pixel -= self.speed
+        elif self.path_move == 'L':
+            self.rect.right += self.speed
+            self.pixel -= self.speed
+        elif self.path_move == 'R':
+            self.rect.left -= self.speed
+            self.pixel -= self.speed
+        
+        # When Ghost reaches a grid, reset pixel count back to 0
+        if self.pixel == 0:
+            self.correct_path = True
+            self.path_move = None
+
+    def choose_direction(self, current_grid, pacman):
+        valid_moves = current_grid.valid_moves
+        distance = self.calculate_distance(current_grid.rect, pacman.rect)
+        for moves in valid_moves:
+            rect = self.rect.copy()
+            if moves == 'U':
+                rect.top -= self.speed
+                new_distance = self.calculate_distance(rect, pacman.rect)
+                if new_distance > distance:
+                    self.path_move = 'U'
+                    break
+            elif moves == 'D':
+                rect.bottom += self.speed
+                new_distance = self.calculate_distance(rect, pacman.rect)
+                if new_distance > distance:
+                    self.path_move = 'D'
+                    break
+            elif moves == 'L':
+                rect.left -= self.speed
+                new_distance = self.calculate_distance(rect, pacman.rect)
+                if new_distance > distance:
+                    self.path_move = 'L'
+                    break
+            elif moves == 'R':
+                rect.right += self.speed
+                new_distance = self.calculate_distance(rect, pacman.rect)
+                if new_distance > distance:
+                    self.path_move = 'R'
+                    break
+        if self.path_move == None:
+            index = random.randint(0, len(valid_moves)-1)
+            self.path_move = valid_moves[index]
+
+    def calculate_distance(self, point_1, point_2):
+        return math.sqrt(math.pow(point_2.x - point_1.x, 2) + math.pow(point_2.y - point_1.y, 2))
+
+    def shift(self):
+        if self.path_move == 'U':
+            self.rect.bottom += self.speed / 2
+            self.pixel -= self.speed / 2
+        elif self.path_move == 'D':
+            self.rect.top -= self.speed / 2
+            self.pixel -= self.speed / 2
+        elif self.path_move == 'L':
+            self.rect.right += self.speed / 2
+            self.pixel -= self.speed / 2
+        elif self.path_move == 'R':
+            self.rect.left -= self.speed / 2
+            self.pixel -= self.speed / 2
+        
+        self.correct_path = True
+
+    def toggle_death(self):
+        if self.state == 'D':
+            self.state = 'A'
+            self.speed = self.default_speed
+        else:
+            self.state = 'D'
+            self.image = pygame.image.load('../sprites/red.png')
+            if self.pixel != 0:
+                self.correct_path = False
+            else:
+                self.correct_path = True
+        
 
 class Pacman(pygame.sprite.Sprite):
     
@@ -206,7 +476,7 @@ class Pellet(pygame.sprite.Sprite):
         self.rect.centery = y
 
 
-class Magic_Pellet(pygame.sprite.Sprite):
+class Power_Pellet(pygame.sprite.Sprite):
 
     def __init__(self, x, y):
         # Call the parent class constructor
