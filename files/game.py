@@ -330,7 +330,7 @@ while True:
     time_end = time.time()
     if time_start and time_end:
         if (time_end-time_start) >= 5.0:
-            if ghost.isVulnerable:
+            if ghost.state == 'V':
                 ghost.toggle_vulnerability()
                 time_start = None
             elif ghost.state == 'P':
