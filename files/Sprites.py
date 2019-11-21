@@ -363,16 +363,12 @@ class Ghost(pygame.sprite.Sprite):
         self.correct_path = True
 
     def toggle_death(self):
-        if self.state == 'D':
-            self.state = 'A'
-            self.speed = self.default_speed
+        self.state = 'D'
+        self.image = pygame.image.load('../sprites/red.png')
+        if self.pixel != 0:
+            self.correct_path = False
         else:
-            self.state = 'D'
-            self.image = pygame.image.load('../sprites/red.png')
-            if self.pixel != 0:
-                self.correct_path = False
-            else:
-                self.correct_path = True
+            self.correct_path = True
         
 
 class Pacman(pygame.sprite.Sprite):
