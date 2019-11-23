@@ -357,7 +357,15 @@ class Ghost(pygame.sprite.Sprite):
             self.correct_path = False
         else:
             self.correct_path = True
-        
+
+    def toggle_alive(self):
+        self.state = 'A'
+        self.image = pygame.image.load('../sprites/red.png')
+        if self.pixel != 0:
+            self.correct_path = False
+        else:
+            self.correct_path = True
+
 
 class Pacman(pygame.sprite.Sprite):
     
