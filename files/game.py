@@ -340,22 +340,22 @@ while True:
     for ghost in ghost_group:
         if ghost.pixel == 0:
             # Find Pacman's and Respawner's current tile
-            pacman_current_grid = pygame.sprite.spritecollide(pacman, tile_system, False)
-            respawner_current_grid = pygame.sprite.spritecollide(respawner_tile, tile_system, False)
+            pacman_current_tile = pygame.sprite.spritecollide(pacman, tile_system, False)
+            respawner_current_tile = pygame.sprite.spritecollide(respawner_tile, tile_system, False)
             target = None
             if ghost.state == 'A':
-                target = pacman_current_grid.pop()
+                target = pacman_current_tile.pop()
             else:
-                target = respawner_current_grid.pop()
+                target = respawner_current_tile.pop()
             # Updates Ghost's movement
-            ghost_current_grid = pygame.sprite.spritecollide(ghost, tile_system, False)
-            g_grid = ghost_current_grid.pop()
+            ghost_current_tile = pygame.sprite.spritecollide(ghost, tile_system, False)
+            g_tile = ghost_current_tile.pop()
             
-            ghost.create_path(target, [g_grid], tile_system.copy())
+            ghost.create_path(target, [g_tile], tile_system.copy())
     
     # move the sprite(pacman)
     test_movement(movement, MOVESPEED, pacman)
-    ghost_group.update(g_grid, target)
+    ghost_group.update(g_tile, target)
     update_window()
     
     # Check if Pacman collided with any Pellets
