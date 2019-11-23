@@ -117,6 +117,9 @@ class Ghost(pygame.sprite.Sprite):
         # Keeping track of pacing direction (within Respawning Zone)
         self.pace_dir = 'R'
 
+        # Timer for respawning
+        self.respawn_timer = None
+
     def toggle_vulnerability(self):
         self.state = 'V'
         self.image = pygame.image.load('../sprites/v-ghost.png')
