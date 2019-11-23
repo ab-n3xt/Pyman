@@ -330,26 +330,28 @@ while True:
     time_end = time.time()
     if time_start and time_end:
         if (time_end-time_start) >= 5.0:
-            if ghost.state == 'V':
-                ghost.toggle_vulnerability()
-                time_start = None
-            elif ghost.state == 'P':
-                ghost.state = 'S'
+            for ghost in ghost_group:
+                if ghost.state == 'V':
+                    ghost.toggle_vulnerability()
+                    time_start = None
+                elif ghost.state == 'P':
+                    ghost.state = 'S'
                 
-    if ghost.pixel == 0:
-        # Updates Pacman's movement
-        pacman_current_grid = pygame.sprite.spritecollide(pacman, tile_system, False)
-        respawner_current_grid = pygame.sprite.spritecollide(respawner_tile, tile_system, False)
-        target = None
-        if ghost.state == 'A':
-            target = pacman_current_grid.pop()
-        else:
-            target = respawner_current_grid.pop()
-        # Updates Ghost's movement
-        ghost_current_grid = pygame.sprite.spritecollide(ghost, tile_system, False)
-        g_grid = ghost_current_grid.pop()
-        
-        ghost.create_path(target, [g_grid], tile_system.copy())
+    for ghost in ghost_group:
+        if ghost.pixel == 0:
+            # Find Pacman's and Respawner's current tile
+            pacman_current_grid = pygame.sprite.spritecollide(pacman, tile_system, False)
+            respawner_current_grid = pygame.sprite.spritecollide(respawner_tile, tile_system, False)
+            target = None
+            if ghost.state == 'A':
+                target = pacman_current_grid.pop()
+            else:
+                target = respawner_current_grid.pop()
+            # Updates Ghost's movement
+            ghost_current_grid = pygame.sprite.spritecollide(ghost, tile_system, False)
+            g_grid = ghost_current_grid.pop()
+            
+            ghost.create_path(target, [g_grid], tile_system.copy())
     
     # move the sprite(pacman)
     test_movement(movement, MOVESPEED, pacman)
@@ -411,10 +413,11 @@ while True:
     elif pygame.sprite.spritecollide(pacman, r_transporter, False):
         transport_right(pacman)
         
-    if pygame.sprite.spritecollide(ghost, respawner, False):
-        if ghost.state == 'D':
-            ghost.state = 'R'
-            time_start = time.time()
+    # Move Ghost to Respawning Area if they collide with entrance and are dead
+    for ghost in ghost_group:
+        if pygame.sprite.spritecollide(ghost, respawner, False):
+            if ghost.state == 'D':
+                ghost.state = 'R'
 
     # Update game
     update_window()
