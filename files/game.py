@@ -418,6 +418,7 @@ while True:
     for ghosts in dead_ghosts:
         if ghost.state == 'D':
             ghost.state = 'R'
+            ghost.respawn_timer = time.time()
 
     # Update game
     update_window()
