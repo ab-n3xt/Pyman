@@ -366,6 +366,9 @@ class Ghost(pygame.sprite.Sprite):
         else:
             self.correct_path = True
 
+    def toggle_spawn(self):
+        self.state = 'S'
+        self.respawn_timer = None
 
 class Pacman(pygame.sprite.Sprite):
     
