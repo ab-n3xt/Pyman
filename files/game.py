@@ -327,13 +327,24 @@ while True:
             if event.key == K_RIGHT:
                 movement = 'R'
 
+    # Checks to see if a Power_Pellet had been eaten
+    # Then if 5 seconds have passed, all Ghosts who are still 'V'ulnerable
+    # will be switched back to 'A'live
     if time_start:
         time_end = time.time()
         if (time_end-time_start) >= 5.0:
             for ghost in ghost_group:
                 if ghost.state == 'V':
                     ghost.toggle_alive()
-                    time_start = None
+            time_start = None
+
+    # Checks to see if any Ghosts are respawning
+    # Then if 5 seconds have passed, 'S'pawn the Ghost back into the game
+    for ghost in ghost_group:
+        if ghost.respawn_timer:
+            time_end = time.time()
+            if (time_end-ghost.respawn_timer) >= 5.0:
+                ghost.toggle_spawn()
                 
     for ghost in ghost_group:
         if ghost.pixel == 0:
