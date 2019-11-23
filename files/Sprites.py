@@ -114,6 +114,7 @@ class Ghost(pygame.sprite.Sprite):
         # Initial state is Alive
         self.state = 'A'
         
+        # Keeping track of pacing direction (within Respawning Zone)
         self.pace_dir = 'R'
 
     def toggle_vulnerability(self):
