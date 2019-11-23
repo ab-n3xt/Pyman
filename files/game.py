@@ -414,10 +414,10 @@ while True:
         transport_right(pacman)
         
     # Move Ghost to Respawning Area if they collide with entrance and are dead
-    for ghost in ghost_group:
-        if pygame.sprite.spritecollide(ghost, respawner, False):
-            if ghost.state == 'D':
-                ghost.state = 'R'
+    dead_ghosts = pygame.sprite.spritecollide(ghost, respawner, False):
+    for ghosts in dead_ghosts:
+        if ghost.state == 'D':
+            ghost.state = 'R'
 
     # Update game
     update_window()
