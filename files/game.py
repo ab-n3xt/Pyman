@@ -326,16 +326,14 @@ while True:
                 movement = 'L'
             if event.key == K_RIGHT:
                 movement = 'R'
-    
-    time_end = time.time()
-    if time_start and time_end:
+
+    if time_start:
+        time_end = time.time()
         if (time_end-time_start) >= 5.0:
             for ghost in ghost_group:
                 if ghost.state == 'V':
-                    ghost.toggle_vulnerability()
+                    ghost.toggle_alive()
                     time_start = None
-                elif ghost.state == 'P':
-                    ghost.state = 'S'
                 
     for ghost in ghost_group:
         if ghost.pixel == 0:
@@ -414,7 +412,7 @@ while True:
         transport_right(pacman)
         
     # Move Ghost to Respawning Area if they collide with entrance and are dead
-    dead_ghosts = pygame.sprite.spritecollide(ghost, respawner, False):
+    dead_ghosts = pygame.sprite.spritecollide(ghost, respawner, False)
     for ghosts in dead_ghosts:
         if ghost.state == 'D':
             ghost.state = 'R'
