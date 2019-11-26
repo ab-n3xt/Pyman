@@ -95,6 +95,9 @@ last_movement = 'R'
 time_start = None
 time_end = None
 
+# Loop
+loop = 0
+
 def create_pellets():
     # Goes through the entire map and outlines which 16x16 areas are black
     # This identifies where Pacman and Pellets can and cannot go
@@ -212,7 +215,7 @@ def update_window():
     
     # Update the display
     pygame.display.update()
-    mainClock.tick(60)
+    mainClock.tick(120)
     
 
 def transport_right(sprite):
@@ -347,7 +350,7 @@ while True:
                 ghost.toggle_spawn()
                 
     for ghost in ghost_group:
-        if ghost.pixel == 0:
+        if ghost.pixel == 0 and loop % 3 == 0:
             # Find Pacman's and Respawner's current tile
             pacman_current_tile = pygame.sprite.spritecollide(pacman, tile_system, False)
             respawner_current_tile = pygame.sprite.spritecollide(respawner_tile, tile_system, False)
@@ -362,10 +365,13 @@ while True:
             
             ghost.create_path(target, [g_tile], tile_system.copy())
     
-    # move the sprite(pacman)
-    test_movement(movement, MOVESPEED, pacman)
-    ghost_group.update(g_tile, target)
-    update_window()
+
+    
+    if loop % 3 == 0:
+        # move the sprite(pacman)
+        test_movement(movement, MOVESPEED, pacman)
+        ghost_group.update(g_tile, target)
+        update_window()
     
     # Check if Pacman collided with any Pellets
     # True = Pellet will be destroyed when collided with
@@ -431,3 +437,6 @@ while True:
 
     # Update game
     update_window()
+    
+    # Increment loop
+    loop = loop + 1
