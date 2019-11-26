@@ -215,7 +215,7 @@ def update_window():
     
     # Update the display
     pygame.display.update()
-    mainClock.tick(120)
+    mainClock.tick(80)
     
 
 def transport_right(sprite):
@@ -350,7 +350,7 @@ while True:
                 ghost.toggle_spawn()
                 
     for ghost in ghost_group:
-        if ghost.pixel == 0 and loop % 3 == 0:
+        if (ghost.pixel == 0 and loop % 3 == 0) or ghost.state == 'D':
             # Find Pacman's and Respawner's current tile
             pacman_current_tile = pygame.sprite.spritecollide(pacman, tile_system, False)
             respawner_current_tile = pygame.sprite.spritecollide(respawner_tile, tile_system, False)
@@ -361,7 +361,10 @@ while True:
                 target = respawner_current_tile.pop()
             # Updates Ghost's movement
             ghost_current_tile = pygame.sprite.spritecollide(ghost, tile_system, False)
-            g_tile = ghost_current_tile.pop()
+            try:
+                g_tile = ghost_current_tile.pop()
+            except IndexError:
+                pass
             
             ghost.create_path(target, [g_tile], tile_system.copy())
     
@@ -370,8 +373,12 @@ while True:
     if loop % 3 == 0:
         # move the sprite(pacman)
         test_movement(movement, MOVESPEED, pacman)
-        ghost_group.update(g_tile, target)
-        update_window()
+        # ghost_group.update(g_tile, target)
+        # update_window()
+        
+    for ghost in ghost_group:
+        if ghost.state == 'D' or loop % 3 == 0:
+            ghost.update(g_tile, target)
     
     # Check if Pacman collided with any Pellets
     # True = Pellet will be destroyed when collided with
