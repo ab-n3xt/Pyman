@@ -84,7 +84,7 @@ pacman = Pacman(224, 384, MOVESPEED) # 16 * 14, 16 * 24
 pacman_group = pygame.sprite.GroupSingle(pacman)
     
 # Initialize Ghosts
-ghost_group = pygame.sprite.Group(Ghost(208, 192, MOVESPEED, 'red'))
+ghost_group = pygame.sprite.Group(Ghost(208, 192, MOVESPEED, 'red'), Ghost(224, 192, MOVESPEED, 'pink'))
     
 # Initialize movement variable
 movement = 'R'
