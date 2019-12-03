@@ -138,8 +138,9 @@ class Ghost(pygame.sprite.Sprite):
                 self.shift()
 
         elif self.state == 'V':
-            if self.pixel == 0 and self.correct_path:
+            if self.pixel == 0:
                 self.choose_direction(current_grid, pacman)
+
             if not self.correct_path:
                 self.reverse()
             else:
@@ -150,7 +151,6 @@ class Ghost(pygame.sprite.Sprite):
                 self.speed = self.dead_speed
                 self.chase_pacman()
             else:
-                self.speed = self.default_speed / 2
                 self.reverse()
 
         elif self.state == 'R':
@@ -337,24 +337,68 @@ class Ghost(pygame.sprite.Sprite):
         return math.sqrt(math.pow(point_2.x - point_1.x, 2) + math.pow(point_2.y - point_1.y, 2))
 
     def shift(self):
-        if self.path_move == 'U':
-            self.rect.bottom += self.speed / 2
-            self.pixel -= self.speed / 2
-        elif self.path_move == 'D':
-            self.rect.top -= self.speed / 2
-            self.pixel -= self.speed / 2
-        elif self.path_move == 'L':
-            self.rect.right += self.speed / 2
-            self.pixel -= self.speed / 2
-        elif self.path_move == 'R':
-            self.rect.left -= self.speed / 2
-            self.pixel -= self.speed / 2
+        if self.pixel % 4 != 0:
+            if self.pixel < 8:
+                if self.path_move == 'U':
+                    self.rect.bottom += self.speed / 2
+                    self.pixel -= self.speed / 2
+                elif self.path_move == 'D':
+                    self.rect.top -= self.speed / 2
+                    self.pixel -= self.speed / 2
+                elif self.path_move == 'L':
+                    self.rect.right += self.speed / 2
+                    self.pixel -= self.speed / 2
+                elif self.path_move == 'R':
+                    self.rect.left -= self.speed / 2
+                    self.pixel -= self.speed / 2
+            else:
+                if self.path_move == 'U':
+                    self.rect.top -= self.speed / 2
+                    self.pixel += self.speed / 2
+                elif self.path_move == 'D':
+                    self.rect.bottom += self.speed / 2                    
+                    self.pixel += self.speed / 2
+                elif self.path_move == 'L':
+                    self.rect.left -= self.speed / 2
+                    self.pixel += self.speed / 2
+                elif self.path_move == 'R':
+                    self.rect.right += self.speed / 2
+                    self.pixel += self.speed / 2
+        else:
+            if self.pixel < 8:
+                if self.path_move == 'U':
+                    self.rect.bottom += self.speed
+                    self.pixel -= self.speed
+                elif self.path_move == 'D':
+                    self.rect.top -= self.speed
+                    self.pixel -= self.speed
+                elif self.path_move == 'L':
+                    self.rect.right += self.speed
+                    self.pixel -= self.speed
+                elif self.path_move == 'R':
+                    self.rect.left -= self.speed
+                    self.pixel -= self.speed
+            else:
+                if self.path_move == 'U':
+                    self.rect.top -= self.speed
+                    self.pixel += self.speed
+                elif self.path_move == 'D':
+                    self.rect.bottom += self.speed                 
+                    self.pixel += self.speed
+                elif self.path_move == 'L':
+                    self.rect.left -= self.speed
+                    self.pixel += self.speed
+                elif self.path_move == 'R':
+                    self.rect.right += self.speed
+                    self.pixel += self.speed
         
-        self.correct_path = True
+        if self.pixel % 16 == 0:
+            self.pixel = 0
+            self.correct_path = True
 
     def toggle_death(self):
         self.state = 'D'
-        self.image = pygame.image.load('../sprites/red.png')
+        self.image = self.defaultimage
         if self.pixel != 0:
             self.correct_path = False
         else:
@@ -372,6 +416,7 @@ class Ghost(pygame.sprite.Sprite):
     def toggle_spawn(self):
         self.state = 'S'
         self.respawn_timer = None
+
 
 class Pacman(pygame.sprite.Sprite):
     
