@@ -370,14 +370,11 @@ while True:
             
             ghost.create_path(target, [g_tile], tile_system.copy())
     
-
-    
+    # Move Pacman
     if loop % 3 == 0:
-        # move the sprite(pacman)
         test_movement(movement, MOVESPEED, pacman)
-        # ghost_group.update(g_tile, target)
-        # update_window()
         
+    # Move Ghosts
     for ghost in ghost_group:
         if ghost.state == 'D' or loop % 3 == 0:
             ghost.update(g_tile, target)
@@ -413,7 +410,6 @@ while True:
     for ghost in collided_ghosts:
         if ghost.state == 'V':
             ghost.toggle_death()
-            time_start = None
             POINTS += 200
         elif ghost.state == 'A':
             window.fill(constants.BLACK)
