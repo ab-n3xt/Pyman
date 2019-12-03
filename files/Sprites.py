@@ -85,6 +85,7 @@ class Ghost(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         
+        self.defaultimage = pygame.image.load(f'../sprites/{color}.png')
         self.defaultx = x
         self.defaulty = y
         
@@ -232,9 +233,10 @@ class Ghost(pygame.sprite.Sprite):
 
     def chase_pacman(self):
         # Reached destination
-        # if self.path == '':
-            # self.toggle_death()
-            # return
+        if self.path == '':
+            self.state = 'R'
+            self.respawn_timer = time.time()
+            return
 
         # Normal movement loop
         if self.path[0] == 'U':
@@ -360,7 +362,8 @@ class Ghost(pygame.sprite.Sprite):
 
     def toggle_alive(self):
         self.state = 'A'
-        self.image = pygame.image.load('../sprites/red.png')
+        self.image = self.defaultimage
+        self.speed = self.default_speed
         if self.pixel != 0:
             self.correct_path = False
         else:
