@@ -136,6 +136,8 @@ def load_game():
     
     # Sets Pacman to its default position
     pacman.reset_pos()
+    for ghost in ghost_group:
+        ghost.reset_pos()
     
     # Create the pellets
     pellets.empty()
