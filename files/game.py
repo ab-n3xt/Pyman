@@ -168,7 +168,8 @@ def continue_game():
     
     # Sets Pacman & Ghost to their default position
     pacman.reset_pos()
-    ghost.reset_pos()
+    for ghost in ghost_group:
+        ghost.reset_pos()
     
     # Updates Pacman's movement
     pacman_current_grid = pygame.sprite.spritecollide(pacman, tile_system, False)
