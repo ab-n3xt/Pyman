@@ -142,10 +142,6 @@ class Ghost(pygame.sprite.Sprite):
                 self.shift()
 
         elif self.state == 'V':
-            # print(f"Path move: {self.path_move}; Pixel: {self.pixel}")
-            # if self.pixel == 0:
-                # self.choose_direction(current_grid, pacman)
-
             if not self.correct_path:
                 self.reverse()
             else:
