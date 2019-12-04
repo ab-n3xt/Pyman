@@ -94,9 +94,6 @@ class Ghost(pygame.sprite.Sprite):
         self.default_speed = speed
         self.dead_speed = speed * 2
         
-        # Used to determine whether Pacman can eat Ghost
-        self.isVulnerable = False
-        
         # Used for path-finding
         self.path = None
         self.path_move = None
