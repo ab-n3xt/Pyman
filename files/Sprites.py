@@ -102,13 +102,14 @@ class Ghost(pygame.sprite.Sprite):
         # Keeping track of which pixel Ghost is currently on
         self.pixel = 0
         
-        # Six states:
-        #   - 'A'live
-        #   - 'V'ulnerable
-        #   - 'D'ead
-        #   - 'R'espawning
-        #   - 'P'urgatory
-        #   - 'S'pawning
+        # Seven states:
+        #   - 'I'nnocent            Roam
+        #   - 'A'live               Chase
+        #   - 'V'ulnerable          Run Away
+        #   - 'D'ead                Back to Spawner
+        #   - 'R'espawning          Enter Spawner
+        #   - 'P'urgatory           Pace in Spawner
+        #   - 'S'pawning            Exit Spawner
         # Initial state is Alive
         self.state = 'A'
         
@@ -128,15 +129,22 @@ class Ghost(pygame.sprite.Sprite):
             self.correct_path = True
 
     def update(self, current_grid, pacman):
-        if self.state == 'A':
+        if self.state == 'I':
+            if self.correct_path:
+                self.chase_pacman()
+            else:
+                self.shift()
+
+        elif self.state == 'A':
             if self.correct_path:
                 self.chase_pacman()
             else:
                 self.shift()
 
         elif self.state == 'V':
-            if self.pixel == 0:
-                self.choose_direction(current_grid, pacman)
+            # print(f"Path move: {self.path_move}; Pixel: {self.pixel}")
+            # if self.pixel == 0:
+                # self.choose_direction(current_grid, pacman)
 
             if not self.correct_path:
                 self.reverse()
