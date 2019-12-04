@@ -353,22 +353,27 @@ while True:
                 
     for ghost in ghost_group:
         if (ghost.pixel == 0 and loop % 3 == 0) or ghost.state == 'D':
-            # Find Pacman's and Respawner's current tile
-            pacman_current_tile = pygame.sprite.spritecollide(pacman, tile_system, False)
-            respawner_current_tile = pygame.sprite.spritecollide(respawner_tile, tile_system, False)
-            target = None
-            if ghost.state == 'A':
-                target = pacman_current_tile.pop()
-            else:
-                target = respawner_current_tile.pop()
-            # Updates Ghost's movement
-            ghost_current_tile = pygame.sprite.spritecollide(ghost, tile_system, False)
-            try:
-                g_tile = ghost_current_tile.pop()
-            except IndexError:
-                pass
-            
-            ghost.create_path(target, [g_tile], tile_system.copy())
+            if ghost.state == 'A' or ghost.state == 'D' or ghost.state == 'V':
+                # Find Pacman's and Respawner's current tile
+                pacman_current_tile = pygame.sprite.spritecollide(pacman, tile_system, False)
+                respawner_current_tile = pygame.sprite.spritecollide(respawner_tile, tile_system, False)
+                target = None
+                if ghost.state == 'A':
+                    target = pacman_current_tile.pop()
+                elif ghost.state == 'D':
+                    target = respawner_current_tile.pop()
+                # Updates Ghost's movement
+                ghost_current_tile = pygame.sprite.spritecollide(ghost, tile_system, False)
+                try:
+                    g_tile = ghost_current_tile.pop()
+                except IndexError:
+                    pass
+                if ghost.state == 'A':
+                    ghost.create_path(target, [g_tile], tile_system.copy())
+                elif ghost.state == 'D':
+                    ghost.create_path(target, [g_tile], tile_system.copy())
+                elif ghost.state == 'V':
+                    ghost.choose_direction(g_tile, pacman)
     
     # Move Pacman
     if loop % 3 == 0:
@@ -394,7 +399,6 @@ while True:
         for ghost in ghost_group:
             if ghost.state == 'A':
                 ghost.toggle_vulnerability()
-        
         
     # Check if all Pellets are eaten
     if len(pellets) == 0:
@@ -434,9 +438,8 @@ while True:
         transport_right(pacman)
         
     # Move Ghost to Respawning Area if they collide with entrance and are dead
-    dead_ghosts = pygame.sprite.spritecollide(ghost, respawner, False)
-    for ghosts in dead_ghosts:
-        if ghost.state == 'D':
+    for ghosts in ghost_group:
+        if ghost.state == 'D' and pygame.sprite.spritecollide(ghost, respawner, False):
             ghost.state = 'R'
             ghost.respawn_timer = time.time()
 
