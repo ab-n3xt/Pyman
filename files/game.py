@@ -349,6 +349,15 @@ while True:
                 if ghost.state == 'V':
                     ghost.toggle_alive()
             time_start = None
+            
+    if len(pellets) == 200:
+        red = ghost_group.sprites()[0]
+        if red.state == 'I':
+            red.toggle_alive()
+    elif len(pellets) == 150:
+        pink = ghost_group.sprites()[1]
+        if pink.state == 'I':
+            pink.toggle_alive()
 
     # Checks to see if any Ghosts are respawning
     # Then if 5 seconds have passed, 'S'pawn the Ghost back into the game
