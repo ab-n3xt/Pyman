@@ -51,6 +51,13 @@ power_pellets = pygame.sprite.Group()
 l_transporter = pygame.sprite.GroupSingle(Tile(0, 16 * 15))
 r_transporter = pygame.sprite.GroupSingle(Tile(16 * 27, 16 * 15))
 
+# Used for roaming
+top_left_tile = Tile(16 * 1, 16 * 1)
+top_right_tile = Tile(16 * 26, 16 * 1)
+bottom_left_tile = Tile(16 * 1, 16 * 30)
+bottom_right_tile = Tile(16 * 26, 16 * 30)
+roam_tiles = pygame.sprite.Group(top_left_tile, top_right_tile, bottom_left_tile, bottom_right_tile)
+
 # Respawner
 respawner_tile = Tile(208, 192)
 respawner = pygame.sprite.GroupSingle(respawner_tile)
@@ -353,27 +360,29 @@ while True:
                 
     for ghost in ghost_group:
         if (ghost.pixel == 0 and loop % 3 == 0) or ghost.state == 'D':
-            if ghost.state == 'A' or ghost.state == 'D' or ghost.state == 'V':
                 # Find Pacman's and Respawner's current tile
                 pacman_current_tile = pygame.sprite.spritecollide(pacman, tile_system, False)
                 respawner_current_tile = pygame.sprite.spritecollide(respawner_tile, tile_system, False)
-                target = None
-                if ghost.state == 'A':
-                    target = pacman_current_tile.pop()
-                elif ghost.state == 'D':
-                    target = respawner_current_tile.pop()
+                
                 # Updates Ghost's movement
                 ghost_current_tile = pygame.sprite.spritecollide(ghost, tile_system, False)
                 try:
                     g_tile = ghost_current_tile.pop()
                 except IndexError:
                     pass
+
+                target = None
+
                 if ghost.state == 'A':
+                    target = pacman_current_tile.pop()
                     ghost.create_path(target, [g_tile], tile_system.copy())
                 elif ghost.state == 'D':
+                    target = respawner_current_tile.pop()
                     ghost.create_path(target, [g_tile], tile_system.copy())
                 elif ghost.state == 'V':
                     ghost.choose_best_direction(g_tile, pacman)
+                elif ghost.state == 'I':
+                    ghost.choose_direction(g_tile)
     
     # Move Pacman
     if loop % 3 == 0:
