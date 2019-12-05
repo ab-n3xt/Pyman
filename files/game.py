@@ -373,7 +373,7 @@ while True:
                 elif ghost.state == 'D':
                     ghost.create_path(target, [g_tile], tile_system.copy())
                 elif ghost.state == 'V':
-                    ghost.choose_direction(g_tile, pacman)
+                    ghost.choose_best_direction(g_tile, pacman)
     
     # Move Pacman
     if loop % 3 == 0:
