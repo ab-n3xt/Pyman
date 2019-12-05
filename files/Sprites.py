@@ -85,6 +85,7 @@ class Ghost(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         
+        # Defaults that can be referenced back to
         self.defaultimage = pygame.image.load(f'../sprites/{color}.png')
         self.defaultx = x
         self.defaulty = y
