@@ -112,10 +112,13 @@ class Ghost(pygame.sprite.Sprite):
         #   - 'P'urgatory           Pace in Spawner
         #   - 'S'pawning            Exit Spawner
         # Initial state is Alive
-        self.state = 'A'
+        self.state = 'I'
         
         # Keeping track of pacing direction (within Respawning Zone)
         self.pace_dir = 'R'
+        
+        
+        self.roam_dir = None
 
         # Timer for respawning
         self.respawn_timer = None
@@ -302,7 +305,7 @@ class Ghost(pygame.sprite.Sprite):
             self.correct_path = True
             self.path_move = None
 
-    def choose_direction(self, current_grid, pacman):
+    def choose_best_direction(self, current_grid, pacman):
         valid_moves = current_grid.valid_moves
         distance = self.calculate_distance(current_grid.rect, pacman.rect)
         for moves in valid_moves:
@@ -419,6 +422,11 @@ class Ghost(pygame.sprite.Sprite):
         self.state = 'S'
         self.respawn_timer = None
 
+    def choose_direction(self, current_grid):
+        valid_moves = current_grid.valid_moves
+                
+        
+        
 
 class Pacman(pygame.sprite.Sprite):
     
