@@ -429,21 +429,26 @@ class Ghost(pygame.sprite.Sprite):
     def roam(self):
         # Normal movement loop
         if self.roam_path == 'U':
+            self.path_move = 'U'
             self.rect.top -= self.speed
             self.pixel += self.speed
         elif self.roam_path == 'D':
+            self.path_move = 'D'
             self.rect.bottom += self.speed
             self.pixel += self.speed
         elif self.roam_path == 'L':
+            self.path_move = 'L'
             self.rect.left -= self.speed
             self.pixel += self.speed
         elif self.roam_path == 'R':
+            self.path_move = 'R'
             self.rect.right += self.speed
             self.pixel += self.speed
         
         # When Ghost reaches a grid, reset pixel count back to 0
         if self.pixel == 16:
             self.pixel = 0
+            self.path_move = None
             self.roam_path = None
 
 class Pacman(pygame.sprite.Sprite):
