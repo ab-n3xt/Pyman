@@ -117,8 +117,7 @@ class Ghost(pygame.sprite.Sprite):
         # Keeping track of pacing direction (within Respawning Zone)
         self.pace_dir = 'R'
         
-        
-        self.roam_dir = None
+        self.roam_path = None
 
         # Timer for respawning
         self.respawn_timer = None
@@ -135,7 +134,7 @@ class Ghost(pygame.sprite.Sprite):
     def update(self, current_grid, pacman):
         if self.state == 'I':
             if self.correct_path:
-                self.chase_pacman()
+                self.roam()
             else:
                 self.shift()
 
@@ -424,9 +423,28 @@ class Ghost(pygame.sprite.Sprite):
 
     def choose_direction(self, current_grid):
         valid_moves = current_grid.valid_moves
-                
+        index = random.randint(0, len(valid_moves)-1)
+        self.roam_path = valid_moves[index]                
         
+    def roam(self):
+        # Normal movement loop
+        if self.roam_path == 'U':
+            self.rect.top -= self.speed
+            self.pixel += self.speed
+        elif self.roam_path == 'D':
+            self.rect.bottom += self.speed
+            self.pixel += self.speed
+        elif self.roam_path == 'L':
+            self.rect.left -= self.speed
+            self.pixel += self.speed
+        elif self.roam_path == 'R':
+            self.rect.right += self.speed
+            self.pixel += self.speed
         
+        # When Ghost reaches a grid, reset pixel count back to 0
+        if self.pixel == 16:
+            self.pixel = 0
+            self.roam_path = None
 
 class Pacman(pygame.sprite.Sprite):
     
