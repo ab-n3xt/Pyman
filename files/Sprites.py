@@ -202,12 +202,12 @@ class Ghost(pygame.sprite.Sprite):
         self.rect.y = self.defaulty
         self.pixel = 0
 
-    def create_path(self, pacman, untraversed, grid_system):
+    def create_path(self, pacman, untraversed, tile_system):
         """
             Parameters:
                 - pacman       : Pacman's current Tile()
                 - untraversed  : list of untraversed Tile()
-                - grid_system  : list of all Tile() in the game
+                - tile_system  : list of all Tile() in the game
         """
         for box in untraversed:
             if box == pacman: # check if box being checked is where pacman is
@@ -217,46 +217,46 @@ class Ghost(pygame.sprite.Sprite):
                 
             for key in box.valid_moves:
                 if key == 'U':
-                    tile = box.valid_moves[key] # get tile from grid_system
+                    tile = box.valid_moves[key] # get tile from tile_system
                     tile.path = tile.path + 'U' # keeps track of where it came from
                     if not (tile in untraversed):
-                        tile.remove(grid_system)    # remove from grid_system
+                        tile.remove(tile_system)    # remove from tile_system
                         untraversed.append(tile)    # appends to end of untraversed list
                 if key == 'D':
-                    # for grid in grid_system:
+                    # for grid in tile_system:
                     #     if grid.rect.x == box.rect.x and grid.rect.y == box.rect.y + 16:
                     #         grid.path = box.path + 'D' # keeps track of where it came from
-                    #         grid.remove(grid_system) # remove from grid_system
+                    #         grid.remove(tile_system) # remove from tile_system
                     #         untraversed.append(grid) # appends to end of untraversed list
                     #         break
-                    tile = box.valid_moves[key] # get tile from grid_system
+                    tile = box.valid_moves[key] # get tile from tile_system
                     tile.path = tile.path + 'D' # keeps track of where it came from
                     if not (tile in untraversed):
-                        tile.remove(grid_system)    # remove from grid_system
+                        tile.remove(tile_system)    # remove from tile_system
                         untraversed.append(tile)    # appends to end of untraversed list
                 if key == 'L':
-                    # for grid in grid_system:
+                    # for grid in tile_system:
                     #     if grid.rect.x == box.rect.x - 16 and grid.rect.y == box.rect.y:
                     #         grid.path = box.path + 'L' # keeps track of where it came from
-                    #         grid.remove(grid_system) # remove from grid_system
+                    #         grid.remove(tile_system) # remove from tile_system
                     #         untraversed.append(grid) # appends to end of untraversed list
                     #         break
-                    tile = box.valid_moves[key] # get tile from grid_system
+                    tile = box.valid_moves[key] # get tile from tile_system
                     tile.path = tile.path + 'L' # keeps track of where it came from
                     if not (tile in untraversed):
-                        tile.remove(grid_system)    # remove from grid_system
+                        tile.remove(tile_system)    # remove from tile_system
                         untraversed.append(tile)    # appends to end of untraversed list
                 if key == 'R':
-                    # for grid in grid_system:
+                    # for grid in tile_system:
                     #     if grid.rect.x == box.rect.x + 16 and grid.rect.y == box.rect.y:
                     #         grid.path = box.path + 'R' # keeps track of where it came from
-                    #         grid.remove(grid_system) # remove from grid_system
+                    #         grid.remove(tile_system) # remove from tile_system
                     #         untraversed.append(grid) # appends to end of untraversed list
                     #         break
-                    tile = box.valid_moves[key] # get tile from grid_system
+                    tile = box.valid_moves[key] # get tile from tile_system
                     tile.path = tile.path + 'R' # keeps track of where it came from
                     if not (tile in untraversed):
-                        tile.remove(grid_system)    # remove from grid_system
+                        tile.remove(tile_system)    # remove from tile_system
                         untraversed.append(tile)    # appends to end of untraversed list
             
             box.path = ''
