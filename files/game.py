@@ -76,9 +76,7 @@ while y < constants.WINDOWHEIGHT:
         # If the cropped image's color is BLACK
         if pygame.transform.average_color(cropped_image)[:3] == constants.BLACK:
             # Create grid for movement
-            grid_member = Tile(x, y)
-            grid_member.check_possible_moves(x, y)
-            tile_system.add(grid_member)
+            tile_system.add(Tile(x, y))
         else:
             walls.add(Tile(x, y))
         
