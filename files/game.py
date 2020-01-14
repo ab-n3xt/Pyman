@@ -99,7 +99,7 @@ while y < constants.WINDOWHEIGHT:
         if pygame.transform.average_color(cropped_image)[:3] == constants.BLACK:
             for tile in tile_system:
                 if tile.rect.x == x and tile.rect.y == y:
-                    tile.check_possible_moves(x, y)
+                    tile.check_possible_moves(x, y, tile_system.copy())
         
         x += 16
     y += 16
