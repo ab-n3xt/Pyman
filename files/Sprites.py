@@ -213,8 +213,10 @@ class Ghost(pygame.sprite.Sprite):
             if box == pacman: # check if box being checked is where pacman is
                 self.path = box.path
                 box.path = ''
+                for b in untraversed:
+                    b.path = ''
                 return
-                
+
             for key in box.valid_moves:
                 if key == 'U':
                     tile = box.valid_moves[key] # get tile from tile_system
