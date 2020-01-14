@@ -85,6 +85,27 @@ while y < constants.WINDOWHEIGHT:
         x += 16
     y += 16
     x = 0
+
+# Connect Grid System
+x = 0
+y = 16
+while y < constants.WINDOWHEIGHT:
+    while x < constants.WINDOWWIDTH:
+        # 16x16 area used for cropping
+        selected_area = pygame.Rect(x, y, 16, 16)
+        
+        # Creates a cropped image from the background
+        cropped_image = background.subsurface(selected_area)
+        
+        # If the cropped image's color is BLACK
+        if pygame.transform.average_color(cropped_image)[:3] == constants.BLACK:
+            for tile in tile_system:
+                if tile.rect.x == x and tile.rect.y == y:
+                    tile.check_possible_moves(x, y)
+        
+        x += 16
+    y += 16
+    x = 0
     
 # Initialize Pacman
 pacman = Pacman(224, 384, MOVESPEED) # 16 * 14, 16 * 24
