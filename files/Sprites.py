@@ -46,9 +46,9 @@ class Tile(pygame.sprite.Sprite):
             cropped_image = self.surface.subsurface(area_down)
             if pygame.transform.average_color(cropped_image)[:3] == BLACK:
                 for tile in tile_system:
-                if tile.rect.x == x_down and tile.rect.y == y_down:
-                    self.valid_moves['D'] = tile
-                    break
+                    if tile.rect.x == x_down and tile.rect.y == y_down:
+                        self.valid_moves['D'] = tile
+                        break
         except ValueError:
             pass
         
@@ -61,9 +61,9 @@ class Tile(pygame.sprite.Sprite):
             cropped_image = self.surface.subsurface(area_left)
             if pygame.transform.average_color(cropped_image)[:3] == BLACK:
                 for tile in tile_system:
-                if tile.rect.x == x_left and tile.rect.y == y_left:
-                    self.valid_moves['L'] = tile
-                    break
+                    if tile.rect.x == x_left and tile.rect.y == y_left:
+                        self.valid_moves['L'] = tile
+                        break
         except ValueError:
             pass
         
@@ -75,9 +75,9 @@ class Tile(pygame.sprite.Sprite):
             cropped_image = self.surface.subsurface(area_right)
             if pygame.transform.average_color(cropped_image)[:3] == BLACK:
                 for tile in tile_system:
-                if tile.rect.x == x_right and tile.rect.y == y_right:
-                    self.valid_moves['R'] = tile
-                    break
+                    if tile.rect.x == x_right and tile.rect.y == y_right:
+                        self.valid_moves['R'] = tile
+                        break
         except ValueError:
             pass
 
