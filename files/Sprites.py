@@ -124,7 +124,7 @@ class Ghost(pygame.sprite.Sprite):
         #   - 'P'urgatory           Pace in Spawner
         #   - 'S'pawning            Exit Spawner
         # Initial state is Alive
-        self.state = 'I'
+        self.state = 'A'
         
         # Keeping track of pacing direction (within Respawning Zone)
         self.pace_dir = 'R'
@@ -144,13 +144,13 @@ class Ghost(pygame.sprite.Sprite):
             self.correct_path = True
 
     def update(self, current_grid, pacman):
-        if self.state == 'I':
-            if self.correct_path:
-                self.roam()
-            else:
-                self.shift()
+        # if self.state == 'I':
+        #     if self.correct_path:
+        #         self.roam()
+        #     else:
+        #         self.shift()
 
-        elif self.state == 'A':
+        if self.state == 'A':
             if self.correct_path:
                 self.chase_pacman()
             else:
@@ -212,13 +212,14 @@ class Ghost(pygame.sprite.Sprite):
         for box in untraversed:
             if box == pacman: # check if box being checked is where pacman is
                 self.path = box.path
+                print(f"PATH: {self.path}")
                 box.path = ''
                 return
                 
             for key in box.valid_moves:
                 if key == 'U':
                     tile = box.valid_moves[key] # get tile from tile_system
-                    tile.path = tile.path + 'U' # keeps track of where it came from
+                    tile.path = box.path + 'U' # keeps track of where it came from
                     if not (tile in untraversed):
                         tile.remove(tile_system)    # remove from tile_system
                         untraversed.append(tile)    # appends to end of untraversed list
@@ -230,7 +231,7 @@ class Ghost(pygame.sprite.Sprite):
                     #         untraversed.append(grid) # appends to end of untraversed list
                     #         break
                     tile = box.valid_moves[key] # get tile from tile_system
-                    tile.path = tile.path + 'D' # keeps track of where it came from
+                    tile.path = box.path + 'D' # keeps track of where it came from
                     if not (tile in untraversed):
                         tile.remove(tile_system)    # remove from tile_system
                         untraversed.append(tile)    # appends to end of untraversed list
@@ -242,7 +243,7 @@ class Ghost(pygame.sprite.Sprite):
                     #         untraversed.append(grid) # appends to end of untraversed list
                     #         break
                     tile = box.valid_moves[key] # get tile from tile_system
-                    tile.path = tile.path + 'L' # keeps track of where it came from
+                    tile.path = box.path + 'L' # keeps track of where it came from
                     if not (tile in untraversed):
                         tile.remove(tile_system)    # remove from tile_system
                         untraversed.append(tile)    # appends to end of untraversed list
@@ -254,7 +255,7 @@ class Ghost(pygame.sprite.Sprite):
                     #         untraversed.append(grid) # appends to end of untraversed list
                     #         break
                     tile = box.valid_moves[key] # get tile from tile_system
-                    tile.path = tile.path + 'R' # keeps track of where it came from
+                    tile.path = box.path + 'R' # keeps track of where it came from
                     if not (tile in untraversed):
                         tile.remove(tile_system)    # remove from tile_system
                         untraversed.append(tile)    # appends to end of untraversed list
@@ -447,35 +448,35 @@ class Ghost(pygame.sprite.Sprite):
         self.state = 'S'
         self.respawn_timer = None
 
-    def choose_direction(self, current_grid):
-        valid_moves = current_grid.valid_moves
-        index = random.randint(0, len(valid_moves)-1)
-        self.roam_path = valid_moves[index]                
+    # def choose_direction(self, current_grid):
+    #     valid_moves = current_grid.valid_moves
+    #     index = random.randint(0, len(valid_moves)-1)
+    #     self.roam_path = valid_moves[index]                
         
-    def roam(self):
-        # Normal movement loop
-        if self.roam_path == 'U':
-            self.path_move = 'U'
-            self.rect.top -= self.speed
-            self.pixel += self.speed
-        elif self.roam_path == 'D':
-            self.path_move = 'D'
-            self.rect.bottom += self.speed
-            self.pixel += self.speed
-        elif self.roam_path == 'L':
-            self.path_move = 'L'
-            self.rect.left -= self.speed
-            self.pixel += self.speed
-        elif self.roam_path == 'R':
-            self.path_move = 'R'
-            self.rect.right += self.speed
-            self.pixel += self.speed
+    # def roam(self):
+    #     # Normal movement loop
+    #     if self.roam_path == 'U':
+    #         self.path_move = 'U'
+    #         self.rect.top -= self.speed
+    #         self.pixel += self.speed
+    #     elif self.roam_path == 'D':
+    #         self.path_move = 'D'
+    #         self.rect.bottom += self.speed
+    #         self.pixel += self.speed
+    #     elif self.roam_path == 'L':
+    #         self.path_move = 'L'
+    #         self.rect.left -= self.speed
+    #         self.pixel += self.speed
+    #     elif self.roam_path == 'R':
+    #         self.path_move = 'R'
+    #         self.rect.right += self.speed
+    #         self.pixel += self.speed
         
-        # When Ghost reaches a grid, reset pixel count back to 0
-        if self.pixel == 16:
-            self.pixel = 0
-            self.path_move = None
-            self.roam_path = None
+    #     # When Ghost reaches a grid, reset pixel count back to 0
+    #     if self.pixel == 16:
+    #         self.pixel = 0
+    #         self.path_move = None
+    #         self.roam_path = None
 
 class Pacman(pygame.sprite.Sprite):
     
