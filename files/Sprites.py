@@ -24,7 +24,7 @@ class Tile(pygame.sprite.Sprite):
         # Used for path-finding
         self.path = ''
         
-    def check_possible_moves(self, x, y):
+    def check_possible_moves(self, x, y, tile_system):
         BLACK = (0, 0, 0)
         
         # Check if the space above this area is also black
