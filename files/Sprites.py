@@ -14,7 +14,7 @@ class Tile(pygame.sprite.Sprite):
         # Create a 16x16 surface and fill it with the color RED
         self.image = pygame.Surface([16, 16])
         
-        self.valid_moves = []
+        self.valid_moves = {}
         
         # Set the rectangle's x and y
         self.rect = self.image.get_rect()
@@ -33,8 +33,11 @@ class Tile(pygame.sprite.Sprite):
         area_up = pygame.Rect(x_up, y_up, 16, 16)
         cropped_image = self.surface.subsurface(area_up)
         if pygame.transform.average_color(cropped_image)[:3] == BLACK:
-            self.valid_moves.append('U')
-        
+            for tile in tile_system:
+                if tile.rect.x == x_up and tile.rect.y == y_up:
+                    self.valid_moves['U'] = tile
+                    break
+
         # Check if the space below this area is also black
         x_down = x
         y_down = y + 16
@@ -42,7 +45,10 @@ class Tile(pygame.sprite.Sprite):
         try:
             cropped_image = self.surface.subsurface(area_down)
             if pygame.transform.average_color(cropped_image)[:3] == BLACK:
-                self.valid_moves.append('D')
+                for tile in tile_system:
+                if tile.rect.x == x_down and tile.rect.y == y_down:
+                    self.valid_moves['D'] = tile
+                    break
         except ValueError:
             pass
         
@@ -54,7 +60,10 @@ class Tile(pygame.sprite.Sprite):
         try:
             cropped_image = self.surface.subsurface(area_left)
             if pygame.transform.average_color(cropped_image)[:3] == BLACK:
-                self.valid_moves.append('L')
+                for tile in tile_system:
+                if tile.rect.x == x_left and tile.rect.y == y_left:
+                    self.valid_moves['L'] = tile
+                    break
         except ValueError:
             pass
         
@@ -65,7 +74,10 @@ class Tile(pygame.sprite.Sprite):
         try:
             cropped_image = self.surface.subsurface(area_right)
             if pygame.transform.average_color(cropped_image)[:3] == BLACK:
-                self.valid_moves.append('R')
+                for tile in tile_system:
+                if tile.rect.x == x_right and tile.rect.y == y_right:
+                    self.valid_moves['R'] = tile
+                    break
         except ValueError:
             pass
 
