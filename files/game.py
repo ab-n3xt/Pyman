@@ -396,7 +396,7 @@ while True:
                 # Updates Ghost's movement
                 ghost_current_tile = pygame.sprite.spritecollide(ghost, tile_system, False)
                 try:
-                    g_tile = ghost_current_tile.pop()
+                    ghost_tile = ghost_current_tile.pop()
                 except IndexError:
                     pass
 
@@ -404,15 +404,15 @@ while True:
 
                 if ghost.state == 'A':
                     target = red_current_tile.pop()
-                    ghost.create_path(target, g_tile)
+                    ghost.create_path(target, ghost_tile)
                 elif ghost.state == 'C':
                     target = pacman_current_tile.pop()
-                    ghost.create_path(target, g_tile)
+                    ghost.create_path(target, ghost_tile)
                 elif ghost.state == 'D':
                     target = respawner_current_tile.pop()
-                    ghost.create_path(target, [g_tile], tile_system.copy())
+                    ghost.create_path(target, [ghost_tile], tile_system.copy())
                 elif ghost.state == 'V':
-                    ghost.choose_best_direction(g_tile, pacman)
+                    ghost.random_direction(ghost_tile)
     
     # Move Pacman
     if loop % 3 == 0:
@@ -421,7 +421,7 @@ while True:
     # Move Ghosts
     for ghost in ghost_group:
         if ghost.state == 'D' or loop % 3 == 0:
-            ghost.update(g_tile, target)
+            ghost.update(ghost_tile, target)
     
     # Check if Pacman collided with any Pellets
     # True = Pellet will be destroyed when collided with

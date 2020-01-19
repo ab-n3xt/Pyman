@@ -260,39 +260,20 @@ class Ghost(pygame.sprite.Sprite):
             self.correct_pixel = True
             self.dir = None
 
-    def choose_best_direction(self, current_grid, pacman):
-        valid_moves = list(current_grid.valid_moves.keys())
-        distance = self.calculate_distance(current_grid.rect, pacman.rect)
-        for moves in valid_moves:
-            rect = self.rect.copy()
-            if moves == 'U':
-                rect.top -= self.speed
-                new_distance = self.calculate_distance(rect, pacman.rect)
-                if new_distance > distance:
-                    self.dir = 'U'
-                    break
-            elif moves == 'D':
-                rect.bottom += self.speed
-                new_distance = self.calculate_distance(rect, pacman.rect)
-                if new_distance > distance:
-                    self.dir = 'D'
-                    break
-            elif moves == 'L':
-                rect.left -= self.speed
-                new_distance = self.calculate_distance(rect, pacman.rect)
-                if new_distance > distance:
-                    self.dir = 'L'
-                    break
-            elif moves == 'R':
-                rect.right += self.speed
-                new_distance = self.calculate_distance(rect, pacman.rect)
-                if new_distance > distance:
-                    self.dir = 'R'
-                    break
-        if self.dir == None:
-            index = random.randint(0, len(valid_moves)-1)
-            key = valid_moves[index]
-            self.dir = current_grid.valid_moves[key]
+    def random_direction(self, current_tile):
+        tmp_list = current_tile.valid_moves.copy()
+        
+        if self.dir == 'U' and 'D' in tmp_list:
+            tmp_list.remove('D')
+        elif self.dir == 'D' and 'U' in tmp_list:
+            tmp_list.remove('U')
+        elif self.dir == 'L' and 'R' in tmp_list:
+            tmp_list.remove('R')
+        elif self.dir == 'R' and 'L' in tmp_list:
+            tmp_list.remove('L')
+
+        index = random.randint(0, len(tmp_list)-1)
+        self.dir = tmp_list[index]
 
     def calculate_distance(self, point_1, point_2):
         return math.sqrt(math.pow(point_2.x - point_1.x, 2) + math.pow(point_2.y - point_1.y, 2))
