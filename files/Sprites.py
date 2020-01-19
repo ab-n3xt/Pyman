@@ -219,47 +219,29 @@ class Ghost(pygame.sprite.Sprite):
 
             for key in box.valid_moves:
                 if key == 'U':
-                    tile = box.valid_moves[key] # get tile from tile_system
-                    tile.path = box.path + 'U' # keeps track of where it came from
+                    tile = box.valid_moves[key]     # get tile from tile_system
+                    tile.path = box.path + 'U'      # keeps track of where it came from
                     if not (tile in untraversed):
                         tile.remove(tile_system)    # remove from tile_system
                         untraversed.append(tile)    # appends to end of untraversed list
                 if key == 'D':
-                    # for grid in tile_system:
-                    #     if grid.rect.x == box.rect.x and grid.rect.y == box.rect.y + 16:
-                    #         grid.path = box.path + 'D' # keeps track of where it came from
-                    #         grid.remove(tile_system) # remove from tile_system
-                    #         untraversed.append(grid) # appends to end of untraversed list
-                    #         break
-                    tile = box.valid_moves[key] # get tile from tile_system
-                    tile.path = box.path + 'D' # keeps track of where it came from
+                    tile = box.valid_moves[key]
+                    tile.path = box.path + 'D'
                     if not (tile in untraversed):
-                        tile.remove(tile_system)    # remove from tile_system
-                        untraversed.append(tile)    # appends to end of untraversed list
+                        tile.remove(tile_system)
+                        untraversed.append(tile)
                 if key == 'L':
-                    # for grid in tile_system:
-                    #     if grid.rect.x == box.rect.x - 16 and grid.rect.y == box.rect.y:
-                    #         grid.path = box.path + 'L' # keeps track of where it came from
-                    #         grid.remove(tile_system) # remove from tile_system
-                    #         untraversed.append(grid) # appends to end of untraversed list
-                    #         break
-                    tile = box.valid_moves[key] # get tile from tile_system
-                    tile.path = box.path + 'L' # keeps track of where it came from
+                    tile = box.valid_moves[key]
+                    tile.path = box.path + 'L'
                     if not (tile in untraversed):
-                        tile.remove(tile_system)    # remove from tile_system
-                        untraversed.append(tile)    # appends to end of untraversed list
+                        tile.remove(tile_system)
+                        untraversed.append(tile)
                 if key == 'R':
-                    # for grid in tile_system:
-                    #     if grid.rect.x == box.rect.x + 16 and grid.rect.y == box.rect.y:
-                    #         grid.path = box.path + 'R' # keeps track of where it came from
-                    #         grid.remove(tile_system) # remove from tile_system
-                    #         untraversed.append(grid) # appends to end of untraversed list
-                    #         break
-                    tile = box.valid_moves[key] # get tile from tile_system
-                    tile.path = box.path + 'R' # keeps track of where it came from
+                    tile = box.valid_moves[key]
+                    tile.path = box.path + 'R'
                     if not (tile in untraversed):
-                        tile.remove(tile_system)    # remove from tile_system
-                        untraversed.append(tile)    # appends to end of untraversed list
+                        tile.remove(tile_system)
+                        untraversed.append(tile)
             
             box.path = ''
 
@@ -448,36 +430,6 @@ class Ghost(pygame.sprite.Sprite):
     def toggle_spawn(self):
         self.state = 'S'
         self.respawn_timer = None
-
-    # def choose_direction(self, current_grid):
-    #     valid_moves = current_grid.valid_moves
-    #     index = random.randint(0, len(valid_moves)-1)
-    #     self.roam_path = valid_moves[index]                
-        
-    # def roam(self):
-    #     # Normal movement loop
-    #     if self.roam_path == 'U':
-    #         self.path_move = 'U'
-    #         self.rect.top -= self.speed
-    #         self.pixel += self.speed
-    #     elif self.roam_path == 'D':
-    #         self.path_move = 'D'
-    #         self.rect.bottom += self.speed
-    #         self.pixel += self.speed
-    #     elif self.roam_path == 'L':
-    #         self.path_move = 'L'
-    #         self.rect.left -= self.speed
-    #         self.pixel += self.speed
-    #     elif self.roam_path == 'R':
-    #         self.path_move = 'R'
-    #         self.rect.right += self.speed
-    #         self.pixel += self.speed
-        
-    #     # When Ghost reaches a grid, reset pixel count back to 0
-    #     if self.pixel == 16:
-    #         self.pixel = 0
-    #         self.path_move = None
-    #         self.roam_path = None
 
 class Pacman(pygame.sprite.Sprite):
     
