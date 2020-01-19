@@ -132,15 +132,6 @@ class Ghost(pygame.sprite.Sprite):
         # Timer for respawning
         self.respawn_timer = None
 
-    def toggle_vulnerability(self):
-        self.state = 'V'
-        self.image = pygame.image.load('../sprites/v-ghost.png')
-        self.speed = self.speed / 2
-        if self.pixel != 0:
-            self.correct_path = False
-        else:
-            self.correct_path = True
-
     def update(self, current_grid, pacman):
         if self.state == 'A':
             if self.correct_path:
@@ -388,6 +379,15 @@ class Ghost(pygame.sprite.Sprite):
         
         if self.pixel % 16 == 0:
             self.pixel = 0
+            self.correct_path = True
+
+    def toggle_vulnerability(self):
+        self.state = 'V'
+        self.image = pygame.image.load('../sprites/v-ghost.png')
+        self.speed = self.speed / 2
+        if self.pixel != 0:
+            self.correct_path = False
+        else:
             self.correct_path = True
 
     def toggle_death(self):
