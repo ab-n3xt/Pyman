@@ -430,6 +430,7 @@ class Ghost(pygame.sprite.Sprite):
         self.state = 'S'
         self.respawn_timer = None
 
+
 class Pacman(pygame.sprite.Sprite):
     
     def __init__(self, x, y, speed):
