@@ -14,15 +14,12 @@ class Tile(pygame.sprite.Sprite):
         # Create a 16x16 surface and fill it with the color RED
         self.image = pygame.Surface([16, 16])
         
-        self.valid_moves = {}
+        self.valid_moves = []
         
         # Set the rectangle's x and y
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        
-        # Used for path-finding
-        self.path = ''
         
     def check_possible_moves(self, x, y, tile_system):
         BLACK = (0, 0, 0)
@@ -33,10 +30,7 @@ class Tile(pygame.sprite.Sprite):
         area_up = pygame.Rect(x_up, y_up, 16, 16)
         cropped_image = self.surface.subsurface(area_up)
         if pygame.transform.average_color(cropped_image)[:3] == BLACK:
-            for tile in tile_system:
-                if tile.rect.x == x_up and tile.rect.y == y_up:
-                    self.valid_moves['U'] = tile
-                    break
+            self.valid_moves.append('U')
 
         # Check if the space below this area is also black
         x_down = x
@@ -45,10 +39,7 @@ class Tile(pygame.sprite.Sprite):
         try:
             cropped_image = self.surface.subsurface(area_down)
             if pygame.transform.average_color(cropped_image)[:3] == BLACK:
-                for tile in tile_system:
-                    if tile.rect.x == x_down and tile.rect.y == y_down:
-                        self.valid_moves['D'] = tile
-                        break
+                self.valid_moves.append('D')
         except ValueError:
             pass
         
@@ -60,10 +51,7 @@ class Tile(pygame.sprite.Sprite):
         try:
             cropped_image = self.surface.subsurface(area_left)
             if pygame.transform.average_color(cropped_image)[:3] == BLACK:
-                for tile in tile_system:
-                    if tile.rect.x == x_left and tile.rect.y == y_left:
-                        self.valid_moves['L'] = tile
-                        break
+                self.valid_moves.append('L')
         except ValueError:
             pass
         
@@ -74,10 +62,7 @@ class Tile(pygame.sprite.Sprite):
         try:
             cropped_image = self.surface.subsurface(area_right)
             if pygame.transform.average_color(cropped_image)[:3] == BLACK:
-                for tile in tile_system:
-                    if tile.rect.x == x_right and tile.rect.y == y_right:
-                        self.valid_moves['R'] = tile
-                        break
+                self.valid_moves.append('R')
         except ValueError:
             pass
 
@@ -108,7 +93,7 @@ class Ghost(pygame.sprite.Sprite):
         self.dead_speed = speed * 2
         
         # Used for path-finding
-        self.dir = None
+        self.dir = 'R'
         self.correct_pixel = True
         
         # Keeping track of which pixel Ghost is currently on
@@ -171,73 +156,65 @@ class Ghost(pygame.sprite.Sprite):
         self.rect.y = self.defaulty
         self.pixel = 0
 
-    def create_path(self, pacman, untraversed, tile_system):
+    def create_path(self, target_tile, current_tile):
         """
             Parameters:
-                - pacman       : Pacman's current Tile()
-                - untraversed  : list of untraversed Tile()
-                - tile_system  : list of all Tile() in the game
-        """
-        for box in untraversed:
-            if box == pacman: # check if box being checked is where pacman is
-                self.path = box.path
-                box.path = ''
-                for b in untraversed:
-                    b.path = ''
-                return
-
-            for key in box.valid_moves:
-                if key == 'U':
-                    tile = box.valid_moves[key]     # get tile from tile_system
-                    tile.path = box.path + 'U'      # keeps track of where it came from
-                    if not (tile in untraversed):
-                        tile.remove(tile_system)    # remove from tile_system
-                        untraversed.append(tile)    # appends to end of untraversed list
-                if key == 'D':
-                    tile = box.valid_moves[key]
-                    tile.path = box.path + 'D'
-                    if not (tile in untraversed):
-                        tile.remove(tile_system)
-                        untraversed.append(tile)
-                if key == 'L':
-                    tile = box.valid_moves[key]
-                    tile.path = box.path + 'L'
-                    if not (tile in untraversed):
-                        tile.remove(tile_system)
-                        untraversed.append(tile)
-                if key == 'R':
-                    tile = box.valid_moves[key]
-                    tile.path = box.path + 'R'
-                    if not (tile in untraversed):
-                        tile.remove(tile_system)
-                        untraversed.append(tile)
+                - target_tile       : Target tile
+                - current_tile      : Current tile
             
-            box.path = ''
+            Determines best direction using current_tile's position and current_tile's position.
+        """
+        best_distance = None
+        new_distance = None
+        all_possible_moves = {
+            'U': None,
+            'L': None,
+            'D': None,
+            'R': None,
+        }
+        for moves in current_tile.valid_moves:
+            rect = self.rect.copy()
+            if moves == 'U' and self.dir != 'D':
+                rect.top -= self.speed
+                new_distance = self.calculate_distance(rect, target_tile.rect)
+                all_possible_moves['U'] = new_distance
+            elif moves == 'D' and self.dir != 'U':
+                rect.bottom += self.speed
+                new_distance = self.calculate_distance(rect, target_tile.rect)
+                all_possible_moves['D'] = new_distance
+            elif moves == 'L' and self.dir != 'R':
+                rect.left -= self.speed
+                new_distance = self.calculate_distance(rect, target_tile.rect)
+                all_possible_moves['L'] = new_distance
+            elif moves == 'R' and self.dir != 'L':
+                rect.right += self.speed
+                new_distance = self.calculate_distance(rect, target_tile.rect)
+                all_possible_moves['R'] = new_distance
+            
+            if best_distance == None:
+                best_distance = new_distance
+            elif new_distance < best_distance:
+                best_distance = new_distance
+
+        for key in all_possible_moves:
+            if best_distance == all_possible_moves[key]:
+                self.dir = key
+                break
 
     def chase_pacman(self):
-        # Reached destination
-        if self.path == '':
-            self.state = 'R'
-            self.respawn_timer = time.time()
-            return
-
         # Normal movement loop
-        if self.path[0] == 'U':
+        if self.dir == 'U':
             self.rect.top -= self.speed
             self.pixel += self.speed
-            self.dir = 'U'
-        elif self.path[0] == 'D':
+        elif self.dir == 'D':
             self.rect.bottom += self.speed
             self.pixel += self.speed
-            self.dir = 'D'
-        elif self.path[0] == 'L':
+        elif self.dir == 'L':
             self.rect.left -= self.speed
             self.pixel += self.speed
-            self.dir = 'L'
-        elif self.path[0] == 'R':
+        elif self.dir == 'R':
             self.rect.right += self.speed
             self.pixel += self.speed
-            self.dir = 'R'
         
         # When Ghost reaches a grid, reset pixel count back to 0
         if self.pixel == 16:

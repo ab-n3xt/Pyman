@@ -369,14 +369,14 @@ while True:
                     ghost.toggle_alive()
             time_start = None
             
-    if len(pellets) == 200:
-        red = ghost_group.sprites()[0]
-        if red.state == 'I':
-            red.toggle_alive()
-    elif len(pellets) == 150:
-        pink = ghost_group.sprites()[1]
-        if pink.state == 'I':
-            pink.toggle_alive()
+    # if len(pellets) == 200:
+    #     red = ghost_group.sprites()[0]
+    #     if red.state == 'I':
+    #         red.toggle_alive()
+    # elif len(pellets) == 150:
+    #     pink = ghost_group.sprites()[1]
+    #     if pink.state == 'I':
+    #         pink.toggle_alive()
 
     # Checks to see if any Ghosts are respawning
     # Then if 5 seconds have passed, 'S'pawn the Ghost back into the game
@@ -403,7 +403,7 @@ while True:
 
                 if ghost.state == 'A':
                     target = pacman_current_tile.pop()
-                    ghost.create_path(target, [g_tile], tile_system.copy())
+                    ghost.create_path(target, g_tile)
                 elif ghost.state == 'D':
                     target = respawner_current_tile.pop()
                     ghost.create_path(target, [g_tile], tile_system.copy())
