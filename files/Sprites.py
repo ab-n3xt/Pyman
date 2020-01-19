@@ -313,7 +313,7 @@ class Ghost(pygame.sprite.Sprite):
             self.path_move = None
 
     def choose_best_direction(self, current_grid, pacman):
-        valid_moves = current_grid.valid_moves
+        valid_moves = list(current_grid.valid_moves.keys())
         distance = self.calculate_distance(current_grid.rect, pacman.rect)
         for moves in valid_moves:
             rect = self.rect.copy()
@@ -343,7 +343,8 @@ class Ghost(pygame.sprite.Sprite):
                     break
         if self.path_move == None:
             index = random.randint(0, len(valid_moves)-1)
-            self.path_move = valid_moves[index]
+            key = valid_moves[index]
+            self.path_move = current_grid.valid_moves[key]
 
     def calculate_distance(self, point_1, point_2):
         return math.sqrt(math.pow(point_2.x - point_1.x, 2) + math.pow(point_2.y - point_1.y, 2))
