@@ -238,7 +238,6 @@ class Ghost(pygame.sprite.Sprite):
         # When Ghost reaches a grid, reset pixel count back to 0
         if self.pixel == 16:
             self.pixel = 0
-            self.dir = None
 
     def reverse(self):
         # Normal movement loop
@@ -258,7 +257,6 @@ class Ghost(pygame.sprite.Sprite):
         # When Ghost reaches a grid, reset pixel count back to 0
         if self.pixel == 0:
             self.correct_pixel = True
-            self.dir = None
 
     def random_direction(self, current_tile):
         tmp_list = current_tile.valid_moves.copy()
