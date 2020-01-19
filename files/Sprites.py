@@ -431,6 +431,44 @@ class Ghost(pygame.sprite.Sprite):
         self.respawn_timer = None
 
 
+class Red(Ghost):
+
+    def __init__(self, x, y, speed, color):
+        super().__init__(x, y, speed, color)
+        self.directions = {}
+        self.gather_frames()
+        self.image = self.directions['R']
+
+    def gather_frames(self):
+        spreadsheet = pygame.image.load('../sprites/ghosts.png')
+
+        selected_area = pygame.Rect(0, 0, 16, 16)
+        right_image = spreadsheet.subsurface(selected_area)
+
+        selected_area = pygame.Rect(16, 0, 16, 16)
+        up_image = spreadsheet.subsurface(selected_area)
+
+        selected_area = pygame.Rect(32, 0, 16, 16)
+        down_image = spreadsheet.subsurface(selected_area)
+
+        selected_area = pygame.Rect(48, 0, 16, 16)
+        left_image = spreadsheet.subsurface(selected_area)
+
+        self.directions = {
+            'U': up_image,
+            'D': down_image,
+            'L': left_image,
+            'R': right_image,
+        }
+
+    def update(self, current_grid, pacman):
+        super().update(current_grid, pacman)
+
+    def chase_pacman(self):
+        super().chase_pacman()
+        self.image = self.directions[self.path_move]
+
+
 class Pacman(pygame.sprite.Sprite):
     
     def __init__(self, x, y, speed):
