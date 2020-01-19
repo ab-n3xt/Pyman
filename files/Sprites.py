@@ -142,12 +142,6 @@ class Ghost(pygame.sprite.Sprite):
             self.correct_path = True
 
     def update(self, current_grid, pacman):
-        # if self.state == 'I':
-        #     if self.correct_path:
-        #         self.roam()
-        #     else:
-        #         self.shift()
-
         if self.state == 'A':
             if self.correct_path:
                 self.chase_pacman()
@@ -155,10 +149,10 @@ class Ghost(pygame.sprite.Sprite):
                 self.shift()
 
         elif self.state == 'V':
-            if not self.correct_path:
-                self.reverse()
-            else:
+            if self.correct_path:
                 self.run_away()
+            else:
+                self.reverse()
 
         elif self.state == 'D':
             if self.correct_path:
@@ -174,26 +168,13 @@ class Ghost(pygame.sprite.Sprite):
             self.state = 'P'
 
         elif self.state == 'P':
-            if self.pace_dir == 'R':
-                if self.rect.x < 240:
-                    self.rect.right += 4
-                    return
-                else:
-                    self.pace_dir = 'L'
-            if self.pace_dir == 'L':
-                if self.rect.x > 192:
-                    self.rect.left -= 4
-                    return
-                else:
-                    self.pace_dir = 'R'
+            self.pace()
 
         elif self.state == 'S':
             if self.rect.y > 192:
                 self.rect.top -= 4
                 return
-            self.state = 'A'
-            self.speed = self.default_speed
-            self.reset_pos()
+            self.toggle_alive()
 
     def reset_pos(self):
         self.rect.x = self.defaultx
@@ -430,6 +411,20 @@ class Ghost(pygame.sprite.Sprite):
         self.state = 'S'
         self.respawn_timer = None
 
+    def pace(self):
+        if self.pace_dir == 'R':
+            if self.rect.x < 240:
+                self.rect.right += 4
+                return
+            else:
+                self.pace_dir = 'L'
+        if self.pace_dir == 'L':
+            if self.rect.x > 192:
+                self.rect.left -= 4
+                return
+            else:
+                self.pace_dir = 'R'
+
 
 class Red(Ghost):
 
@@ -460,9 +455,6 @@ class Red(Ghost):
             'L': left_image,
             'R': right_image,
         }
-
-    def update(self, current_grid, pacman):
-        super().update(current_grid, pacman)
 
     def chase_pacman(self):
         super().chase_pacman()
