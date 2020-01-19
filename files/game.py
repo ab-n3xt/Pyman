@@ -368,15 +368,6 @@ while True:
                 if ghost.state == 'V':
                     ghost.toggle_alive()
             time_start = None
-            
-    # if len(pellets) == 200:
-    #     red = ghost_group.sprites()[0]
-    #     if red.state == 'I':
-    #         red.toggle_alive()
-    # elif len(pellets) == 150:
-    #     pink = ghost_group.sprites()[1]
-    #     if pink.state == 'I':
-    #         pink.toggle_alive()
 
     # Checks to see if any Ghosts are respawning
     # Then if 5 seconds have passed, 'S'pawn the Ghost back into the game
@@ -391,7 +382,12 @@ while True:
                 # Find Pacman's and Respawner's current tile
                 pacman_current_tile = pygame.sprite.spritecollide(pacman, tile_system, False)
                 respawner_current_tile = pygame.sprite.spritecollide(respawner_tile, tile_system, False)
+                
+                # Find Ghost's current tiles
                 red_current_tile = pygame.sprite.spritecollide(top_right_tile, walls, False)
+                pink_current_tile = pygame.sprite.spritecollide(top_left_tile, walls, False)
+                orange_current_tile = pygame.sprite.spritecollide(bottom_left_tile, walls, False)
+                teal_current_tile = pygame.sprite.spritecollide(bottom_right_tile, walls, False)
                 
                 # Updates Ghost's movement
                 ghost_current_tile = pygame.sprite.spritecollide(ghost, tile_system, False)
@@ -410,7 +406,7 @@ while True:
                     ghost.create_path(target, ghost_tile)
                 elif ghost.state == 'D':
                     target = respawner_current_tile.pop()
-                    ghost.create_path(target, [ghost_tile], tile_system.copy())
+                    ghost.create_path(target, ghost_tile)
                 elif ghost.state == 'V':
                     ghost.random_direction(ghost_tile)
     
