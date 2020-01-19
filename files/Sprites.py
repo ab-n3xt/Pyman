@@ -128,8 +128,6 @@ class Ghost(pygame.sprite.Sprite):
         
         # Keeping track of pacing direction (within Respawning Zone)
         self.pace_dir = 'R'
-        
-        self.roam_path = None
 
         # Timer for respawning
         self.respawn_timer = None
