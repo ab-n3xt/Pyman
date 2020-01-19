@@ -391,6 +391,7 @@ while True:
                 # Find Pacman's and Respawner's current tile
                 pacman_current_tile = pygame.sprite.spritecollide(pacman, tile_system, False)
                 respawner_current_tile = pygame.sprite.spritecollide(respawner_tile, tile_system, False)
+                red_current_tile = pygame.sprite.spritecollide(top_right_tile, walls, False)
                 
                 # Updates Ghost's movement
                 ghost_current_tile = pygame.sprite.spritecollide(ghost, tile_system, False)
@@ -402,6 +403,9 @@ while True:
                 target = None
 
                 if ghost.state == 'A':
+                    target = red_current_tile.pop()
+                    ghost.create_path(target, g_tile)
+                elif ghost.state == 'C':
                     target = pacman_current_tile.pop()
                     ghost.create_path(target, g_tile)
                 elif ghost.state == 'D':

@@ -100,8 +100,8 @@ class Ghost(pygame.sprite.Sprite):
         self.pixel = 0
         
         # Seven states:
-        #   - 'I'nnocent            Roam
-        #   - 'A'live               Chase
+        #   - 'A'live               Roam
+        #   - 'C'hase               Chase
         #   - 'V'ulnerable          Run Away
         #   - 'D'ead                Back to Spawner
         #   - 'R'espawning          Enter Spawner
