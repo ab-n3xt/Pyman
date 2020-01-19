@@ -149,6 +149,7 @@ class Ghost(pygame.sprite.Sprite):
             if self.rect.y > 192:
                 self.rect.top -= 4
                 return
+            self.rect = pygame.Rect(208, 192, 16, 16)
             self.toggle_alive()
 
     def reset_pos(self):
