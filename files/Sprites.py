@@ -119,28 +119,28 @@ class Ghost(pygame.sprite.Sprite):
     def update(self, current_grid, pacman):
         if self.state == 'A':
             if self.correct_pixel:
-                self.chase_target()
+                self.move()
             else:
                 self.shift()
 
         elif self.state == 'C':
             if self.correct_pixel:
-                self.chase_target()
+                self.move()
             else:
                 self.shift()
 
         elif self.state == 'V':
             if self.correct_pixel:
-                self.run_away()
+                self.move()
             else:
-                self.reverse()
+                self.shift()
 
         elif self.state == 'D':
             if self.correct_pixel:
                 self.speed = self.dead_speed
-                self.chase_target()
+                self.move()
             else:
-                self.reverse()
+                self.shift()
 
         elif self.state == 'R':
             if self.rect.y < 224:       # Go into the spawn-zone
@@ -208,7 +208,7 @@ class Ghost(pygame.sprite.Sprite):
                 self.dir = key
                 break
 
-    def chase_target(self):
+    def move(self):
         # Normal movement loop
         if self.dir == 'U':
             self.rect.top -= self.speed
@@ -226,44 +226,6 @@ class Ghost(pygame.sprite.Sprite):
         # When Ghost reaches a grid, reset pixel count back to 0
         if self.pixel == 16:
             self.pixel = 0
-
-    def run_away(self):
-        # Normal movement loop
-        if self.dir == 'U':
-            self.rect.top -= self.speed
-            self.pixel += self.speed
-        elif self.dir == 'D':
-            self.rect.bottom += self.speed
-            self.pixel += self.speed
-        elif self.dir == 'L':
-            self.rect.left -= self.speed
-            self.pixel += self.speed
-        elif self.dir == 'R':
-            self.rect.right += self.speed
-            self.pixel += self.speed
-        
-        # When Ghost reaches a grid, reset pixel count back to 0
-        if self.pixel == 16:
-            self.pixel = 0
-
-    def reverse(self):
-        # Normal movement loop
-        if self.dir == 'U':
-            self.rect.bottom += self.speed
-            self.pixel -= self.speed
-        elif self.dir == 'D':
-            self.rect.top -= self.speed
-            self.pixel -= self.speed
-        elif self.dir == 'L':
-            self.rect.right += self.speed
-            self.pixel -= self.speed
-        elif self.dir == 'R':
-            self.rect.left -= self.speed
-            self.pixel -= self.speed
-        
-        # When Ghost reaches a grid, reset pixel count back to 0
-        if self.pixel == 0:
-            self.correct_pixel = True
 
     def random_direction(self, current_tile):
         tmp_list = current_tile.valid_moves.copy()
@@ -360,6 +322,7 @@ class Ghost(pygame.sprite.Sprite):
             self.correct_pixel = False
         else:
             self.correct_pixel = True
+        self.reverse()
 
     def toggle_death(self):
         self.state = 'D'
@@ -395,6 +358,16 @@ class Ghost(pygame.sprite.Sprite):
                 return
             else:
                 self.pace_dir = 'R'
+
+    def reverse(self):
+        if self.dir == 'U':
+            self.dir = 'D'
+        elif self.dir == 'D':
+            self.dir = 'U'
+        elif self.dir == 'L':
+            self.dir = 'R'
+        elif self.dir == 'R':
+            self.dir = 'L'
 
 
 class Red(Ghost):
