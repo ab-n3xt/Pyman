@@ -431,6 +431,7 @@ class Red(Ghost):
         super().chase_pacman()
         self.image = self.directions[self.dir]
 
+
 class Teal(Ghost):
 
     def __init__(self, x, y, speed, color):
@@ -464,6 +465,7 @@ class Teal(Ghost):
     def chase_pacman(self):
         super().chase_pacman()
         self.image = self.directions[self.dir]
+
 
 class Pacman(pygame.sprite.Sprite):
     
