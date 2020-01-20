@@ -54,8 +54,8 @@ r_transporter = pygame.sprite.GroupSingle(Tile(16 * 27, 16 * 15))
 # Used for roaming
 top_left_tile = Tile(16 * 1, 16 * 1)
 top_right_tile = Tile(16 * 26, 16 * 1)
-bottom_left_tile = Tile(16 * 1, 16 * 30)
-bottom_right_tile = Tile(16 * 26, 16 * 30)
+bottom_left_tile = Tile(0, 16 * 31)
+bottom_right_tile = Tile(16 * 26, 16 * 31)
 roam_tiles = pygame.sprite.Group(top_left_tile, top_right_tile, bottom_left_tile, bottom_right_tile)
 
 # Respawner
@@ -116,9 +116,15 @@ ghost_group = pygame.sprite.Group(Red(208, 192, MOVESPEED, 'red'))
 movement = 'R'
 last_movement = 'R'
 
-# Initialize timer
+# Initialize timers
 time_start = None
 time_end = None
+event_start = None
+event_end = None
+
+# Initialize event
+events = ['A', 'C']
+current_event = events[0]
 
 # Loop
 loop = 0
@@ -340,6 +346,7 @@ def test_last_movement(move, speed, pacman):
             pacman_group.update('')
     
 load_game()
+event_start = time.time()
 ###############################################################################
 ##########                     MAIN GAME LOOP                        ##########
 ###############################################################################
@@ -368,6 +375,23 @@ while True:
                 if ghost.state == 'V':
                     ghost.toggle_alive()
             time_start = None
+
+    # Toggles between events
+    # Different events take place over 20 seconds
+    # For 7 seconds, Ghosts are in 'A' state
+    # For 13 seconds, Ghosts are in 'C' state
+    event_end = time.time()
+    if (event_end-event_start) >= 7.0 and current_event == 'A':
+        current_event = events[1]
+        for ghost in ghost_group:
+            if ghost.state == 'A':
+                ghost.toggle_chase()
+    elif (event_end-event_start) >= 20.0 and current_event == 'C':
+        current_event = events[0]
+        for ghost in ghost_group:
+            if ghost.state == 'C':
+                ghost.toggle_alive()
+        event_start = time.time()
 
     # Checks to see if any Ghosts are respawning
     # Then if 5 seconds have passed, 'S'pawn the Ghost back into the game

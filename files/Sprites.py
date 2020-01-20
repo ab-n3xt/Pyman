@@ -119,7 +119,13 @@ class Ghost(pygame.sprite.Sprite):
     def update(self, current_grid, pacman):
         if self.state == 'A':
             if self.correct_pixel:
-                self.chase_pacman()
+                self.chase_target()
+            else:
+                self.shift()
+
+        elif self.state == 'C':
+            if self.correct_pixel:
+                self.chase_target()
             else:
                 self.shift()
 
@@ -132,7 +138,7 @@ class Ghost(pygame.sprite.Sprite):
         elif self.state == 'D':
             if self.correct_pixel:
                 self.speed = self.dead_speed
-                self.chase_pacman()
+                self.chase_target()
             else:
                 self.reverse()
 
@@ -202,7 +208,7 @@ class Ghost(pygame.sprite.Sprite):
                 self.dir = key
                 break
 
-    def chase_pacman(self):
+    def chase_target(self):
         # Normal movement loop
         if self.dir == 'U':
             self.rect.top -= self.speed
@@ -337,6 +343,15 @@ class Ghost(pygame.sprite.Sprite):
             self.pixel = 0
             self.correct_pixel = True
 
+    def toggle_alive(self):
+        self.state = 'A'
+        self.image = self.defaultimage
+        self.speed = self.default_speed
+        if self.pixel != 0:
+            self.correct_pixel = False
+        else:
+            self.correct_pixel = True
+
     def toggle_vulnerability(self):
         self.state = 'V'
         self.image = pygame.image.load('../sprites/v-ghost.png')
@@ -354,8 +369,8 @@ class Ghost(pygame.sprite.Sprite):
         else:
             self.correct_pixel = True
 
-    def toggle_alive(self):
-        self.state = 'A'
+    def toggle_chase(self):
+        self.state = 'C'
         self.image = self.defaultimage
         self.speed = self.default_speed
         if self.pixel != 0:
