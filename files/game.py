@@ -21,6 +21,7 @@ POINTS = 0
 
 # text
 font_system = pygame.font.Font("../font/joystix.ttf", 14)
+font_system_small = pygame.font.Font("../font/joystix.ttf", 7)
 text = font_system.render("POINTS: {}".format(POINTS), True, constants.WHITE)
 
 # Initialize window
@@ -473,7 +474,11 @@ while True:
     for ghost in collided_ghosts:
         if ghost.state == 'V':
             ghost.toggle_death()
+            text = font_system_small.render("200", True, constants.WHITE)
+            window.blit(text, (ghost.rect.x, ghost.rect.y))
+            pygame.display.update()
             POINTS += 200
+            time.sleep(0.5)
         elif ghost.state == 'A' or ghost.state == 'C':
             window.fill(constants.BLACK)
             pygame.display.update()
