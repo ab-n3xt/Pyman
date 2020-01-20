@@ -123,10 +123,6 @@ time_end = None
 event_start = None
 event_end = None
 
-# Initialize event
-events = ['A', 'C']
-current_event = events[0]
-
 # Loop
 loop = 0
 
@@ -383,12 +379,11 @@ while True:
     # For 7 seconds, Ghosts are in 'A' state
     # For 13 seconds, Ghosts are in 'C' state
     event_end = time.time()
-    if (event_end-event_start) >= 7.0 and current_event == 'A':
-        current_event = events[1]
+    if (event_end-event_start) >= 7.0:
         for ghost in ghost_group:
             if ghost.state == 'A':
                 ghost.toggle_chase()
-    elif (event_end-event_start) >= 20.0 and current_event == 'C':
+    elif (event_end-event_start) >= 20.0:
         current_event = events[0]
         for ghost in ghost_group:
             if ghost.state == 'C':
