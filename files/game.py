@@ -456,7 +456,7 @@ while True:
         POINTS += 10
         time_start = time.time()
         for ghost in ghost_group:
-            if ghost.state == 'A':
+            if ghost.state == 'A' or ghost.state == 'C':
                 ghost.toggle_vulnerability()
         
     # Check if all Pellets are eaten
@@ -474,7 +474,7 @@ while True:
         if ghost.state == 'V':
             ghost.toggle_death()
             POINTS += 200
-        elif ghost.state == 'A':
+        elif ghost.state == 'A' or ghost.state == 'C':
             window.fill(constants.BLACK)
             pygame.display.update()
             LIVES -= 1
