@@ -116,6 +116,9 @@ class Ghost(pygame.sprite.Sprite):
         # Timer for respawning
         self.respawn_timer = None
 
+        self.death_frames = {}
+        self.gather_death_frames()
+
     def update(self, current_grid, pacman):
         if self.state == 'A':
             if self.correct_pixel:
@@ -157,6 +160,28 @@ class Ghost(pygame.sprite.Sprite):
                 return
             self.rect = pygame.Rect(208, 192, 16, 16)
             self.toggle_alive()
+
+    def gather_death_frames(self):
+        spreadsheet = pygame.image.load('../sprites/ghosts.png')
+
+        selected_area = pygame.Rect(16, 64, 16, 16)
+        right_image = spreadsheet.subsurface(selected_area)
+
+        selected_area = pygame.Rect(32, 64, 16, 16)
+        up_image = spreadsheet.subsurface(selected_area)
+
+        selected_area = pygame.Rect(48, 64, 16, 16)
+        down_image = spreadsheet.subsurface(selected_area)
+
+        selected_area = pygame.Rect(64, 64, 16, 16)
+        left_image = spreadsheet.subsurface(selected_area)
+
+        self.directions = {
+            'U': up_image,
+            'D': down_image,
+            'L': left_image,
+            'R': right_image,
+        }
 
     def reset_pos(self):
         self.rect.x = self.defaultx
