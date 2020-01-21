@@ -379,15 +379,17 @@ while True:
     # For 7 seconds, Ghosts are in 'A' state
     # For 13 seconds, Ghosts are in 'C' state
     event_end = time.time()
-    if (event_end-event_start) >= 7.0:
-        for ghost in ghost_group:
-            if ghost.state == 'A':
-                ghost.toggle_chase()
-    elif (event_end-event_start) >= 20.0:
+    if (event_end-event_start) >= 20.0:
         for ghost in ghost_group:
             if ghost.state == 'C':
                 ghost.toggle_alive()
         event_start = time.time()
+    elif (event_end-event_start) >= 7.0:
+        for ghost in ghost_group:
+            if ghost.state == 'A':
+                ghost.toggle_chase()
+
+    print(f"Time: {event_end-event_start}")
 
     # Checks to see if any Ghosts are respawning
     # Then if 5 seconds have passed, 'S'pawn the Ghost back into the game
