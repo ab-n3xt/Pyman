@@ -253,7 +253,7 @@ def update_window():
 def transport_right(sprite):
     """Transports sprite from the right side of the window to the left side"""
     
-    while sprite.rect.left <= WINDOWWIDTH:
+    while sprite.rect.left <= constants.WINDOWWIDTH:
         sprite.rect.right += 10
         update_window()
         
