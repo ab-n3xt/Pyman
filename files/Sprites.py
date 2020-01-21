@@ -124,26 +124,26 @@ class Ghost(pygame.sprite.Sprite):
             if self.correct_pixel:
                 self.move()
             else:
-                self.shift(current_tile)
+                self.adjust(current_tile)
 
         elif self.state == 'C':
             if self.correct_pixel:
                 self.move()
             else:
-                self.shift(current_tile)
+                self.adjust(current_tile)
 
         elif self.state == 'V':
             if self.correct_pixel:
                 self.move()
             else:
-                self.shift(current_tile)
+                self.adjust(current_tile)
 
         elif self.state == 'D':
             if self.correct_pixel:
                 self.speed = self.dead_speed
                 self.move()
             else:
-                self.shift(current_tile)
+                self.adjust(current_tile)
 
         elif self.state == 'R':
             if self.rect.y < 224:       # Go into the spawn-zone
@@ -270,7 +270,7 @@ class Ghost(pygame.sprite.Sprite):
     def calculate_distance(self, point_1, point_2):
         return math.sqrt(math.pow(point_2.x - point_1.x, 2) + math.pow(point_2.y - point_1.y, 2))
 
-    def shift(self, current_tile):
+    def adjust(self, current_tile):
         # if self.pixel % 4 != 0:
         #     if self.pixel < 8:
         #         if self.dir == 'U':
