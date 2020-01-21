@@ -1,6 +1,8 @@
 import os, sys, pygame, constants, time
 
 from pygame.locals import *
+from pygame.event import QUIT, KEYDOWN
+from pygame.key import K_UP, K_DOWN, K_LEFT, K_RIGHT
 
 # from Start import Start
 from Menus import Start, Retry
@@ -186,7 +188,7 @@ def load_game():
     ghost_group.draw(window)
     
     # "Ready" Message
-    text = font_system.render("READY!".format(POINTS), True, constants.YELLOW)
+    text = font_system.render("READY!", True, constants.YELLOW)
     window.blit(text, (192, 288))
     pygame.display.update()
     time.sleep(2.5)
@@ -218,7 +220,7 @@ def continue_game():
     ghost_group.draw(window)
     
     # "Ready" Message
-    text = font_system.render("READY!".format(POINTS), True, constants.YELLOW)
+    text = font_system.render("READY!", True, constants.YELLOW)
     window.blit(text, (192, 288))
     pygame.display.update()
     time.sleep(2.5)
