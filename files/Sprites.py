@@ -520,6 +520,12 @@ class Pacman(pygame.sprite.Sprite):
         
         # Setting the pixels per loop of the sprite
         self.speed = speed
+
+        # Three states:
+        # 'N'one
+        # 'TR'
+        # 'TL'
+        self.state = 'N'
         
     def update(self, movement):
         
@@ -568,6 +574,14 @@ class Pacman(pygame.sprite.Sprite):
         self.rect.x = self.defaultx
         self.rect.y = self.defaulty
 
+    def toggle_TR(self):
+        self.state = 'TR'
+    
+    def toggle_TL(self):
+        self.state = 'TL'
+
+    def toggle_N(self):
+        self.state = 'N'
 
 class Pellet(pygame.sprite.Sprite):
 
