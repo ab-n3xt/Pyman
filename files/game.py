@@ -127,6 +127,7 @@ event_end = None
 loop = 0
 
 def create_pellets():
+    """ Identifies where Pellets can and cannot go """
     # Goes through the entire map and outlines which 16x16 areas are black
     # This identifies where Pacman and Pellets can and cannot go
     list = [3, 4, 8, 9, 10, 17, 18, 19, 23, 24]
@@ -284,6 +285,7 @@ def transport_left(sprite):
     
     
 def test_movement(move, speed, pacman):
+    """ Tests movement of player and will update Pacman if move is legal """
     test = Tile(pacman.rect.x, pacman.rect.y)
     global last_movement
     if move == 'U':
@@ -317,6 +319,12 @@ def test_movement(move, speed, pacman):
 
             
 def test_last_movement(move, speed, pacman):
+    """
+        Tests last movement of player and will update Pacman if move is legal.
+        
+        Function used is test_movement() failed.
+    """
+
     test = Tile(pacman.rect.x, pacman.rect.y)
     global last_movement
     if move == 'U':
