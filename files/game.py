@@ -1,8 +1,6 @@
 import os, sys, pygame, constants, time
 
 from pygame.locals import *
-from pygame.event import QUIT, KEYDOWN
-from pygame.key import K_UP, K_DOWN, K_LEFT, K_RIGHT
 
 # from Start import Start
 from Menus import Start, Retry
@@ -400,37 +398,37 @@ while True:
                 ghost.toggle_spawn()
                 
     for ghost in ghost_group:
-        if (ghost.pixel == 0 and loop % 3 == 0) or ghost.state == 'D':
-                # Find Pacman's and Respawner's current tile
-                pacman_current_tile = pygame.sprite.spritecollide(pacman, tile_system, False)
-                respawner_current_tile = pygame.sprite.spritecollide(respawner_tile, tile_system, False)
+        if (ghost.pixel == 0 and loop % 3 == 0) or (ghost.state == 'D' and ghost.pixel == 0):
+            # Find Pacman's and Respawner's current tile
+            pacman_current_tile = pygame.sprite.spritecollide(pacman, tile_system, False)
+            respawner_current_tile = pygame.sprite.spritecollide(respawner_tile, tile_system, False)
                 
-                # Find Ghost's current tiles
-                red_current_tile = pygame.sprite.spritecollide(top_right_tile, walls, False)
-                pink_current_tile = pygame.sprite.spritecollide(top_left_tile, walls, False)
-                orange_current_tile = pygame.sprite.spritecollide(bottom_left_tile, walls, False)
-                teal_current_tile = pygame.sprite.spritecollide(bottom_right_tile, walls, False)
+            # Find Ghost's current tiles
+            red_current_tile = pygame.sprite.spritecollide(top_right_tile, walls, False)
+            pink_current_tile = pygame.sprite.spritecollide(top_left_tile, walls, False)
+            orange_current_tile = pygame.sprite.spritecollide(bottom_left_tile, walls, False)
+            teal_current_tile = pygame.sprite.spritecollide(bottom_right_tile, walls, False)
                 
-                # Updates Ghost's movement
-                ghost_current_tile = pygame.sprite.spritecollide(ghost, tile_system, False)
-                try:
-                    ghost_tile = ghost_current_tile.pop()
-                except IndexError:
-                    pass
+            # Updates Ghost's movement
+            ghost_current_tile = pygame.sprite.spritecollide(ghost, tile_system, False)
+            try:
+                ghost_tile = ghost_current_tile.pop()
+            except IndexError:
+                pass
 
-                target = None
+            target = None
 
-                if ghost.state == 'A':
-                    target = red_current_tile.pop()
-                    ghost.create_path(target, ghost_tile)
-                elif ghost.state == 'C':
-                    target = pacman_current_tile.pop()
-                    ghost.create_path(target, ghost_tile)
-                elif ghost.state == 'D':
-                    target = respawner_current_tile.pop()
-                    ghost.create_path(target, ghost_tile)
-                elif ghost.state == 'V':
-                    ghost.random_direction(ghost_tile)
+            if ghost.state == 'A':
+                target = red_current_tile.pop()
+                ghost.create_path(target, ghost_tile)
+            elif ghost.state == 'C':
+                target = pacman_current_tile.pop()
+                ghost.create_path(target, ghost_tile)
+            elif ghost.state == 'D':
+                target = respawner_current_tile.pop()
+                ghost.create_path(target, ghost_tile)
+            elif ghost.state == 'V':
+                ghost.random_direction(ghost_tile)
     
     # Move Pacman
     if loop % 3 == 0:
