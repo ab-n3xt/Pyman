@@ -49,8 +49,8 @@ pellets = pygame.sprite.Group()
 power_pellets = pygame.sprite.Group()
 
 # Teleporters
-l_transporter = pygame.sprite.GroupSingle(Tile(0, 16 * 15))
-r_transporter = pygame.sprite.GroupSingle(Tile(16 * 27, 16 * 15))
+l_transporter = pygame.sprite.GroupSingle(Tile(16 * 4, 16 * 15)) # 16 * 0
+r_transporter = pygame.sprite.GroupSingle(Tile(16 * 23, 16 * 15)) # 16 * 27
 
 # Used for roaming
 top_left_tile = Tile(16 * 1, 16 * 1)
@@ -256,32 +256,32 @@ def transport_right(sprite):
     """Transports sprite from the right side of the window to the left side"""
     
     while sprite.rect.left <= constants.WINDOWWIDTH:
-        sprite.rect.right += 10
+        sprite.rect.right += 1
         update_window()
         
     sprite.rect.right = 0
     
     while sprite.rect.left <= 0:
-        sprite.rect.right += 10
+        sprite.rect.right += 1
         update_window()
         
-    sprite.rect = pygame.Rect(16 * 1, 16 * 15, 16, 16)
+    sprite.rect = pygame.Rect(16 * 5, 16 * 15, 16, 16)
     
     
 def transport_left(sprite):
     """Transports sprite from the left side of the window to the right side"""
     
     while sprite.rect.right >= 0:
-        sprite.rect.left -= 10
+        sprite.rect.left -= 1
         update_window()
         
     sprite.rect.left = constants.WINDOWWIDTH
     
     while sprite.rect.right >= constants.WINDOWWIDTH:
-        sprite.rect.left -= 10
+        sprite.rect.left -= 1
         update_window()
         
-    sprite.rect = pygame.Rect(16 * 26, 16 * 15, 16, 16)
+    sprite.rect = pygame.Rect(16 * 22, 16 * 15, 16, 16)
     
     
 def test_movement(move, speed, pacman):
@@ -398,8 +398,6 @@ while True:
             if ghost.state == 'A':
                 ghost.toggle_chase()
 
-    print(f"Time: {event_end-event_start}")
-
     # Checks to see if any Ghosts are respawning
     # Then if 5 seconds have passed, 'S'pawn the Ghost back into the game
     for ghost in ghost_group:
@@ -443,7 +441,17 @@ while True:
     
     # Move Pacman
     if loop % 3 == 0:
-        test_movement(movement, MOVESPEED, pacman)
+        if pacman.state == 'N':
+            test_movement(movement, MOVESPEED, pacman)
+        elif pacman.state == 'TL':
+            pacman_group.update('L')
+            if pacman.rect.right <= 0:
+                pacman.rect.left = constants.WINDOWWIDTH
+            elif pygame.sprite.spritecollide(pacman, r_transporter, False):
+                pacman.rect = pygame.Rect(16 * 22, 16 * 15, 16, 16)
+                pacman.toggle_N()
+        elif pacman.state == 'TR':
+            pacman_group.update('R')
         
     # Move Ghosts
     for ghost in ghost_group:
@@ -503,9 +511,11 @@ while True:
     
     # Transport Pacman if Pacman collides with either transporter
     if pygame.sprite.spritecollide(pacman, l_transporter, False):
-        transport_left(pacman)
+        # transport_left(pacman)
+        pacman.toggle_TL()
     elif pygame.sprite.spritecollide(pacman, r_transporter, False):
-        transport_right(pacman)
+        # transport_right(pacman)
+        pacman.toggle_TR()
         
     # Move Ghost to Respawning Area if they collide with entrance and are dead
     for ghosts in ghost_group:
