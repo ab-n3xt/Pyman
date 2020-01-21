@@ -90,7 +90,6 @@ class Ghost(pygame.sprite.Sprite):
         # Speed of sprite
         self.speed = speed
         self.default_speed = speed
-        self.dead_speed = speed * 2
         
         # Used for path-finding
         self.dir = 'R'
@@ -140,7 +139,6 @@ class Ghost(pygame.sprite.Sprite):
 
         elif self.state == 'D':
             if self.correct_pixel:
-                self.speed = self.dead_speed
                 self.move()
             else:
                 self.adjust(current_tile)
@@ -345,11 +343,11 @@ class Ghost(pygame.sprite.Sprite):
         self.state = 'V'
         self.image = pygame.image.load('../sprites/v-ghost.png')
         self.speed = self.speed / 2
+        self.reverse()
         if self.pixel != 0:
             self.correct_pixel = False
         else:
             self.correct_pixel = True
-        self.reverse()
 
     def toggle_death(self):
         self.state = 'D'
