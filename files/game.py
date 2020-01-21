@@ -167,6 +167,7 @@ def load_game():
     pacman.reset_pos()
     for ghost in ghost_group:
         ghost.reset_pos()
+        ghost.toggle_alive()
     
     # Create the pellets
     pellets.empty()
