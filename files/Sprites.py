@@ -119,31 +119,31 @@ class Ghost(pygame.sprite.Sprite):
         self.death_frames = {}
         self.gather_death_frames()
 
-    def update(self, current_grid, pacman):
+    def update(self, current_tile):
         if self.state == 'A':
             if self.correct_pixel:
                 self.move()
             else:
-                self.shift()
+                self.shift(current_tile)
 
         elif self.state == 'C':
             if self.correct_pixel:
                 self.move()
             else:
-                self.shift()
+                self.shift(current_tile)
 
         elif self.state == 'V':
             if self.correct_pixel:
                 self.move()
             else:
-                self.shift()
+                self.shift(current_tile)
 
         elif self.state == 'D':
             if self.correct_pixel:
                 self.speed = self.dead_speed
                 self.move()
             else:
-                self.shift()
+                self.shift(current_tile)
 
         elif self.state == 'R':
             if self.rect.y < 224:       # Go into the spawn-zone
@@ -164,19 +164,19 @@ class Ghost(pygame.sprite.Sprite):
     def gather_death_frames(self):
         spreadsheet = pygame.image.load('../sprites/ghosts.png')
 
-        selected_area = pygame.Rect(16, 64, 16, 16)
+        selected_area = pygame.Rect(16, 48, 16, 16)
         right_image = spreadsheet.subsurface(selected_area)
 
-        selected_area = pygame.Rect(32, 64, 16, 16)
+        selected_area = pygame.Rect(32, 48, 16, 16)
         up_image = spreadsheet.subsurface(selected_area)
 
-        selected_area = pygame.Rect(48, 64, 16, 16)
+        selected_area = pygame.Rect(48, 48, 16, 16)
         down_image = spreadsheet.subsurface(selected_area)
 
-        selected_area = pygame.Rect(64, 64, 16, 16)
+        selected_area = pygame.Rect(64, 48, 16, 16)
         left_image = spreadsheet.subsurface(selected_area)
 
-        self.directions = {
+        self.death_frames = {
             'U': up_image,
             'D': down_image,
             'L': left_image,
@@ -270,65 +270,67 @@ class Ghost(pygame.sprite.Sprite):
     def calculate_distance(self, point_1, point_2):
         return math.sqrt(math.pow(point_2.x - point_1.x, 2) + math.pow(point_2.y - point_1.y, 2))
 
-    def shift(self):
-        if self.pixel % 4 != 0:
-            if self.pixel < 8:
-                if self.dir == 'U':
-                    self.rect.bottom += self.speed / 2
-                    self.pixel -= self.speed / 2
-                elif self.dir == 'D':
-                    self.rect.top -= self.speed / 2
-                    self.pixel -= self.speed / 2
-                elif self.dir == 'L':
-                    self.rect.right += self.speed / 2
-                    self.pixel -= self.speed / 2
-                elif self.dir == 'R':
-                    self.rect.left -= self.speed / 2
-                    self.pixel -= self.speed / 2
-            else:
-                if self.dir == 'U':
-                    self.rect.top -= self.speed / 2
-                    self.pixel += self.speed / 2
-                elif self.dir == 'D':
-                    self.rect.bottom += self.speed / 2                    
-                    self.pixel += self.speed / 2
-                elif self.dir == 'L':
-                    self.rect.left -= self.speed / 2
-                    self.pixel += self.speed / 2
-                elif self.dir == 'R':
-                    self.rect.right += self.speed / 2
-                    self.pixel += self.speed / 2
-        else:
-            if self.pixel < 8:
-                if self.dir == 'U':
-                    self.rect.bottom += self.speed
-                    self.pixel -= self.speed
-                elif self.dir == 'D':
-                    self.rect.top -= self.speed
-                    self.pixel -= self.speed
-                elif self.dir == 'L':
-                    self.rect.right += self.speed
-                    self.pixel -= self.speed
-                elif self.dir == 'R':
-                    self.rect.left -= self.speed
-                    self.pixel -= self.speed
-            else:
-                if self.dir == 'U':
-                    self.rect.top -= self.speed
-                    self.pixel += self.speed
-                elif self.dir == 'D':
-                    self.rect.bottom += self.speed                 
-                    self.pixel += self.speed
-                elif self.dir == 'L':
-                    self.rect.left -= self.speed
-                    self.pixel += self.speed
-                elif self.dir == 'R':
-                    self.rect.right += self.speed
-                    self.pixel += self.speed
+    def shift(self, current_tile):
+        # if self.pixel % 4 != 0:
+        #     if self.pixel < 8:
+        #         if self.dir == 'U':
+        #             self.rect.bottom += self.speed / 2
+        #             self.pixel -= self.speed / 2
+        #         elif self.dir == 'D':
+        #             self.rect.top -= self.speed / 2
+        #             self.pixel -= self.speed / 2
+        #         elif self.dir == 'L':
+        #             self.rect.right += self.speed / 2
+        #             self.pixel -= self.speed / 2
+        #         elif self.dir == 'R':
+        #             self.rect.left -= self.speed / 2
+        #             self.pixel -= self.speed / 2
+        #     else:
+        #         if self.dir == 'U':
+        #             self.rect.top -= self.speed / 2
+        #             self.pixel += self.speed / 2
+        #         elif self.dir == 'D':
+        #             self.rect.bottom += self.speed / 2                    
+        #             self.pixel += self.speed / 2
+        #         elif self.dir == 'L':
+        #             self.rect.left -= self.speed / 2
+        #             self.pixel += self.speed / 2
+        #         elif self.dir == 'R':
+        #             self.rect.right += self.speed / 2
+        #             self.pixel += self.speed / 2
+        # else:
+        #     if self.pixel < 8:
+        #         if self.dir == 'U':
+        #             self.rect.bottom += self.speed
+        #             self.pixel -= self.speed
+        #         elif self.dir == 'D':
+        #             self.rect.top -= self.speed
+        #             self.pixel -= self.speed
+        #         elif self.dir == 'L':
+        #             self.rect.right += self.speed
+        #             self.pixel -= self.speed
+        #         elif self.dir == 'R':
+        #             self.rect.left -= self.speed
+        #             self.pixel -= self.speed
+        #     else:
+        #         if self.dir == 'U':
+        #             self.rect.top -= self.speed
+        #             self.pixel += self.speed
+        #         elif self.dir == 'D':
+        #             self.rect.bottom += self.speed                 
+        #             self.pixel += self.speed
+        #         elif self.dir == 'L':
+        #             self.rect.left -= self.speed
+        #             self.pixel += self.speed
+        #         elif self.dir == 'R':
+        #             self.rect.right += self.speed
+        #             self.pixel += self.speed
+        self.rect.x = current_tile.rect.x
+        self.rect.y = current_tile.rect.y
         
-        if self.pixel % 16 == 0:
-            self.pixel = 0
-            self.correct_pixel = True
+        # if self.pixel % 16 == 0:
+        self.pixel = 0
+        self.correct_pixel = True
 
     def toggle_alive(self):
         self.state = 'A'
@@ -351,7 +353,7 @@ class Ghost(pygame.sprite.Sprite):
 
     def toggle_death(self):
         self.state = 'D'
-        self.image = self.defaultimage
+        self.image = self.death_frames[self.dir]
         if self.pixel != 0:
             self.correct_pixel = False
         else:
@@ -371,6 +373,7 @@ class Ghost(pygame.sprite.Sprite):
         self.respawn_timer = None
 
     def pace(self):
+        self.image = self.directions[self.pace_dir]
         if self.pace_dir == 'R':
             if self.rect.x < 240:
                 self.rect.right += 4
@@ -427,7 +430,10 @@ class Red(Ghost):
 
     def chase_pacman(self):
         super().chase_pacman()
-        self.image = self.directions[self.dir]
+        if self.state == 'D':
+            self.image = self.death_frames[self.dir]
+        else:
+            self.image = self.directions[self.dir]
 
 
 class Teal(Ghost):

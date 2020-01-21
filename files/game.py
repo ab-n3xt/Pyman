@@ -438,7 +438,7 @@ while True:
     # Move Ghosts
     for ghost in ghost_group:
         if ghost.state == 'D' or loop % 3 == 0:
-            ghost.update(ghost_tile, target)
+            ghost.update(ghost_tile)
     
     # Check if Pacman collided with any Pellets
     # True = Pellet will be destroyed when collided with
