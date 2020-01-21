@@ -384,7 +384,6 @@ while True:
             if ghost.state == 'A':
                 ghost.toggle_chase()
     elif (event_end-event_start) >= 20.0:
-        current_event = events[0]
         for ghost in ghost_group:
             if ghost.state == 'C':
                 ghost.toggle_alive()
