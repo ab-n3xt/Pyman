@@ -4,15 +4,15 @@ from pygame.locals import *
 
 class Tile(pygame.sprite.Sprite):
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, x_size, y_size):
         # Call the parent class constructor
         pygame.sprite.Sprite.__init__(self)
         
         # Get the main window's display
         self.surface = pygame.display.get_surface()
         
-        # Create a 16x16 surface and fill it with the color RED
-        self.image = pygame.Surface([16, 16])
+        # Create a x_size x y_size surface
+        self.image = pygame.Surface([x_size, y_size])
         
         self.valid_moves = []
         
