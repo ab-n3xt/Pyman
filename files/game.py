@@ -454,7 +454,7 @@ while True:
         if pacman.state == 'N':
             pacman.toggle_TR()
     
-    # Transport Pacman if Pacman collides with either transporter
+    # Transport any Ghosts if Ghosts collide with either transporter
     for ghost in ghost_group:
         if pygame.sprite.spritecollide(ghost, l_transporter, False):
             if ghost.state == 'C':
