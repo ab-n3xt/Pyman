@@ -583,6 +583,7 @@ class Pacman(pygame.sprite.Sprite):
     def toggle_N(self):
         self.state = 'N'
 
+
 class Pellet(pygame.sprite.Sprite):
 
     def __init__(self, x, y):
