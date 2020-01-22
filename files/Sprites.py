@@ -108,6 +108,7 @@ class Ghost(pygame.sprite.Sprite):
         #   - 'S'pawning            Exit Spawner
         # Initial state is Alive
         self.state = 'A'
+        self.saved_state = ''
         
         # Keeping track of pacing direction (within Respawning Zone)
         self.pace_dir = 'R'
@@ -130,6 +131,12 @@ class Ghost(pygame.sprite.Sprite):
                 self.move()
             else:
                 self.adjust(current_tile)
+
+        elif self.state == 'TL':
+            self.move()
+
+        elif self.state == 'TR':
+            self.move()
 
         elif self.state == 'V':
             if self.correct_pixel:
@@ -369,6 +376,17 @@ class Ghost(pygame.sprite.Sprite):
     def toggle_spawn(self):
         self.state = 'S'
         self.respawn_timer = None
+
+    def toggle_TL(self):
+        self.saved_state = self.state
+        self.state = 'TL'
+
+    def toggle_TR(self):
+        self.saved_state = self.state
+        self.state = 'TR'
+
+    def toggle_back(self):
+        self.state = self.saved_state
 
     def pace(self):
         self.image = self.directions[self.pace_dir]

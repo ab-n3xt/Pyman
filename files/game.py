@@ -446,6 +446,23 @@ while True:
             elif ghost.state == 'V':
                 ghost.random_direction(ghost_tile)
     
+    # Transport Pacman if Pacman collides with either transporter
+    if pygame.sprite.spritecollide(pacman, l_transporter, False):
+        if pacman.state == 'N':
+            pacman.toggle_TL()
+    elif pygame.sprite.spritecollide(pacman, r_transporter, False):
+        if pacman.state == 'N':
+            pacman.toggle_TR()
+    
+    # Transport Pacman if Pacman collides with either transporter
+    for ghost in ghost_group:
+        if pygame.sprite.spritecollide(ghost, l_transporter, False):
+            if ghost.state == 'C':
+                ghost.toggle_TL()
+        elif pygame.sprite.spritecollide(ghost, r_transporter, False):
+            if ghost.state == 'C':
+                ghost.toggle_TR()
+    
     # Move Pacman
     if loop % 3 == 0:
         if pacman.state == 'N':
@@ -466,7 +483,23 @@ while True:
     # Move Ghosts
     for ghost in ghost_group:
         if ghost.state == 'D' or loop % 3 == 0:
-            ghost.update(ghost_tile)
+            if ghost.state != 'TL' and ghost.state != 'TR':
+                ghost.update(ghost_tile)
+            else:
+                if ghost.state == 'TL':
+                    ghost.dir = 'L'
+                    ghost.update(ghost_tile)
+                    if ghost.rect.right <= 0:
+                        ghost.rect.left = constants.WINDOWWIDTH
+                    elif ghost.rect.contains(right_exit.rect):
+                        ghost.toggle_back()
+                elif ghost.state == 'TR':
+                    ghost.dir = 'R'
+                    ghost.update(ghost_tile)
+                    if ghost.rect.left >= constants.WINDOWWIDTH:
+                        ghost.rect.right = 0
+                    elif ghost.rect.contains(left_exit.rect):
+                        ghost.toggle_back()
     
     # Check if Pacman collided with any Pellets
     # True = Pellet will be destroyed when collided with
@@ -518,16 +551,6 @@ while True:
             
             movement = 'R'
             last_movement = 'R'
-    
-    # Transport Pacman if Pacman collides with either transporter
-    if pygame.sprite.spritecollide(pacman, l_transporter, False):
-        # transport_left(pacman)
-        if pacman.state == 'N':
-            pacman.toggle_TL()
-    elif pygame.sprite.spritecollide(pacman, r_transporter, False):
-        # transport_right(pacman)
-        if pacman.state == 'N':
-            pacman.toggle_TR()
         
     # Move Ghost to Respawning Area if they collide with entrance and are dead
     for ghosts in ghost_group:
