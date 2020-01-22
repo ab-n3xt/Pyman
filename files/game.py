@@ -49,18 +49,22 @@ pellets = pygame.sprite.Group()
 power_pellets = pygame.sprite.Group()
 
 # Teleporters
-l_transporter = pygame.sprite.GroupSingle(Tile(16 * 4, 16 * 15)) # 16 * 0
-r_transporter = pygame.sprite.GroupSingle(Tile(16 * 23, 16 * 15)) # 16 * 27
+left_transporter = Tile(16 * 4, 16 * 15, 1, 16) # 16 * 0
+left_exit = Tile(16 * 5, 16 * 15, 1, 16)
+right_transporter = Tile(16 * 23, 16 * 15, 1, 16) # 16 * 27
+right_exit = Tile(16 * 22, 16 * 15, 1, 16)
+l_transporter = pygame.sprite.GroupSingle(left_transporter)
+r_transporter = pygame.sprite.GroupSingle(right_transporter)
 
 # Used for roaming
-top_left_tile = Tile(16 * 1, 16 * 1)
-top_right_tile = Tile(16 * 26, 16 * 1)
-bottom_left_tile = Tile(0, 16 * 31)
-bottom_right_tile = Tile(16 * 26, 16 * 31)
+top_left_tile = Tile(16 * 1, 16 * 1, 16, 16)
+top_right_tile = Tile(16 * 26, 16 * 1, 16, 16)
+bottom_left_tile = Tile(0, 16 * 31, 16, 16)
+bottom_right_tile = Tile(16 * 26, 16 * 31, 16, 16)
 roam_tiles = pygame.sprite.Group(top_left_tile, top_right_tile, bottom_left_tile, bottom_right_tile)
 
 # Respawner
-respawner_tile = Tile(208, 192)
+respawner_tile = Tile(208, 192, 16, 16)
 respawner = pygame.sprite.GroupSingle(respawner_tile)
 
 # Create Grid System
@@ -77,9 +81,9 @@ while y < constants.WINDOWHEIGHT:
         # If the cropped image's color is BLACK
         if pygame.transform.average_color(cropped_image)[:3] == constants.BLACK:
             # Create grid for movement
-            tile_system.add(Tile(x, y))
+            tile_system.add(Tile(x, y, 16, 16))
         else:
-            walls.add(Tile(x, y))
+            walls.add(Tile(x, y, 16, 16))
         
         x += 16
     y += 16
@@ -286,7 +290,7 @@ def transport_left(sprite):
     
 def test_movement(move, speed, pacman):
     """ Tests movement of player and will update Pacman if move is legal """
-    test = Tile(pacman.rect.x, pacman.rect.y)
+    test = Tile(pacman.rect.x, pacman.rect.y, 16, 16)
     global last_movement
     if move == 'U':
         test.rect.top -= speed
@@ -325,7 +329,7 @@ def test_last_movement(move, speed, pacman):
         Function used is test_movement() failed.
     """
 
-    test = Tile(pacman.rect.x, pacman.rect.y)
+    test = Tile(pacman.rect.x, pacman.rect.y, 16, 16)
     global last_movement
     if move == 'U':
         test.rect.top -= speed
@@ -431,8 +435,11 @@ while True:
                 target = red_current_tile.pop()
                 ghost.create_path(target, ghost_tile)
             elif ghost.state == 'C':
-                target = pacman_current_tile.pop()
-                ghost.create_path(target, ghost_tile)
+                try:
+                    target = pacman_current_tile.pop()
+                    ghost.create_path(target, ghost_tile)
+                except IndexError:
+                    pass
             elif ghost.state == 'D':
                 target = respawner_current_tile.pop()
                 ghost.create_path(target, ghost_tile)
@@ -447,11 +454,14 @@ while True:
             pacman_group.update('L')
             if pacman.rect.right <= 0:
                 pacman.rect.left = constants.WINDOWWIDTH
-            elif pygame.sprite.spritecollide(pacman, r_transporter, False):
-                pacman.rect = pygame.Rect(16 * 22, 16 * 15, 16, 16)
+            elif pacman.rect.contains(right_exit.rect):
                 pacman.toggle_N()
         elif pacman.state == 'TR':
             pacman_group.update('R')
+            if pacman.rect.left >= constants.WINDOWWIDTH:
+                pacman.rect.right = 0
+            elif pacman.rect.contains(left_exit.rect):
+                pacman.toggle_N()
         
     # Move Ghosts
     for ghost in ghost_group:
@@ -512,10 +522,12 @@ while True:
     # Transport Pacman if Pacman collides with either transporter
     if pygame.sprite.spritecollide(pacman, l_transporter, False):
         # transport_left(pacman)
-        pacman.toggle_TL()
+        if pacman.state == 'N':
+            pacman.toggle_TL()
     elif pygame.sprite.spritecollide(pacman, r_transporter, False):
         # transport_right(pacman)
-        pacman.toggle_TR()
+        if pacman.state == 'N':
+            pacman.toggle_TR()
         
     # Move Ghost to Respawning Area if they collide with entrance and are dead
     for ghosts in ghost_group:
