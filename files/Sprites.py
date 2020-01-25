@@ -537,6 +537,9 @@ class Pacman(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+
+        # Get the sound effects
+        self.beep = pygame.mixer.Sound("../audio/beep.wav")
         
         # Default coordinates when the game restarts
         self.defaultx = x
@@ -583,6 +586,7 @@ class Pacman(pygame.sprite.Sprite):
         if movement:
             self.image = self.directions[movement]
             self.image = pygame.transform.scale(self.image, (20, 20))
+            self.beep.play()
             
     def death(self):
         time.sleep(1)
