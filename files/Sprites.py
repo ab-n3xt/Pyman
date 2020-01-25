@@ -484,7 +484,10 @@ class Teal(Ghost):
 
     def chase_pacman(self):
         super().chase_pacman()
-        self.image = self.directions[self.dir]
+        if self.state == 'D':
+            self.image = self.death_frames[self.dir]
+        else:
+            self.image = self.directions[self.dir]
 
 
 class Pacman(pygame.sprite.Sprite):
