@@ -451,6 +451,7 @@ class Red(Ghost):
             self.image = pygame.image.load('../sprites/v-ghost.png')
         else:
             self.image = self.directions[self.dir]
+        self.image = pygame.transform.scale(self.image, (20, 20))
         super().update(current_tile)
         
 
@@ -581,6 +582,7 @@ class Pacman(pygame.sprite.Sprite):
         # Update image
         if movement:
             self.image = self.directions[movement]
+            self.image = pygame.transform.scale(self.image, (20, 20))
             
     def death(self):
         time.sleep(1)
