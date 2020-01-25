@@ -48,6 +48,9 @@ pellets = pygame.sprite.Group()
 # Magic Pellets
 power_pellets = pygame.sprite.Group()
 
+# Points
+v_points = 200
+
 # Teleporters
 left_transporter = Tile(16 * 4, 16 * 15, 1, 16) # 16 * 0
 left_exit = Tile(16 * 5, 16 * 15, 1, 16)
@@ -511,8 +514,8 @@ while True:
     # True = Magic Pellet will be destroyed when collided with
     eaten_power_pellets = pygame.sprite.spritecollide(pacman, power_pellets, True)
     for power_pellet in eaten_power_pellets:
-        POINTS += 10
         time_start = time.time()
+        v_points = 200
         for ghost in ghost_group:
             if ghost.state == 'A' or ghost.state == 'C':
                 ghost.toggle_vulnerability()
@@ -531,10 +534,11 @@ while True:
     for ghost in collided_ghosts:
         if ghost.state == 'V':
             ghost.toggle_death()
-            text = font_system_small.render("200", True, constants.WHITE)
+            text = font_system_small.render(f"{v_points}", True, constants.WHITE)
+            v_points += 200
             window.blit(text, (ghost.rect.x, ghost.rect.y))
             pygame.display.update()
-            POINTS += 200
+            POINTS += v_points
             time.sleep(0.5)
         elif ghost.state == 'A' or ghost.state == 'C':
             window.fill(constants.BLACK)
