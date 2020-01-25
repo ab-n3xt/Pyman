@@ -420,7 +420,7 @@ while True:
     
     if nom:
         nom.toggle_spawn()
-        nom = None
+        p_list.remove(nom)
                 
     for ghost in ghost_group:
         if (ghost.pixel == 0 and loop % 3 == 0) or (ghost.state == 'D' and ghost.pixel == 0):
@@ -469,10 +469,10 @@ while True:
     # Transport any Ghosts if Ghosts collide with either transporter
     for ghost in ghost_group:
         if pygame.sprite.spritecollide(ghost, l_transporter, False):
-            if ghost.state == 'C':
+            if ghost.state == 'C' or ghost.state == 'V':
                 ghost.toggle_TL()
         elif pygame.sprite.spritecollide(ghost, r_transporter, False):
-            if ghost.state == 'C':
+            if ghost.state == 'C' or ghost.state == 'V':
                 ghost.toggle_TR()
     
     # Move Pacman
