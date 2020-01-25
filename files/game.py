@@ -491,6 +491,7 @@ while True:
                 pacman.rect.right = 0
             elif pacman.rect.contains(left_exit.rect):
                 pacman.toggle_N()
+        pacman.image = pygame.transform.scale(pacman.image, (20, 20))
         
     # Move Ghosts
     for ghost in ghost_group:
@@ -512,6 +513,7 @@ while True:
                         ghost.rect.right = 0
                     elif ghost.rect.contains(left_exit.rect):
                         ghost.toggle_back()
+        ghost.image = pygame.transform.scale(ghost.image, (20, 20))
     
     # Check if Pacman collided with any Pellets
     # True = Pellet will be destroyed when collided with
