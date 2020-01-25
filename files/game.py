@@ -51,6 +51,9 @@ power_pellets = pygame.sprite.Group()
 # Points
 v_points = 200
 
+# Keeps track of pacing Ghosts
+p_list = []
+
 # Teleporters
 left_transporter = Tile(16 * 4, 16 * 15, 1, 16) # 16 * 0
 left_exit = Tile(16 * 5, 16 * 15, 1, 16)
@@ -67,7 +70,7 @@ bottom_right_tile = Tile(16 * 26, 16 * 31, 16, 16)
 roam_tiles = pygame.sprite.Group(top_left_tile, top_right_tile, bottom_left_tile, bottom_right_tile)
 
 # Respawner
-respawner_tile = Tile(208, 192, 16, 16)
+respawner_tile = Tile(223, 192, 1, 16)
 respawner = pygame.sprite.GroupSingle(respawner_tile)
 
 # Create Grid System
@@ -406,12 +409,18 @@ while True:
                 ghost.toggle_chase()
 
     # Checks to see if any Ghosts are respawning
-    # Then if 5 seconds have passed, 'S'pawn the Ghost back into the game
-    for ghost in ghost_group:
-        if ghost.respawn_timer:
-            time_end = time.time()
-            if (time_end-ghost.respawn_timer) >= 5.0:
-                ghost.toggle_spawn()
+    # Then no other ghost is spawning, 'S'pawn the Ghost back into the game
+    nom = None
+    for ghost in p_list:
+        if ghost.state == 'P' and nom == None:
+            nom = ghost
+        elif ghost.state == 'R':
+            nom = None
+            break
+    
+    if nom:
+        nom.toggle_spawn()
+        nom = None
                 
     for ghost in ghost_group:
         if (ghost.pixel == 0 and loop % 3 == 0) or (ghost.state == 'D' and ghost.pixel == 0):
@@ -560,7 +569,7 @@ while True:
     for ghosts in ghost_group:
         if ghost.state == 'D' and pygame.sprite.spritecollide(ghost, respawner, False):
             ghost.state = 'R'
-            ghost.respawn_timer = time.time()
+            p_list.append(ghost)
 
     # Update game
     update_window()

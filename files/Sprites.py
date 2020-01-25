@@ -163,7 +163,8 @@ class Ghost(pygame.sprite.Sprite):
             if self.rect.y > 192:
                 self.rect.top -= 4
                 return
-            self.rect = pygame.Rect(208, 192, 16, 16)
+            self.rect.x = 208
+            self.rect.y = 192
             self.toggle_alive()
 
     def gather_death_frames(self):
@@ -348,7 +349,6 @@ class Ghost(pygame.sprite.Sprite):
 
     def toggle_vulnerability(self):
         self.state = 'V'
-        self.image = pygame.image.load('../sprites/v-ghost.png')
         self.speed = self.speed / 2
         self.reverse()
         if self.pixel != 0:
@@ -444,13 +444,15 @@ class Red(Ghost):
             'R': right_image,
         }
 
-    def chase_pacman(self):
-        super().chase_pacman()
+    def update(self, current_tile):
         if self.state == 'D':
             self.image = self.death_frames[self.dir]
+        elif self.state == 'V':
+            self.image = pygame.image.load('../sprites/v-ghost.png')
         else:
             self.image = self.directions[self.dir]
-
+        super().update(current_tile)
+        
 
 class Teal(Ghost):
 
