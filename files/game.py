@@ -220,6 +220,9 @@ def continue_game():
     for ghost in ghost_group:
         ghost.toggle_alive()
         ghost.reset_pos()
+
+    teal.state = 'P'
+    p_list.append(teal)
     
     # Updates Pacman's movement
     pacman_current_grid = pygame.sprite.spritecollide(pacman, tile_system, False)
@@ -589,7 +592,7 @@ while True:
             last_movement = 'R'
         
     # Move Ghost to Respawning Area if they collide with entrance and are dead
-    for ghosts in ghost_group:
+    for ghost in ghost_group:
         if ghost.state == 'D' and pygame.sprite.spritecollide(ghost, respawner, False):
             ghost.state = 'R'
             p_list.append(ghost)
