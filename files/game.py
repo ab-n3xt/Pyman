@@ -512,7 +512,13 @@ while True:
     # Move Ghosts
     for ghost in ghost_group:
         if ghost.state == 'D' or loop % 3 == 0:
-            if ghost.state != 'TL' and ghost.state != 'TR':
+            # Updates Ghost's movement
+            ghost_current_tile = pygame.sprite.spritecollide(ghost, tile_system, False)
+            try:
+                ghost_tile = ghost_current_tile.pop()
+            except IndexError:
+                pass
+            if ghost.state != 'TL' and ghost.state != 'TR':                
                 ghost.update(ghost_tile)
             else:
                 if ghost.state == 'TL':
