@@ -4,7 +4,7 @@ from pygame.locals import *
 
 # from Start import Start
 from Menus import Start, Retry
-from Sprites import Tile, Ghost, Pacman, Pellet, Power_Pellet, Red, Teal, Orange
+from Sprites import Tile, Ghost, Pacman, Pellet, Power_Pellet, Red, Teal, Orange, Pink
 
 # Initialize Pygame
 pygame.init()
@@ -122,9 +122,10 @@ pacman_group = pygame.sprite.GroupSingle(pacman)
     
 # Initialize Ghosts
 red = Red(208, 192, MOVESPEED, 'red')
-teal = Teal(224, 240, MOVESPEED, 'teal')
+teal = Teal(216, 240, MOVESPEED, 'teal')
 orange = Orange(192, 240, MOVESPEED, 'orange')
-ghost_group = pygame.sprite.Group(red, teal, orange)
+pink = Pink(240, 240, MOVESPEED, 'pink')
+ghost_group = pygame.sprite.Group(red, teal, orange, pink)
     
 # Initialize movement variable
 movement = 'R'
@@ -188,6 +189,8 @@ def load_game():
     p_list.append(teal)
     orange.state = 'P'
     p_list.append(orange)
+    pink.state = 'P'
+    p_list.append(pink)
     
     # Create the pellets
     pellets.empty()
@@ -228,6 +231,8 @@ def continue_game():
     p_list.append(teal)
     orange.state = 'P'
     p_list.append(orange)
+    pink.state = 'P'
+    p_list.append(pink)
     
     # Updates Pacman's movement
     pacman_current_grid = pygame.sprite.spritecollide(pacman, tile_system, False)
@@ -474,6 +479,9 @@ while True:
                 elif ghost.name == 'orange':
                     target = orange_current_tile.pop()
                     orange.create_path(target, ghost_tile)
+                elif ghost.name == 'pink':
+                    target = pink_current_tile.pop()
+                    pink.create_path(target, ghost_tile)
             elif ghost.state == 'C':
                 try:
                     target = pacman_current_tile.pop()

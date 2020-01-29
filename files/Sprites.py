@@ -539,6 +539,46 @@ class Orange(Ghost):
         super().update(current_tile)
 
 
+class Pink(Ghost):
+    def __init__(self, x, y, speed, color):
+        super().__init__(x, y, speed, color)
+        self.directions = {}
+        self.gather_frames()
+        self.image = self.directions['R']
+
+    def gather_frames(self):
+        spreadsheet = pygame.image.load('../sprites/ghosts.png')
+
+        selected_area = pygame.Rect(32, 32, 16, 16)
+        right_image = spreadsheet.subsurface(selected_area)
+
+        selected_area = pygame.Rect(48, 32, 16, 16)
+        up_image = spreadsheet.subsurface(selected_area)
+
+        selected_area = pygame.Rect(64, 32, 16, 16)
+        down_image = spreadsheet.subsurface(selected_area)
+
+        selected_area = pygame.Rect(0, 48, 16, 16)
+        left_image = spreadsheet.subsurface(selected_area)
+
+        self.directions = {
+            'U': up_image,
+            'D': down_image,
+            'L': left_image,
+            'R': right_image,
+        }
+
+    def update(self, current_tile):
+        if self.state == 'D':
+            self.image = self.death_frames[self.dir]
+        elif self.state == 'V' or self.saved_state == 'V':
+            self.image = pygame.image.load('../sprites/v-ghost.png')
+        else:
+            self.image = self.directions[self.dir]
+        self.image = pygame.transform.scale(self.image, (20, 20))
+        super().update(current_tile)
+
+
 class Pacman(pygame.sprite.Sprite):
     
     def __init__(self, x, y, speed):
