@@ -4,7 +4,7 @@ from pygame.locals import *
 
 # from Start import Start
 from Menus import Start, Retry
-from Sprites import Tile, Ghost, Pacman, Pellet, Power_Pellet, Red, Teal
+from Sprites import Tile, Ghost, Pacman, Pellet, Power_Pellet, Red, Teal, Orange
 
 # Initialize Pygame
 pygame.init()
@@ -122,8 +122,9 @@ pacman_group = pygame.sprite.GroupSingle(pacman)
     
 # Initialize Ghosts
 red = Red(208, 192, MOVESPEED, 'red')
-teal = Teal(224, 224, MOVESPEED, 'teal')
-ghost_group = pygame.sprite.Group(red, teal)
+teal = Teal(224, 240, MOVESPEED, 'teal')
+orange = Orange(192, 240, MOVESPEED, 'orange')
+ghost_group = pygame.sprite.Group(red, teal, orange)
     
 # Initialize movement variable
 movement = 'R'
@@ -185,6 +186,8 @@ def load_game():
 
     teal.state = 'P'
     p_list.append(teal)
+    orange.state = 'P'
+    p_list.append(orange)
     
     # Create the pellets
     pellets.empty()
@@ -223,6 +226,8 @@ def continue_game():
 
     teal.state = 'P'
     p_list.append(teal)
+    orange.state = 'P'
+    p_list.append(orange)
     
     # Updates Pacman's movement
     pacman_current_grid = pygame.sprite.spritecollide(pacman, tile_system, False)
@@ -430,13 +435,13 @@ while True:
     for ghost in p_list:
         if ghost.state == 'P' and nom == None:
             nom = ghost
-        elif ghost.state == 'R':
+        elif ghost.state == 'S':
             nom = None
             break
     
     if nom:
         nom.toggle_spawn()
-        p_list.remove(nom)
+        
                 
     for ghost in ghost_group:
         if (ghost.pixel == 0 and loop % 3 == 0) or (ghost.state == 'D' and ghost.pixel == 0):
@@ -466,6 +471,9 @@ while True:
                 elif ghost.name == 'teal':
                     target = teal_current_tile.pop()
                     teal.create_path(target, ghost_tile)
+                elif ghost.name == 'orange':
+                    target = orange_current_tile.pop()
+                    orange.create_path(target, ghost_tile)
             elif ghost.state == 'C':
                 try:
                     target = pacman_current_tile.pop()
@@ -576,6 +584,7 @@ while True:
             POINTS += v_points
             time.sleep(0.5)
         elif ghost.state == 'A' or ghost.state == 'C':
+            pygame.mixer.Sound("../audio/death-quack.wav").play()
             window.fill(constants.BLACK)
             pygame.display.update()
             LIVES -= 1

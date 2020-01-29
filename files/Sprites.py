@@ -153,7 +153,7 @@ class Ghost(pygame.sprite.Sprite):
                 self.adjust(current_tile)
 
         elif self.state == 'R':
-            if self.rect.y < 224:       # Go into the spawn-zone
+            if self.rect.y < 240:       # Go into the spawn-zone
                 self.rect.bottom += 4
                 return
             self.state = 'P'
@@ -162,6 +162,7 @@ class Ghost(pygame.sprite.Sprite):
             self.pace()
 
         elif self.state == 'S':
+            self.rect.x = 216
             if self.rect.y > 192:
                 self.rect.top -= 4
                 return
@@ -478,6 +479,46 @@ class Teal(Ghost):
         down_image = spreadsheet.subsurface(selected_area)
 
         selected_area = pygame.Rect(32, 16, 16, 16)
+        left_image = spreadsheet.subsurface(selected_area)
+
+        self.directions = {
+            'U': up_image,
+            'D': down_image,
+            'L': left_image,
+            'R': right_image,
+        }
+
+    def update(self, current_tile):
+        if self.state == 'D':
+            self.image = self.death_frames[self.dir]
+        elif self.state == 'V' or self.saved_state == 'V':
+            self.image = pygame.image.load('../sprites/v-ghost.png')
+        else:
+            self.image = self.directions[self.dir]
+        self.image = pygame.transform.scale(self.image, (20, 20))
+        super().update(current_tile)
+
+
+class Orange(Ghost):
+    def __init__(self, x, y, speed, color):
+        super().__init__(x, y, speed, color)
+        self.directions = {}
+        self.gather_frames()
+        self.image = self.directions['R']
+
+    def gather_frames(self):
+        spreadsheet = pygame.image.load('../sprites/ghosts.png')
+
+        selected_area = pygame.Rect(48, 16, 16, 16)
+        right_image = spreadsheet.subsurface(selected_area)
+
+        selected_area = pygame.Rect(64, 16, 16, 16)
+        up_image = spreadsheet.subsurface(selected_area)
+
+        selected_area = pygame.Rect(0, 32, 16, 16)
+        down_image = spreadsheet.subsurface(selected_area)
+
+        selected_area = pygame.Rect(16, 32, 16, 16)
         left_image = spreadsheet.subsurface(selected_area)
 
         self.directions = {
