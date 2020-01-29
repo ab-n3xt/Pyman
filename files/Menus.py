@@ -49,6 +49,9 @@ class Start(object):
 
         pygame.display.update()
 
+        menu_music = pygame.mixer.Sound("../audio/menu.wav")
+        menu_music.play()
+
         while True:
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -60,6 +63,7 @@ class Start(object):
                         pygame.quit()
                         sys.exit()
                     elif start_rect.collidepoint(x, y):
+                        menu_music.stop()
                         return
                         
                         
