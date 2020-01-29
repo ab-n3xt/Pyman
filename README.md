@@ -1,2 +1,2 @@
 # Pyman
-Pacman copy implemented in Python
+Rough Pacman copy implemented in Python
