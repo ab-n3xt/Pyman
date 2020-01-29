@@ -134,6 +134,7 @@ time_start = None
 time_end = None
 event_start = None
 event_end = None
+event_name = ''
 
 # Loop
 loop = 0
@@ -404,11 +405,18 @@ while True:
     # For 13 seconds, Ghosts are in 'C' state
     event_end = time.time()
     if (event_end-event_start) >= 20.0:
+        event_name = 'A'
+        event_start = time.time()
+    elif (event_end-event_start) >= 7.0:
+        event_name = 'C'
+        
+    # Added new event trigger to keep track of current events
+    # If Ghost comes out of spawn, it knows which state to be in
+    if event_name == 'A':
         for ghost in ghost_group:
             if ghost.state == 'C':
                 ghost.toggle_alive()
-        event_start = time.time()
-    elif (event_end-event_start) >= 7.0:
+    elif event_name == 'C':
         for ghost in ghost_group:
             if ghost.state == 'A':
                 ghost.toggle_chase()
