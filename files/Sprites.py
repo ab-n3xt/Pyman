@@ -449,7 +449,7 @@ class Red(Ghost):
     def update(self, current_tile):
         if self.state == 'D':
             self.image = self.death_frames[self.dir]
-        elif self.state == 'V':
+        elif self.state == 'V' or self.saved_state == 'V':
             self.image = pygame.image.load('../sprites/v-ghost.png')
         else:
             self.image = self.directions[self.dir]
@@ -490,7 +490,7 @@ class Teal(Ghost):
     def update(self, current_tile):
         if self.state == 'D':
             self.image = self.death_frames[self.dir]
-        elif self.state == 'V':
+        elif self.state == 'V' or self.saved_state == 'V':
             self.image = pygame.image.load('../sprites/v-ghost.png')
         else:
             self.image = self.directions[self.dir]
@@ -559,8 +559,7 @@ class Pacman(pygame.sprite.Sprite):
         # 'TL'
         self.state = 'N'
         
-    def update(self, movement):
-        
+    def update(self, movement):        
         if movement == 'U':
             self.rect.top -= self.speed
             self.index += 1
@@ -591,7 +590,7 @@ class Pacman(pygame.sprite.Sprite):
         if movement:
             self.image = self.directions[movement]
             self.image = pygame.transform.scale(self.image, (20, 20))
-            # self.beep.play()
+            self.beep.play()
             
     def death(self):
         time.sleep(1)
