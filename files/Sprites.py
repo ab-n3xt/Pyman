@@ -75,6 +75,8 @@ class Ghost(pygame.sprite.Sprite):
         
         # Get the main window's display
         self.surface = pygame.display.get_surface()
+
+        self.name = color
         
         # Get the sprite and set the x+y coordinates
         self.image = pygame.image.load(f'../sprites/{color}.png')
@@ -485,12 +487,15 @@ class Teal(Ghost):
             'R': right_image,
         }
 
-    def chase_pacman(self):
-        super().chase_pacman()
+    def update(self, current_tile):
         if self.state == 'D':
             self.image = self.death_frames[self.dir]
+        elif self.state == 'V':
+            self.image = pygame.image.load('../sprites/v-ghost.png')
         else:
             self.image = self.directions[self.dir]
+        self.image = pygame.transform.scale(self.image, (20, 20))
+        super().update(current_tile)
 
 
 class Pacman(pygame.sprite.Sprite):
@@ -586,7 +591,7 @@ class Pacman(pygame.sprite.Sprite):
         if movement:
             self.image = self.directions[movement]
             self.image = pygame.transform.scale(self.image, (20, 20))
-            self.beep.play()
+            # self.beep.play()
             
     def death(self):
         time.sleep(1)
