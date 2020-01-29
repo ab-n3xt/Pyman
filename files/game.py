@@ -4,7 +4,7 @@ from pygame.locals import *
 
 # from Start import Start
 from Menus import Start, Retry
-from Sprites import Tile, Ghost, Pacman, Pellet, Power_Pellet, Red
+from Sprites import Tile, Ghost, Pacman, Pellet, Power_Pellet, Red, Teal
 
 # Initialize Pygame
 pygame.init()
@@ -121,7 +121,9 @@ pacman = Pacman(224, 384, MOVESPEED) # 16 * 14, 16 * 24
 pacman_group = pygame.sprite.GroupSingle(pacman)
     
 # Initialize Ghosts
-ghost_group = pygame.sprite.Group(Red(208, 192, MOVESPEED, 'red'))
+red = Red(208, 192, MOVESPEED, 'red')
+teal = Teal(224, 224, MOVESPEED, 'teal')
+ghost_group = pygame.sprite.Group(red, teal)
     
 # Initialize movement variable
 movement = 'R'
@@ -179,6 +181,9 @@ def load_game():
     for ghost in ghost_group:
         ghost.reset_pos()
         ghost.toggle_alive()
+
+    teal.state = 'P'
+    p_list.append(teal)
     
     # Create the pellets
     pellets.empty()
@@ -444,8 +449,12 @@ while True:
             target = None
 
             if ghost.state == 'A':
-                target = red_current_tile.pop()
-                ghost.create_path(target, ghost_tile)
+                if ghost.name == 'red':
+                    target = red_current_tile.pop()
+                    red.create_path(target, ghost_tile)
+                elif ghost.name == 'teal':
+                    target = teal_current_tile.pop()
+                    teal.create_path(target, ghost_tile)
             elif ghost.state == 'C':
                 try:
                     target = pacman_current_tile.pop()
